@@ -30,7 +30,7 @@ First, you'll need to use the Chrome browser to [generate the coverage report](h
 
 The wizard will walk you through the process of linking to the proper js bundles and sourcemaps to create the visualization. If you don't have them locally, it will conveniently download them for you.
 
-**Note:** this requires sourcemaps to be available. It might be helpful to point to a testing instead of prod build, as for some apps, sourcemaps are disabled in production.
+**Note:** this requires sourcemaps to be publically available, or at least available on your network. It might be helpful to point to a testing instead of prod build, for instance, as for some apps, sourcemaps are disabled in production.
 
 ### Here's what a run through the wizard might look like:
 
