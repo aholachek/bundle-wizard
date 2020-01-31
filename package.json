@@ -18,7 +18,9 @@
   ],
   "files": [
     "index.js",
-    "helpers.js"
+    "helpers.js",
+    "pinterest-mobile.png",
+    "example-usage.png"
   ],
   "dependencies": {
     "fs-extra": "^8.1.0",
