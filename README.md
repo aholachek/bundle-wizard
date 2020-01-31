@@ -1,6 +1,6 @@
 # 🧙‍♂️ sourcemap-wizard
 
-This small command line utility is build on top of [source-map-explorer](https://github.com/danvk/source-map-explorer) to help you easily create visualizations of the bundles fetched for any specific entry point of an app.
+This small command line utility is built on top of [source-map-explorer](https://github.com/danvk/source-map-explorer) to help you easily create visualizations of the bundles fetched for any specific entry point of an app.
 
 ## Example
 
