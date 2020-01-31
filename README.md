@@ -4,9 +4,9 @@ This small command line utility is build on top of [source-map-explorer](https:/
 
 ## Example
 
-Here's a visualization of the js bundles fetched by Pinterest on desktop when loading the home screen, with a dark red color indicating the code that was mostly unused during the bootup of the app:
+Here's a visualization of the js bundles fetched by Pinterest on the mobile home screen, with the color red indicating the code that was mostly unused during the bootup of the app:
 
-<img src="./pinterest-desktop.png" alt="pinterest desktop home js bundle coverage visualization">
+<img src="./pinterest-mobile.png" alt="pinterest desktop home js bundle coverage visualization">
 
 ## Installation
 
