@@ -9,6 +9,7 @@ const {
   coverageAndDownloadPrompts,
   jsURLsFromCoverage
 } = require('./helpers')
+const process = require('process')
 
 inquirer.registerPrompt('fuzzypath', require('inquirer-fuzzy-path'))
 
@@ -23,18 +24,17 @@ const bundleFolderName = `${__dirname}/sourcemap-wizard-downloads`
 const shouldDownload = 'Download the js bundles and sourcemaps for me'
 const shouldNotDownload = 'I already have the js bundles and sourcemaps'
 
-const defaultBundlesPath = 'build/static/js'
+const defaultBundlesPath = `${process.cwd()}/build/static/js`
 
 coverageAndDownloadPrompts({ shouldDownload, shouldNotDownload }).then(
   answers => {
-    const coverage = require(`${__dirname}/${answers.coverage}`)
+    const coverage = require(`${process.cwd()}/${answers.coverage}`)
     if (answers.download === shouldNotDownload) {
       inquirer
         .prompt([
           {
             type: 'fuzzypath',
             itemType: 'directory',
-            excludePath: nodePath => nodePath.startsWith('node_modules'),
             message: 'Provide the directory path to the bundles and sourcemaps',
             excludePath: nodePath => nodePath.startsWith('node_modules'),
             default: fs.existsSync(defaultBundlesPath)
