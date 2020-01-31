@@ -6,7 +6,7 @@ This small command line utility is build on top of [source-map-explorer](https:/
 
 Here's a visualization of the js bundles fetched by Pinterest on desktop when loading the home screen, with a dark red color indicating the code that was mostly unused during the bootup of the app:
 
-<img src="./pinterest_desktop_home_example.png" alt="pinterest desktop home js bundle coverage visualization">
+<img src="./pinterest-desktop.png" alt="pinterest desktop home js bundle coverage visualization">
 
 ## Installation
 
@@ -24,6 +24,10 @@ First, you'll need to use the Chrome browser to [generate the coverage report](h
 
 The wizard will walk you through the process of linking to the proper js bundles and sourcemaps to create the visualization. If you don't have them locally, it will conveniently download them for you. (Note: this requires sourcemaps to be available. It might be helpful to point to a testing instead of prod build, as for some apps, sourcemaps are disabled in production.)
 
+### Here's what a run through the wizard might look like:
+
+<img src="./example-usage.png" alt="pinterest desktop home js bundle coverage visualization">
 
 ## How to contribute
+
 This project is very new&mdash; if you find a bug or have a suggestion for improvement, please make an issue.
