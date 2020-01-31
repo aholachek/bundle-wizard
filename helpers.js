@@ -64,7 +64,7 @@ const initDownloadFilesFlow = ({ coverage, bundleFolderName }) => {
     .prompt([
       {
         type: 'checkbox',
-        message: `The following files (along with their sourcemaps, if available) will be fetched. Unselect any files you do not wish to include by pressing space. When you're ready to move on, press enter.`,
+        message: `The following files, along their sourcemaps, will be fetched. Unselect any files you do not wish to include by pressing space. When you're ready to move on, press enter.`,
         choices: urls,
         default: urls,
         name: 'files'
