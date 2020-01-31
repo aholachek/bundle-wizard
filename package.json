@@ -1,0 +1,21 @@
+{
+  "name": "sourcemap-wizard",
+  "description": "A command line wrapper around source-map-explorer for easier analysis",
+  "version": "0.0.1",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alex Holachek",
+  "license": "ISC",
+  "dependencies": {
+    "fs-extra": "^8.1.0",
+    "inquirer": "^7.0.4",
+    "inquirer-fuzzy-path": "^2.2.0",
+    "open": "^7.0.1",
+    "ora": "^4.0.3",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.8",
+    "source-map-explorer": "^2.2.2"
+  }
+}
