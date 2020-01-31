@@ -1,6 +1,12 @@
 # 🧙‍♂️ sourcemap-wizard
 
-This small command line utility is built on top of [source-map-explorer](https://github.com/danvk/source-map-explorer) to help you easily create visualizations of the bundles fetched for any specific entry point of an app.
+This small command line utility is built on top of [source-map-explorer](https://github.com/danvk/source-map-explorer) to help you more easily create visualizations of the bundles fetched for any specific entry point of an app.
+
+The wizard simply:
+
+1. Extracts relevant js bundle names from your [provided coverage json file](#more-info)
+2. Fetches those js bundles along with their sourcemaps
+3. Feeds that information into source-map-explorer for you
 
 ## Example
 
