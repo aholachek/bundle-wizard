@@ -19,6 +19,8 @@ const visualizeBundles = ({
 
   const htmlFileName = `${__dirname}/${visHTML}`
 
+  fs.removeSync(htmlFileName)
+
   explore(bundles, {
     output: {
       format: 'html',
@@ -39,7 +41,8 @@ const visualizeBundles = ({
 
 const jsURLsFromCoverage = coverage => {
   const urls = coverage
-    .filter(c => /\.js$/.test(c.url))
+    // TODO: refine this logic
+    .filter(c => /(m)?js$/.test(c.url))
     .filter(c => !/^file:/.test(c.url))
     .map(c => c.url)
   return urls
@@ -67,7 +70,7 @@ const initDownloadFilesFlow = ({ coverage, bundleFolderName }) => {
     .then(answers => {
       spinner = ora('Downloading bundles').start()
 
-      const dir = `./${bundleFolderName}`
+      const dir = bundleFolderName
 
       fs.removeSync(dir)
       fs.mkdirSync(dir)
@@ -82,10 +85,11 @@ const initDownloadFilesFlow = ({ coverage, bundleFolderName }) => {
           uri: url
         })
           .then(response => {
-            fs.writeFileSync(`./${bundleFolderName}/${fileName}`, response)
+            fs.writeFileSync(`${bundleFolderName}/${fileName}`, response)
           })
           .catch(error => {
             console.error(`\nUnable to download: ${url}\n`)
+            console.error(error)
           })
 
         const sourceMapPromise = request({
@@ -93,7 +97,7 @@ const initDownloadFilesFlow = ({ coverage, bundleFolderName }) => {
           uri: `${url}.map`
         })
           .then(response => {
-            fs.writeFileSync(`./${bundleFolderName}/${fileName}.map`, response)
+            fs.writeFileSync(`${bundleFolderName}/${fileName}.map`, response)
           })
           .catch(error => {
             console.error(`\nUnable to download: ${url}.map\n`)
@@ -114,7 +118,7 @@ const initDownloadFilesFlow = ({ coverage, bundleFolderName }) => {
   return returnedPromise
 }
 
-const fileNameRegex = /[^/]*\.js/
+const fileNameRegex = /[^/]*\.(m)?js$/
 
 const createListOfLocalPaths = ({ files, path }) => {
   const fileNames = files
@@ -134,20 +138,21 @@ const createListOfLocalPaths = ({ files, path }) => {
 }
 
 const coverageAndDownloadPrompts = ({ shouldDownload, shouldNotDownload }) => {
-  console.log('\nWelcome to the source map analysis wizard!\n')
+  console.log('\n🧙‍♂️ Welcome to the source map analysis wizard!\n')
 
   console.log(
     "First, make sure you've downloaded a coverage report for the app entrypoint you want to analyze."
   )
 
-  console.log('(Learn more about generating a coverage report here.)\n')
+  console.log(
+    'You can learn more about generating a coverage report here: https://developers.google.com/web/tools/chrome-devtools/coverage\n'
+  )
 
   return inquirer.prompt([
     {
       type: 'fuzzypath',
       itemType: 'file',
       message: 'Provide the location and name of the coverage file',
-      default: 'coverage.json',
       name: 'coverage',
       excludePath: nodePath => nodePath.startsWith('node_modules'),
       excludeFilter: nodePath => {

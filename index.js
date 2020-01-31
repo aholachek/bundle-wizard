@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const fs = require('fs-extra')
 const inquirer = require('inquirer')
 const {
@@ -10,14 +12,13 @@ const {
 
 inquirer.registerPrompt('fuzzypath', require('inquirer-fuzzy-path'))
 
-// https://developers.google.com/web/tools/chrome-devtools/coverage
 const visHTML = 'bundles.html'
 
 if (fs.existsSync(visHTML)) {
   fs.unlinkSync(visHTML)
 }
 
-const bundleFolderName = 'sourcemap-wizard-downloads'
+const bundleFolderName = `${__dirname}/sourcemap-wizard-downloads`
 
 const shouldDownload = 'Download the js bundles and sourcemaps for me'
 const shouldNotDownload = 'I already have the js bundles and sourcemaps'
@@ -26,8 +27,7 @@ const defaultBundlesPath = 'build/static/js'
 
 coverageAndDownloadPrompts({ shouldDownload, shouldNotDownload }).then(
   answers => {
-    const coverage = require(`./${answers.coverage}`)
-    debugger
+    const coverage = require(`${__dirname}/${answers.coverage}`)
     if (answers.download === shouldNotDownload) {
       inquirer
         .prompt([
@@ -66,7 +66,12 @@ coverageAndDownloadPrompts({ shouldDownload, shouldNotDownload }).then(
           files: fetchedFileNames,
           path: bundleFolderName
         })
-        visualizeBundles({ bundles: paths, visHTML, bundleFolderName })
+        visualizeBundles({
+          bundles: paths,
+          visHTML,
+          bundleFolderName,
+          coverageFilePath: answers.coverage
+        })
       })
     }
   }

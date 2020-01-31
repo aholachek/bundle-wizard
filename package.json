@@ -3,11 +3,23 @@
   "description": "A command line wrapper around source-map-explorer for easier analysis",
   "version": "0.0.1",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "bin": {
+    "sourcemap-wizard": "index.js"
   },
   "author": "Alex Holachek",
   "license": "ISC",
+  "keywords": [
+    "source-map",
+    "performance",
+    "entry point"
+  ],
+  "files": [
+    "index.js",
+    "helpers.js"
+  ],
   "dependencies": {
     "fs-extra": "^8.1.0",
     "inquirer": "^7.0.4",
