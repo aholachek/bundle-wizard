@@ -22,7 +22,9 @@ Here's a visualization of the js bundles fetched by Pinterest on desktop when lo
 
 First, you'll need to use the Chrome browser to [generate the coverage report](https://developers.google.com/web/tools/chrome-devtools/coverage) for the entry point you wish to analyze.
 
-The wizard will walk you through the process of linking to the proper js bundles and sourcemaps to create the visualization. If you don't have them locally, it will conveniently download them for you. (Note: this requires sourcemaps to be available. It might be helpful to point to a testing instead of prod build, as for some apps, sourcemaps are disabled in production.)
+The wizard will walk you through the process of linking to the proper js bundles and sourcemaps to create the visualization. If you don't have them locally, it will conveniently download them for you.
+
+**Note:** this requires sourcemaps to be available. It might be helpful to point to a testing instead of prod build, as for some apps, sourcemaps are disabled in production.
 
 ### Here's what a run through the wizard might look like:
 
