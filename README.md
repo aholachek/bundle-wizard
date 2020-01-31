@@ -12,7 +12,7 @@ Here's a visualization of the js bundles fetched by Pinterest on the mobile home
 
 ### For global access:
 
-`npm install -g sourcemap-wizard`
+`npx sourcemap-wizard`
 
 ### Or in a project:
 

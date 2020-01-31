@@ -32,6 +32,9 @@ const visualizeBundles = ({
       spinner.succeed()
       open(htmlFileName)
       fs.removeSync(bundleFolderName)
+      console.log(
+        `💡  Done! A source map visualization should be popping up in your default browser.`
+      )
     })
     .catch(e => {
       spinner.fail('Failed to generate source map visualization')
