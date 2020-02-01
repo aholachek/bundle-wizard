@@ -30,6 +30,7 @@
     "ora": "^4.0.3",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.8",
-    "source-map-explorer": "^2.2.2"
+    "source-map-explorer": "^2.2.2",
+    "yargs": "^15.1.0"
   }
 }

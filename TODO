@@ -1,0 +1,4 @@
+✅ make coverage file and build folder location optional command line arguments @done(20-02-01 13:08)
+✅ warn for empty coverage.json @done(20-02-01 13:26)
+✅ make sure paths outside of current directory work @done(20-02-01 13:08)
+✅ don't show welcome warnings if path to bundles was provided @done(20-02-01 13:26)

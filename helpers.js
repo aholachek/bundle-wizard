@@ -33,7 +33,7 @@ const visualizeBundles = ({
       open(htmlFileName)
       fs.removeSync(bundleFolderName)
       console.log(
-        `💡  Done! A source map visualization should be popping up in your default browser.`
+        `🎊 Done! A source map visualization should pop up in your default browser.`
       )
     })
     .catch(e => {
@@ -51,7 +51,7 @@ const jsURLsFromCoverage = coverage => {
   return urls
 }
 
-const initDownloadFilesFlow = ({ coverage, bundleFolderName }) => {
+const initDownloadFilesFlow = ({ bundleFolderName, coverage }) => {
   let cachedResolve
   const returnedPromise = new Promise((resolve, reject) => {
     cachedResolve = resolve
@@ -140,36 +140,44 @@ const createListOfLocalPaths = ({ files, path }) => {
   return filesWithSourcemaps.concat(filesWithSourcemaps.map(f => `${f}.map`))
 }
 
-const coverageAndDownloadPrompts = ({ shouldDownload, shouldNotDownload }) => {
-  console.log('\n🧙‍♂️ Welcome to the source map analysis wizard!\n')
+const coverageAndDownloadPrompts = ({
+  shouldDownload,
+  shouldNotDownload,
+  argv
+}) => {
+  console.log('\n🧙‍  Welcome to the source map analysis wizard!\n')
 
-  console.log(
-    "First, make sure you've downloaded a coverage report for the app entrypoint you want to analyze."
-  )
+  if (!argv.coverage) {
+    console.log(
+      "First, make sure you've downloaded a coverage report for the app entrypoint you want to analyze."
+    )
 
-  console.log(
-    'You can learn more about generating a coverage report here: https://developers.google.com/web/tools/chrome-devtools/coverage\n'
-  )
+    console.log(
+      'You can learn more about generating a coverage report here:  https://developers.google.com/web/tools/chrome-devtools/coverage\n'
+    )
+  }
 
-  return inquirer.prompt([
-    {
-      type: 'fuzzypath',
-      itemType: 'file',
-      message: 'Provide the location and name of the coverage file',
-      name: 'coverage',
-      excludePath: nodePath => nodePath.startsWith('node_modules'),
-      excludeFilter: nodePath => {
-        if (!/\.json$/.test(nodePath)) return true
+  return inquirer.prompt(
+    [
+      !argv.coverage && {
+        type: 'fuzzypath',
+        itemType: 'file',
+        message: 'Provide the location and name of the coverage file',
+        name: 'coverage',
+        excludePath: nodePath => nodePath.startsWith('node_modules'),
+        excludeFilter: nodePath => {
+          if (!/\.json$/.test(nodePath)) return true
+        }
+      },
+      !argv.bundles && {
+        type: 'list',
+        name: 'download',
+        message:
+          'Do the js files and sourcemaps already live in your filesystem, or do you need to download them?',
+        choices: [shouldNotDownload, shouldDownload]
       }
-    },
-    {
-      type: 'list',
-      name: 'download',
-      message:
-        'Do the js files and sourcemaps already live in your filesystem, or do you need to download them?',
-      choices: [shouldNotDownload, shouldDownload]
-    }
-  ])
+    ].filter(Boolean)
+  )
 }
 module.exports = {
   createListOfLocalPaths,
