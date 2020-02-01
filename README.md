@@ -1,6 +1,6 @@
 # 🧙‍♂️ sourcemap-wizard
 
-This small command line utility is built on top of [source-map-explorer](https://github.com/danvk/source-map-explorer) to help you more easily create visualizations of which JS bundles were fetched for any specific entry point of an app.
+This small command line utility is built on top of [source-map-explorer](https://github.com/danvk/source-map-explorer) to help you easily create visualizations of which JS bundles were fetched for any specific entry point of an app.
 
 The wizard simply:
 
@@ -46,6 +46,3 @@ If you don't need to download bundles and sourcemaps, you can also provide the `
 
 <img src="./example-usage.png" alt="pinterest desktop home js bundle coverage visualization">
 
-## How to contribute
-
-This project is new&mdash; if you find a bug or have a suggestion for improvement, please make an issue.

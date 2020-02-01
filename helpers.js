@@ -145,7 +145,7 @@ const coverageAndDownloadPrompts = ({
   shouldNotDownload,
   argv
 }) => {
-  console.log('\n🧙‍  Welcome to the source map analysis wizard!\n')
+  console.log('\n🧙‍  Welcome to sourcemap-wizard!\n')
 
   if (!argv.coverage) {
     console.log(
