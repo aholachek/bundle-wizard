@@ -2,12 +2,15 @@
   "name": "sourcemap-wizard",
   "description": "A command line wrapper around source-map-explorer for easier analysis",
   "version": "0.0.8",
-  "main": "index.js",
+  "main": "src/index.js",
   "engines": {
     "node": ">=10.0.0"
   },
   "bin": {
-    "sourcemap-wizard": "index.js"
+    "sourcemap-wizard": "src/index.js"
+  },
+  "scripts": {
+    "test": "jest"
   },
   "author": "Alex Holachek",
   "license": "ISC",
@@ -23,11 +26,12 @@
     "example-usage.png"
   ],
   "dependencies": {
+    "chrome-launcher": "^0.12.0",
+    "enquirer": "^2.3.4",
     "fs-extra": "^8.1.0",
-    "inquirer": "^7.0.4",
-    "inquirer-fuzzy-path": "^2.2.0",
-    "open": "^7.0.1",
-    "ora": "^4.0.3",
+    "jest": "^25.1.0",
+    "open": "^7.0.2",
+    "puppeteer-core": "^2.1.0",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.8",
     "source-map-explorer": "^2.2.2",

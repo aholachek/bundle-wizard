@@ -2,3 +2,9 @@
 ✅ warn for empty coverage.json @done(20-02-01 13:26)
 ✅ make sure paths outside of current directory work @done(20-02-01 13:08)
 ✅ don't show welcome warnings if path to bundles was provided @done(20-02-01 13:26)
+✅ Fix UI for long lists of bundles @done(20-02-02 16:18)
+✅ allow mobile/desktop choice @started(20-02-02 16:19) @done(20-02-02 18:36) @lasted(2h18m)
+⬜ fix coverage @started(20-02-02 18:37)
+⬜ test on mobile reddit
+⬜ paginate long lists of sourcemaps
+
