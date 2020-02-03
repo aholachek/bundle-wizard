@@ -25,6 +25,8 @@ const main = async () => {
     process.exit()
   }
 
+  if (argv.debug) global.debug = true
+
   try {
     const downloadedData = await downloadCoverage({
       url: (argv._ && argv._[0]) || argv.url,

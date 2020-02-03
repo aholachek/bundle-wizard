@@ -29,7 +29,7 @@ const launchBrowser = async () => {
     return [chrome, browser]
   } catch (e) {
     console.error('❌  Unable to launch Chrome:\n')
-    console.error(e)
+    if (global.debug) console.error(e)
     process.exit(1)
   }
 }
@@ -43,7 +43,9 @@ const validateURL = url => {
     new URL(url)
     return url
   } catch (e) {
-    console.error('❌  The provided url is not valid, please try again.')
+    console.error(
+      `❌  The provided url: ${url} is not valid, please try again.`
+    )
     return false
   }
 }
@@ -113,10 +115,13 @@ const downloadCoverage = async ({ url, type, bundleFolderName }) => {
 
   await page.coverage.startJSCoverage()
   await page.goto(url)
-  await delay(7500)
 
-  // const jsCoverage = await page.coverage.stopJSCoverage()
-  // fs.writeFileSync(coverageFilePath, JSON.stringify(jsCoverage))
+  console.log('\nFinishing up page load recording...\n')
+  await delay(5000)
+  console.log('Writing coverage file to disk...\n')
+
+  const jsCoverage = await page.coverage.stopJSCoverage()
+  fs.writeFileSync(coverageFilePath, JSON.stringify(jsCoverage))
 
   await browser.disconnect()
   await chrome.kill()
