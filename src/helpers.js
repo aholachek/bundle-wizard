@@ -11,7 +11,7 @@ const visualizeBundles = ({
   fullCoverageFilePath
 }) => {
   console.log(
-    `\n⏳  Generating sourcemap visualization (this might take several minutes...)\n`
+    `\n⏳  Generating sourcemap visualization (this might take a few minutes...)\n`
   )
 
   const htmlFileName = `${__dirname}/${visHTML}`
@@ -36,15 +36,6 @@ const visualizeBundles = ({
       console.error('Failed to generate source map visualization')
       console.error(e)
     })
-}
-
-const jsURLsFromCoverage = coverage => {
-  const urls = coverage
-    // TODO: refine this logic
-    .filter(c => /(m)?js$/.test(c.url))
-    .filter(c => !/^file:/.test(c.url))
-    .map(c => c.url)
-  return urls
 }
 
 const partitionUrls = urls => {
@@ -79,8 +70,10 @@ const partitionUrls = urls => {
   return [fetchUrls, dontFetchUrls]
 }
 
-const initDownloadFilesFlow = async ({ bundleFolderName, coverage }) => {
-  const urls = jsURLsFromCoverage(coverage)
+const fileNameRegex = /[^/]*\.(m)?js$/
+
+const initDownloadFilesFlow = async ({ bundleFolderName, urlToFileDict }) => {
+  const urls = Object.keys(urlToFileDict)
 
   const [fetchUrls, dontFetchUrls] = partitionUrls(urls)
 
@@ -127,63 +120,43 @@ const initDownloadFilesFlow = async ({ bundleFolderName, coverage }) => {
 
     if (addedBackFiles.length) {
       ;[].push.apply(files, addedBackFiles)
+      addedBackFiles.forEach(file => {
+        const fileIndex = dontFetchUrls.findIndex(file)
+        dontFetchUrls.splice(fileIndex, 1)
+      })
     }
   }
 
-  console.log('\n⬇️  Downloading bundles...')
+  dontFetchUrls.forEach(url => {
+    // we're  using the folder contents as the new source of truth,
+    // so clean up unneeded files
+    fs.removeSync(urlToFileDict[url])
+  })
 
-  const dir = bundleFolderName
+  console.log('\n⬇️  Downloading sourcemaps...')
 
-  fs.removeSync(dir)
-  fs.mkdirSync(dir)
-
-  const promises = []
-
-  files.forEach(url => {
-    let fileName
-    try {
-      fileName = url.match(fileNameRegex)[0]
-    } catch (e) {}
-
-    const filePromise = request({
-      gzip: true,
-      uri: url
-    })
-      .then(response => {
-        fs.writeFileSync(`${bundleFolderName}/${fileName}`, response)
-        return url
-      })
-      .catch(error => {
-        console.error(`\nUnable to download: ${url}\n`)
-        console.error(error)
-      })
-
-    const sourceMapPromise = request({
+  const promises = files.map(url => {
+    return request({
       gzip: true,
       uri: `${url}.map`
     })
       .then(response => {
-        fs.writeFileSync(`${bundleFolderName}/${fileName}.map`, response)
+        fs.writeFileSync(`${urlToFileDict[url]}.map`, response)
       })
       .catch(error => {
-        console.error(`\nUnable to download: ${url}.map\n`)
+        console.error(`\nUnable to download sourcemap: ${url}.map\n`)
+        console.error(error)
       })
-
-    ;[].push.apply(promises, [filePromise, sourceMapPromise])
   })
 
-  return Promise.all(promises).catch(e => {
-    console.error('Downloading bundles and sourcemaps failed')
-    console.error(e)
+  await Promise.all(promises)
+  return fs.readdirSync(bundleFolderName).map(file => {
+    return `${bundleFolderName}/${file}`
   })
 }
 
-const fileNameRegex = /[^/]*\.(m)?js$/
-
 const createListOfLocalPaths = ({ files, path }) => {
   const fileNames = files
-    // filter out resolved promises for sourcemaps
-    .filter(Boolean)
     .map(file => {
       const match = file.match(fileNameRegex)
       if (match) return match[0]
@@ -199,10 +172,20 @@ const createListOfLocalPaths = ({ files, path }) => {
   return filesWithSourcemaps.concat(filesWithSourcemaps.map(f => `${f}.map`))
 }
 
+// only relevant when bundles are provided
+const jsURLsFromCoverage = coverage => {
+  const urls = coverage
+    // TODO: refine this logic
+    .filter(c => /(m)?js$/.test(c.url))
+    .filter(c => !/^file:/.test(c.url))
+    .map(c => c.url)
+  return urls
+}
+
 module.exports = {
   createListOfLocalPaths,
   visualizeBundles,
   initDownloadFilesFlow,
-  jsURLsFromCoverage,
-  partitionUrls
+  partitionUrls,
+  jsURLsFromCoverage
 }

@@ -16,7 +16,7 @@ const process = require('process')
 const visHTML = 'bundles.html'
 
 if (fs.existsSync(visHTML)) {
-  fs.unlinkSync(visHTML)
+  fs.urnlinkSync(visHTML)
 }
 
 const createFullPath = pathArg =>
@@ -24,12 +24,18 @@ const createFullPath = pathArg =>
 
 const bundleFolderName = `${__dirname}/sourcemap-wizard-downloads`
 
+const dir = bundleFolderName
+
+fs.removeSync(dir)
+fs.mkdirSync(dir)
+
 const main = async () => {
   console.log(`\n 🧙‍  Welcome to sourcemap-wizard\n`)
 
-  const coverageFilePath = argv.coverage
-    ? argv.coverage
-    : await downloadCoverage((argv._ && argv._[0]) || argv.url)
+  const { coverageFilePath, urlToFileDict } = await downloadCoverage({
+    url: (argv._ && argv._[0]) || argv.url,
+    bundleFolderName
+  })
 
   const fullCoverageFilePath = coverageFilePath
     ? coverageFilePath
@@ -59,14 +65,9 @@ const main = async () => {
       fullCoverageFilePath
     })
   } else {
-    const fetchedFileNames = await initDownloadFilesFlow({
+    const paths = await initDownloadFilesFlow({
       bundleFolderName,
-      coverage
-    })
-
-    const paths = createListOfLocalPaths({
-      files: fetchedFileNames,
-      path: bundleFolderName
+      urlToFileDict
     })
 
     visualizeBundles({
