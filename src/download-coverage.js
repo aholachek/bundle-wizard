@@ -5,8 +5,9 @@ const request = require('request')
 const util = require('util')
 const fs = require('fs')
 const { Input, Select } = require('enquirer')
+const { delay } = require('./helpers')
 
-const coverageFilePath = `${__dirname}/coverage.json`
+const coverageFilePath = `${__dirname}/../coverage.json`
 
 const launchBrowser = async () => {
   const opts = {
@@ -74,12 +75,15 @@ const promptForUserAgent = async siteName => {
   return userAgent
 }
 
-const downloadCoverage = async ({ url, bundleFolderName }) => {
+const downloadCoverage = async ({ url, type, bundleFolderName }) => {
   if (!url) {
     url = await promptForURL()
+  } else {
+    url = validateURL(url)
   }
-
-  const userAgent = await promptForUserAgent(url)
+  if (!type) {
+    type = await promptForUserAgent(url)
+  }
 
   console.log(`🤖  Fetching code coverage information for ${url} ...\n`)
 
@@ -87,7 +91,7 @@ const downloadCoverage = async ({ url, bundleFolderName }) => {
 
   const page = await browser.newPage()
 
-  const isMobile = userAgent === mobile
+  const isMobile = type === mobile
 
   if (isMobile) {
     await page.emulate(devices['iPhone X'])
@@ -108,15 +112,16 @@ const downloadCoverage = async ({ url, bundleFolderName }) => {
   })
 
   await page.coverage.startJSCoverage()
-  await page.goto(url, { waitUntil: 'networkidle0' })
-  const jsCoverage = await page.coverage.stopJSCoverage()
+  await page.goto(url)
+  await delay(7500)
 
-  fs.writeFileSync(coverageFilePath, JSON.stringify(jsCoverage))
+  // const jsCoverage = await page.coverage.stopJSCoverage()
+  // fs.writeFileSync(coverageFilePath, JSON.stringify(jsCoverage))
 
-  browser.disconnect()
+  await browser.disconnect()
   await chrome.kill()
 
-  return { coverageFilePath, urlToFileDict }
+  return { coverageFilePath, urlToFileDict, url }
 }
 
 module.exports = downloadCoverage

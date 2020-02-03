@@ -2,27 +2,11 @@
 
 const fs = require('fs-extra')
 const argv = require('yargs').argv
-const path = require('path')
 const downloadCoverage = require('./download-coverage')
 
-const {
-  visualizeBundles,
-  initDownloadFilesFlow,
-  createListOfLocalPaths,
-  jsURLsFromCoverage
-} = require('./helpers')
-const process = require('process')
+const { visualizeBundles, downloadSourcemaps } = require('./helpers')
 
-const visHTML = 'bundles.html'
-
-if (fs.existsSync(visHTML)) {
-  fs.urnlinkSync(visHTML)
-}
-
-const createFullPath = pathArg =>
-  path.isAbsolute(pathArg) ? pathArg : `${process.cwd()}/${pathArg}`
-
-const bundleFolderName = `${__dirname}/sourcemap-wizard-downloads`
+const bundleFolderName = `${__dirname}/../sourcemap-wizard-downloads`
 
 const dir = bundleFolderName
 
@@ -32,51 +16,57 @@ fs.mkdirSync(dir)
 const main = async () => {
   console.log(`\n 🧙‍  Welcome to sourcemap-wizard\n`)
 
-  const { coverageFilePath, urlToFileDict } = await downloadCoverage({
-    url: (argv._ && argv._[0]) || argv.url,
-    bundleFolderName
-  })
+  let coverageFilePath, urlToFileDict, url
 
-  const fullCoverageFilePath = coverageFilePath
-    ? coverageFilePath
-    : createFullPath(argv.coverage)
+  if (argv.type && !['mobile', 'desktop'].includes(argv.type)) {
+    console.error(
+      `❌  type argument not recognized. Please pass in either "mobile" or "desktop".\n`
+    )
+    process.exit()
+  }
 
-  const coverageFileStats = fs.statSync(fullCoverageFilePath)
+  try {
+    const downloadedData = await downloadCoverage({
+      url: (argv._ && argv._[0]) || argv.url,
+      type: argv.type,
+      bundleFolderName
+    })
+    coverageFilePath = downloadedData.coverageFilePath
+    urlToFileDict = downloadedData.urlToFileDict
+    url = downloadedData.url
+  } catch (e) {
+    console.error('\n❌  Unable to fetch website data\n')
+    console.error(e)
+    process.exit()
+  }
+
+  const coverageFileStats = fs.statSync(coverageFilePath)
 
   if (coverageFileStats['size'] === 0) {
     console.error(
       '❌  The coverage file is empty. Please try again with a new file.'
     )
-    return
+    process.exit()
   }
 
-  const coverage = require(fullCoverageFilePath)
+  await downloadSourcemaps({
+    bundleFolderName,
+    urlToFileDict
+  })
 
-  if (argv.bundles) {
-    const urls = jsURLsFromCoverage(coverage)
-    const paths = createListOfLocalPaths({
-      files: urls,
-      path: argv.bundles
-    })
-    visualizeBundles({
-      bundles: paths,
-      visHTML,
-      bundleFolderName,
-      fullCoverageFilePath
-    })
-  } else {
-    const paths = await initDownloadFilesFlow({
-      bundleFolderName,
-      urlToFileDict
-    })
+  const visHTML = `${url.replace('https://', '')}-sourcemap-analysis.html`
+  const htmlFileName = `${__dirname}/../${visHTML}`
 
-    visualizeBundles({
-      bundles: paths,
-      visHTML,
-      bundleFolderName,
-      fullCoverageFilePath
-    })
+  if (fs.existsSync(htmlFileName)) {
+    fs.unlinkSync(htmlFileName)
   }
+
+  visualizeBundles({
+    bundles: `${bundleFolderName}/*`,
+    htmlFileName,
+    bundleFolderName,
+    coverageFilePath
+  })
 }
 
 main()
