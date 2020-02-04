@@ -31,9 +31,15 @@ That's it! The wizard will walk you through the rest.
 
 ### `url`
 
-To skip the first prompt, provide a `url` as a command line argument.
+To skip the first prompt, provide a `url` as an initial argument:
 
-`npx sourcemap-wizard --url=nytimes.com`
+`npx sourcemap-wizard nytimes.com`
+
+### `interact` flag
+
+By default `sourcemap-wizard` uses a headless browser to analyze a website. If you'd like to interact with the page instead (possibly navigating to new pages within the app and adding their bundles to the total set for analysis), use the following flag:
+
+`npx sourcemap-wizard --interact`
 
 ### `type`
 
@@ -41,13 +47,15 @@ To skip the second prompt asking whether you want to analyze the desktop or mobi
 
 `npx sourcemap-wizard --type=mobile`
 
-### `debug`
+### `debug` flag
 
 If you'd like to see more logging and detailed error messages, add this flag.
 
 `npx sourcemap-wizard --debug`
 
 ## Example Run Through
+
+<img src="./example.png" alt="example of using the wizard">
 
 ## Credits
 

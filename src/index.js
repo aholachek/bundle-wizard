@@ -2,21 +2,24 @@
 
 const fs = require('fs-extra')
 const argv = require('yargs').argv
+const path = require('path')
 const downloadCoverage = require('./download-coverage')
 
 const { visualizeBundles, downloadSourcemaps } = require('./helpers')
 
-const bundleFolderName = `${__dirname}/../sourcemap-wizard-downloads`
+const tempFolderName = path.join(__dirname, '..', 'temp')
 
-const dir = bundleFolderName
+const coverageFilePath = `${tempFolderName}/coverage.json`
 
-fs.removeSync(dir)
-fs.mkdirSync(dir)
+const downloadsDir = `${tempFolderName}/downloads`
+
+fs.removeSync(downloadsDir)
+fs.mkdirp(downloadsDir)
 
 const main = async () => {
   console.log(`\n 🧙‍  Welcome to sourcemap-wizard\n`)
 
-  let coverageFilePath, urlToFileDict, url
+  let urlToFileDict
 
   if (argv.type && !['mobile', 'desktop'].includes(argv.type)) {
     console.error(
@@ -31,11 +34,11 @@ const main = async () => {
     const downloadedData = await downloadCoverage({
       url: (argv._ && argv._[0]) || argv.url,
       type: argv.type,
-      bundleFolderName
+      interact: argv.interact,
+      downloadsDir,
+      coverageFilePath
     })
-    coverageFilePath = downloadedData.coverageFilePath
     urlToFileDict = downloadedData.urlToFileDict
-    url = downloadedData.url
   } catch (e) {
     console.error('\n❌  Unable to fetch website data\n')
     console.error(e)
@@ -52,21 +55,20 @@ const main = async () => {
   }
 
   await downloadSourcemaps({
-    bundleFolderName,
+    downloadsDir,
     urlToFileDict
   })
 
-  const visHTML = `${url.replace('https://', '')}-sourcemap-analysis.html`
-  const htmlFileName = `${__dirname}/../${visHTML}`
+  const htmlFileName = `${tempFolderName}/sourcemap-analysis.html`
 
   if (fs.existsSync(htmlFileName)) {
     fs.unlinkSync(htmlFileName)
   }
 
   visualizeBundles({
-    bundles: `${bundleFolderName}/*`,
+    bundles: `${downloadsDir}/*`,
     htmlFileName,
-    bundleFolderName,
+    downloadsDir,
     coverageFilePath
   })
 }

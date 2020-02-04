@@ -3,36 +3,40 @@ const { explore } = require('source-map-explorer')
 const open = require('open')
 const request = require('request-promise-native')
 
-const visualizeBundles = ({ bundles, htmlFileName, coverageFilePath }) => {
+const visualizeBundles = async ({
+  bundles,
+  htmlFileName,
+  coverageFilePath
+}) => {
   console.log(
-    `\n⏳  Generating sourcemap visualization (this might take up to a few minutes...)\n`
+    `\n⏳  Generating sourcemap visualization (this might take several minutes...)\n`
   )
 
-  explore(bundles, {
-    output: {
-      format: 'html',
-      filename: htmlFileName
-    },
-    coverage: coverageFilePath
-  })
-    .then(() => {
-      open(htmlFileName)
-      console.log(
-        `🎊  Done! A source map visualization should pop up in your default browser.\n`
-      )
+  try {
+    await explore(bundles, {
+      output: {
+        format: 'html',
+        filename: htmlFileName
+      },
+      coverage: coverageFilePath
     })
-    .catch(e => {
-      console.error('❌ Failed to generate source map visualization')
-      if (debug) console.error(e)
-    })
+    open(htmlFileName)
+    console.log(
+      `🎊  Done! A source map visualization should pop up in your default browser.\n`
+    )
+  } catch (e) {
+    console.error('❌  Failed to generate source map visualizationm')
+    console.log(e)
+    if (global.debug) console.error(e)
+  }
 }
 
 const downloadSourcemaps = async ({ urlToFileDict }) => {
   const urls = Object.keys(urlToFileDict)
 
-  console.log('\n⬇️  Downloading sourcemaps...')
+  console.log('\n⬇️   Downloading sourcemaps...')
 
-  let sourcemapDownloaded = false
+  let oneSourcemapDownloaded = false
 
   const promises = urls.map(url => {
     return request({
@@ -40,25 +44,30 @@ const downloadSourcemaps = async ({ urlToFileDict }) => {
       uri: `${url}.map`
     })
       .then(response => {
-        sourcemapDownloaded = true
+        oneSourcemapDownloaded = true
         fs.writeFileSync(`${urlToFileDict[url]}.map`, response)
       })
       .catch(error => {
         fs.removeSync(urlToFileDict[url])
-        if (global.debug)
+        if (global.debug) {
           console.error(
             `\nUnable to download sourcemap: ${url}.map (this might not be an actual problem)\n`
           )
-        console.error(error)
+
+          if (error.statusCode)
+            console.error(`Request failed with statuscode: ${error.statusCode}`)
+        }
       })
   })
 
-  if (!sourcemapDownloaded) {
-    console.error(`❌  No sourcemaps could be downloaded, analysis cannot proceed.`)
-    process.exit()
-  }
-
-  await Promise.all(promises)
+  await Promise.all(promises).then(() => {
+    if (!oneSourcemapDownloaded) {
+      console.error(
+        `❌  No sourcemaps could be downloaded, analysis cannot proceed.`
+      )
+      process.exit()
+    }
+  })
 }
 
 const delay = t => {

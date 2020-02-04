@@ -4,15 +4,13 @@ const devices = require('puppeteer-core/DeviceDescriptors')
 const request = require('request')
 const util = require('util')
 const fs = require('fs')
-const { Input, Select } = require('enquirer')
+const { Input, Select, Confirm } = require('enquirer')
 const { delay } = require('./helpers')
 
-const coverageFilePath = `${__dirname}/../coverage.json`
-
-const launchBrowser = async () => {
+const launchBrowser = async ({ interact }) => {
   const opts = {
-    chromeFlags: ['--headless'],
-    logLevel: 'info',
+    chromeFlags: interact ? undefined : ['--headless'],
+    logLevel: global.debug ? 'info' : 'error',
     output: 'json'
   }
   try {
@@ -29,7 +27,7 @@ const launchBrowser = async () => {
     return [chrome, browser]
   } catch (e) {
     console.error('❌  Unable to launch Chrome:\n')
-    if (global.debug) console.error(e)
+    console.error(e)
     process.exit(1)
   }
 }
@@ -77,7 +75,26 @@ const promptForUserAgent = async siteName => {
   return userAgent
 }
 
-const downloadCoverage = async ({ url, type, bundleFolderName }) => {
+const promptForInteraction = async () => {
+  console.log(
+    'A browser window should have opened that you can interact with.\n'
+  )
+
+  const prompt = new Input({
+    message: `Press enter to close the browser and continue`,
+    initial: '',
+    default: ''
+  })
+  await prompt.run()
+}
+
+const downloadCoverage = async ({
+  url,
+  type,
+  interact,
+  downloadsDir,
+  coverageFilePath
+}) => {
   if (!url) {
     url = await promptForURL()
   } else {
@@ -87,9 +104,9 @@ const downloadCoverage = async ({ url, type, bundleFolderName }) => {
     type = await promptForUserAgent(url)
   }
 
-  console.log(`🤖  Fetching code coverage information for ${url} ...\n`)
+  console.log(`\n🤖  Recording page load info for ${url} ...`)
 
-  const [chrome, browser] = await launchBrowser()
+  const [chrome, browser] = await launchBrowser({ interact })
 
   const page = await browser.newPage()
 
@@ -107,7 +124,7 @@ const downloadCoverage = async ({ url, type, bundleFolderName }) => {
     const isJSFile = fileName.match(/\.(m)?js$/)
     if (!isJSFile) return
     response.text().then(body => {
-      const localFileName = `${bundleFolderName}/${fileName}`
+      const localFileName = `${downloadsDir}/${fileName}`
       urlToFileDict[url.toString()] = localFileName
       fs.writeFileSync(localFileName, body)
     })
@@ -116,17 +133,23 @@ const downloadCoverage = async ({ url, type, bundleFolderName }) => {
   await page.coverage.startJSCoverage()
   await page.goto(url)
 
-  console.log('\nFinishing up page load recording...\n')
-  await delay(5000)
-  console.log('Writing coverage file to disk...\n')
+  if (interact) {
+    await promptForInteraction()
+  } else {
+    console.log('\n🤖  Finishing up recording...\n')
+    await delay(5000)
+  }
+
+  console.log('🤖  Writing coverage file to disk...')
 
   const jsCoverage = await page.coverage.stopJSCoverage()
   fs.writeFileSync(coverageFilePath, JSON.stringify(jsCoverage))
 
   await browser.disconnect()
+  await browser.close()
   await chrome.kill()
 
-  return { coverageFilePath, urlToFileDict, url }
+  return { urlToFileDict, url }
 }
 
 module.exports = downloadCoverage
