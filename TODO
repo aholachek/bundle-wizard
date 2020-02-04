@@ -10,5 +10,5 @@
 ✅ add warning if no sourcemaps could be downloaded @done(20-02-03 17:53)
 ✅ Update readme to reflect new code @done(20-02-03 18:10)
 ✅ update log level based on global.debug @done(20-02-03 20:58)
-⬜ add option to interact with non-headless browser
-⬜ add walk through image
+✅ add option to interact with non-headless browser @done(20-02-04 09:10)
+✅ add walk through image @done(20-02-04 09:09)

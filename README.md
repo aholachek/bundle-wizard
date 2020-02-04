@@ -19,13 +19,13 @@ That's it! The wizard will walk you through the rest.
 
 ## Requirements
 
-1. Sourcemaps
+1. Downloadable sourcemaps
 
-   This utility downloads sourcemaps from the url you provide. This requires the sourcemaps to be publically available, or at least available on your network. You might need to point to a testing instead of prod build, for instance, as some apps disable sourcemaps in production.
+   This utility downloads sourcemaps from the url you provide. This requires the sourcemaps to be publically available, or at least available on your network. You might need to point to a testing instead of production build, for instance, as some apps disable sourcemaps in production.
 
 2. A local Chrome installation
 
-   The wizard uses `puppeteer-core` to load coverage information from the provided url. This requires you to have a version of Chrome installed on your machine.
+   The wizard uses `puppeteer-core` to load coverage information from the provided url. This requires you to have an up-to-date version of Chrome installed on your machine.
 
 ## Optional command line arguments
 
