@@ -34,7 +34,7 @@ const visualizeBundles = async ({
 const downloadSourcemaps = async ({ urlToFileDict }) => {
   const urls = Object.keys(urlToFileDict)
 
-  console.log('\n⬇️  Downloading sourcemaps...')
+  console.log('\n⬇️   Downloading sourcemaps...')
 
   let oneSourcemapDownloaded = false
 

@@ -17,7 +17,7 @@ fs.removeSync(downloadsDir)
 fs.mkdirp(downloadsDir)
 
 const main = async () => {
-  console.log(`\n 🧙‍  Welcome to sourcemap-wizard\n`)
+  console.log(`\n🧙‍  Welcome to sourcemap-wizard\n`)
 
   let urlToFileDict
 
