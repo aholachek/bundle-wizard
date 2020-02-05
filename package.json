@@ -19,12 +19,6 @@
     "performance",
     "entry point"
   ],
-  "files": [
-    "index.js",
-    "helpers.js",
-    "pinterest-mobile.png",
-    "example-usage.png"
-  ],
   "dependencies": {
     "chrome-launcher": "^0.12.0",
     "enquirer": "^2.3.4",
