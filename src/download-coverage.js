@@ -4,12 +4,12 @@ const devices = require('puppeteer-core/DeviceDescriptors')
 const request = require('request')
 const util = require('util')
 const fs = require('fs')
-const { Input, Select, Confirm } = require('enquirer')
+const { Input } = require('enquirer')
 const { delay } = require('./helpers')
 
-const launchBrowser = async ({ interact }) => {
+const launchBrowser = async ({ interact, isMobile }) => {
   const opts = {
-    chromeFlags: interact ? undefined : ['--headless'],
+    chromeFlags: interact ? [] : ['--headless'],
     logLevel: global.debug ? 'info' : 'error',
     output: 'json'
   }
@@ -21,8 +21,10 @@ const launchBrowser = async ({ interact }) => {
       `http://localhost:${opts.port}/json/version`
     )
     const { webSocketDebuggerUrl } = JSON.parse(resp.body)
+
     const browser = await puppeteer.connect({
-      browserWSEndpoint: webSocketDebuggerUrl
+      browserWSEndpoint: webSocketDebuggerUrl,
+      isMobile
     })
     return [chrome, browser]
   } catch (e) {
@@ -62,55 +64,28 @@ const promptForURL = async () => {
   }
 }
 
-const mobile = '📱  mobile'
-const desktop = '🖥️  desktop'
-
-const promptForUserAgent = async siteName => {
-  const prompt = new Select({
-    message: `Do you want to analyze the mobile or desktop version of ${siteName}?`,
-    choices: [mobile, desktop],
-    initial: 'mobile'
-  })
-  const userAgent = await prompt.run()
-  return userAgent
-}
-
-const promptForInteraction = async () => {
-  console.log(
-    'A browser window should have opened that you can interact with.\n'
-  )
-
-  const prompt = new Input({
-    message: `Press enter to close the browser and continue`,
-    initial: '',
-    default: ''
-  })
-  await prompt.run()
-}
-
 const downloadCoverage = async ({
   url,
   type,
   interact,
   downloadsDir,
-  coverageFilePath
+  coverageFilePath,
+  tempFolderName
 }) => {
   if (!url) {
     url = await promptForURL()
+    console.log('\n')
   } else {
     url = validateURL(url)
   }
-  if (!type) {
-    type = await promptForUserAgent(url)
-  }
 
-  console.log(`\n🤖  Recording page load info for ${url} ...`)
+  console.log(`🤖  Recording page load info for ${url} ...`)
 
-  const [chrome, browser] = await launchBrowser({ interact })
+  const isMobile = type === 'mobile'
 
-  const page = await browser.newPage()
+  const [chrome, browser] = await launchBrowser({ interact, isMobile })
 
-  const isMobile = type === mobile
+  const page = await (await browser.pages())[0]
 
   if (isMobile) {
     await page.emulate(devices['iPhone X'])
@@ -133,23 +108,34 @@ const downloadCoverage = async ({
   await page.coverage.startJSCoverage()
   await page.goto(url)
 
-  if (interact) {
-    await promptForInteraction()
-  } else {
-    console.log('\n🤖  Finishing up recording...\n')
-    await delay(5000)
+  const completeCoverage = async () => {
+    console.log('🤖  Writing coverage file to disk...')
+    const jsCoverage = await page.coverage.stopJSCoverage()
+    fs.writeFileSync(coverageFilePath, JSON.stringify(jsCoverage))
+    await browser.close()
+    await chrome.kill()
+    return { urlToFileDict, url }
   }
 
-  console.log('🤖  Writing coverage file to disk...')
+  return new Promise(async resolve => {
+    if (interact) {
+      browser.on('disconnected', async () => {
+        resolve(await completeCoverage())
+      })
+      console.log(
+        '\n💻  A browser window should have opened that you can interact with.\n'
+      )
+      console.log('\n💻  Close the browser window to continue.\n')
+    } else {
+      console.log('\n🤖  Finishing up recording...\n')
+      // allow page to make any errant http requests.
+      // this might not be super necessary
+      await delay(3000)
+      await page.screenshot({ path: `${tempFolderName}/screenshot.png` })
 
-  const jsCoverage = await page.coverage.stopJSCoverage()
-  fs.writeFileSync(coverageFilePath, JSON.stringify(jsCoverage))
-
-  await browser.disconnect()
-  await browser.close()
-  await chrome.kill()
-
-  return { urlToFileDict, url }
+      resolve(await completeCoverage())
+    }
+  })
 }
 
 module.exports = downloadCoverage

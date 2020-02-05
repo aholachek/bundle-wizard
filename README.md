@@ -25,27 +25,21 @@ That's it! The wizard will walk you through the rest.
 
 2. A local Chrome installation
 
-   The wizard uses `puppeteer-core` to load coverage information from the provided url. This requires you to have an up-to-date version of Chrome installed on your machine.
+   The wizard uses `puppeteer-core` to load coverage information from the provided url. This requires you to have a fairly up-to-date version of Chrome installed on your machine.
 
 ## Optional command line arguments
 
 ### `url`
 
-To skip the first prompt, provide a `url` as an initial argument:
+To skip the first prompt, provide a url as an initial argument:
 
 `npx sourcemap-wizard nytimes.com`
 
-### `interact` flag
+### `desktop` flag
 
-By default `sourcemap-wizard` uses a headless browser to analyze a website. If you'd like to interact with the page instead (possibly navigating to new pages within the app and adding their bundles to the total set for analysis), use the following flag:
+By default, `sourcemap-wizard` will analyze a mobile version of the site. To analyze the desktop version instead, pass the `--desktop` flag:
 
-`npx sourcemap-wizard --interact`
-
-### `type`
-
-To skip the second prompt asking whether you want to analyze the desktop or mobile version of the url (if one exists), provide `type` as a command line argument with either `mobile` or `desktop` specified.
-
-`npx sourcemap-wizard --type=mobile`
+`npx sourcemap-wizard --desktop`
 
 ### `debug` flag
 

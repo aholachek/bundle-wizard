@@ -21,22 +21,16 @@ const main = async () => {
 
   let urlToFileDict
 
-  if (argv.type && !['mobile', 'desktop'].includes(argv.type)) {
-    console.error(
-      `❌  type argument not recognized. Please pass in either "mobile" or "desktop".\n`
-    )
-    process.exit()
-  }
-
   if (argv.debug) global.debug = true
 
   try {
     const downloadedData = await downloadCoverage({
       url: (argv._ && argv._[0]) || argv.url,
-      type: argv.type,
+      type: argv.desktop ? 'desktop' : 'mobile',
       interact: argv.interact,
       downloadsDir,
-      coverageFilePath
+      coverageFilePath,
+      tempFolderName
     })
     urlToFileDict = downloadedData.urlToFileDict
   } catch (e) {
