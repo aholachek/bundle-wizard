@@ -1,0 +1,51 @@
+* {
+  box-sizing: border-box;
+}
+body,
+html {
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI',
+    'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 100%;
+}
+#container {
+  width: calc(100vw-4rem);
+  height: calc(100vh-4rem);
+  position: relative;
+  padding-left: 2rem;
+  padding-top: 2rem;
+  transition: box-shadow 0.3s;
+}
+
+.box {
+  position: absolute;
+}
+
+.visible-box {
+  position: absolute;
+  border: 1px solid black;
+}
+
+.label {
+  padding: 0.3rem;
+  display: block;
+  white-space: nowrap;
+  font-size: 0.66rem;
+  position: relative;
+  z-index: 100;
+  display: inline-block;
+  // left: 50%;
+  // transform: translateX(-50%);
+}
+
+.leaf-label {
+  padding: 0.3rem;
+  display: block;
+  font-size: 0.7rem;
+
+  position: relative;
+  z-index: 100;
+  display: inline-block;
+  // top: 50%;
+  // transform: translate(0, -50%);
+}
+

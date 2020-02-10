@@ -5,22 +5,22 @@ const request = require('request-promise-native')
 
 const visualizeBundles = async ({
   bundles,
-  htmlFileName,
+  jsonFileName,
   coverageFilePath
 }) => {
   console.log(
-    `\n⏳  Generating sourcemap visualization (this might take several minutes...)\n`
+    `\n⏳  Generating sourcemap visualization (this might take up to several minutes...)\n`
   )
 
   try {
     await explore(bundles, {
       output: {
-        format: 'html',
-        filename: htmlFileName
+        format: 'json',
+        filename: jsonFileName
       },
       coverage: coverageFilePath
     })
-    open(htmlFileName)
+    open(jsonFileName)
     console.log(
       `🎊  Done! A source map visualization should pop up in your default browser.\n`
     )

@@ -53,15 +53,15 @@ const main = async () => {
     urlToFileDict
   })
 
-  const htmlFileName = `${tempFolderName}/sourcemap-analysis.html`
+  const jsonFileName = `${tempFolderName}/sourcemap-analysis.json`
 
-  if (fs.existsSync(htmlFileName)) {
-    fs.unlinkSync(htmlFileName)
+  if (fs.existsSync(jsonFileName)) {
+    fs.unlinkSync(jsonFileName)
   }
 
   visualizeBundles({
     bundles: `${downloadsDir}/*`,
-    htmlFileName,
+    jsonFileName,
     downloadsDir,
     coverageFilePath
   })
