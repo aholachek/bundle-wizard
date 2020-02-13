@@ -2,8 +2,7 @@ import 'sanitize.css'
 import './index.scss'
 import _sourcemapAnalysis from './sourcemap-analysis.json'
 import * as d3 from 'd3'
-
-const sourcemapAnalysis = _sourcemapAnalysis.results
+import { Flipper } from 'flip-toolkit'
 
 const findeOrCreateChild = (arr, name) => {
   const child = arr.find(child => child.name === name)
@@ -36,11 +35,7 @@ const processFiles = files => {
   // any dict with only one key should turn into a key1/key2
 
   const hasOneChild = d => {
-    return (
-      d.children &&
-      d.children.length === 1 &&
-      (!d.children[0].children || d.children[0].children.length === 1)
-    )
+    return d.children && d.children.length === 1
   }
 
   const collapse = d => {
@@ -92,10 +87,59 @@ const calculateAverageCoverage = data => {
   }
 }
 
+const addPersistentIds = data => {
+  const addId = (id, data) => {
+    data.id = id
+    if (data.children)
+      data.children.forEach(child => {
+        addId(`${id}/${child.name}`, child)
+      })
+  }
+  addId(data.name, data)
+}
+
+const calculateRealCumulativeSize = data => {
+  const processNode = d => {
+    if (d.size) {
+      d.realSize = d.size
+      return d.size
+    }
+    if (d.children) {
+      const cumulativeSize = d.children.map(processNode).reduce((acc, curr) => {
+        return acc + curr
+      }, 0)
+      d.realSize = cumulativeSize
+      return cumulativeSize
+    }
+    return 0
+  }
+  processNode(data)
+  return data
+}
+
 const processData = data => {
-  const processed = { name: '', children: data.map(processBundle) }
+  const processed = { name: 'topLevel', children: data.map(processBundle) }
   calculateAverageCoverage(processed)
+  calculateRealCumulativeSize(processed)
+  addPersistentIds(processed)
   return processed
+}
+
+const sourcemapAnalysis = processData(_sourcemapAnalysis.results)
+
+const state = {
+  data: sourcemapAnalysis
+}
+
+const findBranch = id => {
+  let cachedBranch
+  const inner = branch => {
+    if (cachedBranch) return
+    if (branch.id === id) cachedBranch = branch
+    if (branch.children) branch.children.forEach(inner)
+  }
+  inner(sourcemapAnalysis)
+  return cachedBranch
 }
 
 const width = document.body.clientWidth - 64
@@ -103,8 +147,8 @@ const height = document.body.clientHeight - 64
 
 const color = d3.scaleSequential([-0.1, 1.1], d3.interpolateRdYlGn)
 
-const treemap = data =>
-  d3
+const treemap = data => {
+  return d3
     .treemap()
     .tile(d3.treemapBinary)
     .size([width, height])
@@ -117,99 +161,157 @@ const treemap = data =>
       .sum(d => d.size)
       .sort((a, b) => b.value - a.value)
   )
+}
 
 const container = d3.select('#container')
 
-const parentIsNodeModules = d => {
-  let parent = d.parent
-  let level = 1
-  while (true) {
-    if (!parent) break
-    if (parent.data.name === 'node_modules') return level
-    parent = parent.parent
-    level += 1
+const flipper = new Flipper({ element: document.querySelector('#container') })
+
+const isTopLevel = data => data.name === 'topLevel'
+
+const calculateArea = node => (node.y1 - node.y0) * (node.x1 - node.x0)
+
+// TODO:
+// 1. add "real" size
+// 2. take removed size and add evenly to remaining items
+const removeTooSmallNodes = (data, ids) => {
+  const idDict = ids.reduce((acc, curr) => {
+    acc[curr] = true
+    return acc
+  }, {})
+  const traverseTree = node => {
+    if (node.children) {
+      const filteredChildren = node.children.filter(child => {
+        return !idDict[child.id]
+      })
+      const removedSize = node.children
+        .filter(child => {
+          return idDict[child.id]
+        })
+        .map(child => child.size)
+        .filter(Boolean)
+        .reduce((acc, curr) => acc + curr, 0)
+
+      const allLeafNodes = []
+
+      const findLeafNodes = arr => {
+        arr.forEach(child => {
+          if (child.size) allLeafNodes.push(child)
+          else if (child.children) findLeafNodes(child.children)
+        })
+      }
+
+      findLeafNodes(filteredChildren)
+
+      const additionalFraction = removedSize / allLeafNodes.length
+      allLeafNodes.forEach(node => (node.size += additionalFraction))
+
+      node.children = filteredChildren
+
+      node.children.forEach(traverseTree)
+    }
   }
-  return false
+  traverseTree(data)
+  return data
 }
 
-const renderGraph = data => {
-  const root = treemap(processData(data))
+const renderGraph = ({ data }) => {
+  const dataCopy = JSON.parse(JSON.stringify(data))
+  const testRoot = treemap(dataCopy)
 
-  const nestedData = d3
-    .nest()
-    .key(d => d.height)
-    .entries(root.descendants())
-
-  const node = container
-    .selectAll('div')
-    .data(nestedData)
-    .join('div')
-    .selectAll('div')
-    .data(d => d.values)
-
-    .join('div')
-    .style('transform', d => `translate(${d.x0}px,${d.y0}px)`)
-    .style('z-index', d => {
-      return d.depth
+  const tooSmallNodeIds = testRoot
+    .descendants()
+    .filter(node => {
+      return calculateArea(node) < 500
     })
-    .attr('class', 'box')
+    .map(node => node.data.id)
 
-    // dont show top level
-    .filter(d => {
-      if (d.data.name === '') return false
-      return true
-    })
-    // dont show rects with height = 1 or width = 1
-    .filter(d => {
-      const width = d.x1 - d.x0
-      const height = d.y1 - d.y0
-      return width > 3 && height > 3
-    })
-    // dont show detail inside top level node_modules
-    .filter(d => {
-      return parentIsNodeModules(d) < 2
-    })
-    .attr('class', 'visible-box')
-    .style('background-color', d => {
-      return color(d.data.averageCoverage) || 'white'
-    })
-    .style('overflow', 'hidden')
-    .style('width', d => d.x1 - d.x0)
-    .style('height', d => d.y1 - d.y0)
+  const filteredData = removeTooSmallNodes(dataCopy, tooSmallNodeIds)
+  const root = treemap(JSON.parse(JSON.stringify(filteredData)))
+  debugger // eslint-disable-line
 
-    .append('span')
-    .attr('class', d => {
-      if (!d.data.children || !d.data.children.length) return `leaf leaf-label`
-      return 'label'
+  const position = selection =>
+    selection
+      .style('left', d => `${d.x0}px`)
+      .style('top', d => `${d.y0}px`)
+      .style('width', d => d.x1 - d.x0)
+      .style('height', d => d.y1 - d.y0)
+      .style('z-index', d => {
+        return d.depth
+      })
+
+  const createEnteredElements = enter => {
+    const entered = enter
+      .filter(d => !isTopLevel(d.data))
+      // dont show rects with height = 1 or width = 1
+      .filter(d => {
+        const width = d.x1 - d.x0
+        const height = d.y1 - d.y0
+        return width > 3 && height > 3
+      })
+      // // dont show detail inside top level node_modules
+      // .filter(d => {
+      //   return isTopLevel(state.data) ? parentIsNodeModules(d) < 2 : true
+      // })
+      .append('div')
+      .style('background-color', d => {
+        return color(d.data.averageCoverage) || 'white'
+      })
+
+      .on('click', d => {
+        state.data = findBranch(d.data.id)
+        flipper.recordBeforeUpdate()
+        renderGraph(state)
+        flipper.update()
+      })
+      .each(function(d) {
+        this.classList.add('box')
+        if (!isTopLevel(d.data) && !isTopLevel(data))
+          this.classList.add('animate-in-box')
+      })
+      .each(function(d) {
+        flipper.addFlipped({
+          element: this,
+          flipId: d.data.id
+        })
+      })
+
+    entered.append('div').attr('class', 'label')
+
+    entered.attr('title', d => {
+      return `${d
+        .ancestors()
+        .reverse()
+        .map(d => d.data.name)
+        .slice(1)
+        .join('/')}`
     })
-    .html(d => {
-      const name = d.data.name
-      const isLeaf =
-        !d.data.children ||
-        !d.data.children.length ||
-        parentIsNodeModules(d) == 1
-      const leafName = name.split('/').join('/<br/>')
+    return position(entered)
+  }
 
-      const coveragePercent =
-        d.data.averageCoverage !== undefined
-          ? `${Math.floor(d.data.averageCoverage.toFixed(2) * 100)}%`
-          : 'N/A'
-
-      if (isLeaf)
-        return `<div>${leafName}</div> ${Math.ceil(
-          d.value / 1000
-        )}kb ${coveragePercent}`
-
-      return `${name} ${Math.ceil(d.value / 1000)}kb ${coveragePercent}`
+  container
+    .selectAll('div.box')
+    .data(root.descendants(), d => {
+      if (!d) return ''
+      return d.data.id
     })
+    .join(createEnteredElements, update => {
+      position(update)
+      return update
+    })
+    .each(function(d) {
+      const label = `
+      <div>${d.data.name}</div> <div>${Math.ceil(
+        d.data.realSize / 1000
+      )}kb</div>
+     `
 
-  node.append('title').text(d => {
-    return `${d
-      .ancestors()
-      .reverse()
-      .map(d => d.data.name)
-      .join('/')}\n${d.data.value}`
-  })
+      this.querySelector('.label').innerHTML = label
+    })
 }
 
-renderGraph(sourcemapAnalysis)
+renderGraph(state)
+
+// window.addEventListener('resize', event => {
+//   renderGraph(state)
+// })

@@ -12,3 +12,9 @@
 ✅ update log level based on global.debug @done(20-02-03 20:58)
 ✅ add option to interact with non-headless browser @done(20-02-04 09:10)
 ✅ add walk through image @done(20-02-04 09:09)
+
+✅ label adjustments for node modules @done(20-02-09 21:08)
+
+⬜ fix collapse
+⬜ fix sizes when pruned
+

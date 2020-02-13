@@ -10,7 +10,8 @@
     "sourcemap-wizard": "src/index.js"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "parcel src/client/index.html"
   },
   "author": "Alex Holachek",
   "license": "ISC",
@@ -21,14 +22,21 @@
   ],
   "dependencies": {
     "chrome-launcher": "^0.12.0",
+    "d3": "5",
     "enquirer": "^2.3.4",
+    "flip-toolkit": "^7.0.7",
     "fs-extra": "^8.1.0",
     "jest": "^25.1.0",
     "open": "^7.0.2",
+    "parcel": "^1.12.4",
     "puppeteer-core": "^2.1.0",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.8",
+    "sanitize.css": "^11.0.0",
     "source-map-explorer": "aholachek/source-map-explorer#temp-fix",
     "yargs": "^15.1.0"
+  },
+  "devDependencies": {
+    "sass": "^1.25.0"
   }
 }

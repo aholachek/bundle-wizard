@@ -3100,6 +3100,13 @@ find-up@^4.0.0, find-up@^4.1.0:
     locate-path "^5.0.0"
     path-exists "^4.0.0"
 
+flip-toolkit@^7.0.7:
+  version "7.0.7"
+  resolved "https://registry.yarnpkg.com/flip-toolkit/-/flip-toolkit-7.0.7.tgz#5cd71c0375ce189294b5ace0d7ec3569a1577b35"
+  integrity sha512-jqAqiJPlD0SqSFdnk0fhM4EMOt/JLCkyWaxv6aaDTGtnDioL3QwXPq0wQ4clxHLp2euOjCbegeGxbgsr3j/kXg==
+  dependencies:
+    react-flip-toolkit "^7.0.7"
+
 for-in@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/for-in/-/for-in-1.0.2.tgz#81068d295a8142ec0ac726c6e2200c30fb6d5e80"
@@ -5769,6 +5776,13 @@ range-parser@~1.2.1:
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.1.tgz#3cf37023d199e1c24d1a55b84800c2f3e6468031"
   integrity sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==
 
+react-flip-toolkit@^7.0.7:
+  version "7.0.7"
+  resolved "https://registry.yarnpkg.com/react-flip-toolkit/-/react-flip-toolkit-7.0.7.tgz#a50d455ff4f9f9961042a7a0eb23bd5a2154c963"
+  integrity sha512-1aORVOoaseauhoBg86P1qy4RgG0spzT50s2Ewiju20KtQjcNdkyqObyzOrl7ETd5fCkLV6uzgkJe8AEzuxYJBQ==
+  dependencies:
+    rematrix "0.2.2"
+
 react-is@^16.12.0:
   version "16.12.0"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.12.0.tgz#2cc0fe0fba742d97fd527c42a13bec4eeb06241c"
@@ -5900,6 +5914,11 @@ regjsparser@^0.6.0:
   integrity sha512-E9ghzUtoLwDekPT0DYCp+c4h+bvuUpe6rRHCTYn6eGoqj1LgKXxT6I0Il4WbjhQkOghzi/V+y03bPKvbllL93Q==
   dependencies:
     jsesc "~0.5.0"
+
+rematrix@0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/rematrix/-/rematrix-0.2.2.tgz#c96a050260782db9908904885991256e23beda5d"
+  integrity sha512-agFFS3RzrLXJl5LY5xg/xYyXvUuVAnkhgKO7RaO9J1Ssth6yvbO+PIiV67V59MB5NCdAK2flvGvNT4mdKVniFA==
 
 remove-trailing-separator@^1.0.1:
   version "1.1.0"

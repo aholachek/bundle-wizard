@@ -13,39 +13,39 @@ html {
   position: relative;
   padding-left: 2rem;
   padding-top: 2rem;
-  transition: box-shadow 0.3s;
 }
 
 .box {
   position: absolute;
+  border: 1px solid black;
+  cursor: pointer;
+  overflow: hidden;
 }
 
-.visible-box {
-  position: absolute;
-  border: 1px solid black;
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-in-box {
+  opacity: 0;
+  animation: fadeIn 0.5s forwards;
+  animation-delay: 0.3s;
 }
 
 .label {
   padding: 0.3rem;
   display: block;
   white-space: nowrap;
-  font-size: 0.66rem;
-  position: relative;
-  z-index: 100;
-  display: inline-block;
-  // left: 50%;
-  // transform: translateX(-50%);
-}
-
-.leaf-label {
-  padding: 0.3rem;
-  display: block;
   font-size: 0.7rem;
-
   position: relative;
   z-index: 100;
-  display: inline-block;
-  // top: 50%;
-  // transform: translate(0, -50%);
+  display: flex;
+  justify-content: space-between;
 }
-
