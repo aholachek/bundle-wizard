@@ -15,6 +15,7 @@
 
 ✅ label adjustments for node modules @done(20-02-09 21:08)
 
-⬜ fix collapse
-⬜ fix sizes when pruned
+⬜ fix navigation back to top
+⬜ collapse react dom
+⬜ add will-change transform
 

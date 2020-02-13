@@ -2,7 +2,6 @@ import 'sanitize.css'
 import './index.scss'
 import _sourcemapAnalysis from './sourcemap-analysis.json'
 import * as d3 from 'd3'
-import { Flipper } from 'flip-toolkit'
 
 const findeOrCreateChild = (arr, name) => {
   const child = arr.find(child => child.name === name)
@@ -154,7 +153,7 @@ const treemap = data => {
     .size([width, height])
     .paddingOuter(10)
     .paddingTop(22)
-    .paddingInner(4)
+    .paddingInner(5)
     .round(false)(
     d3
       .hierarchy(data)
@@ -163,17 +162,12 @@ const treemap = data => {
   )
 }
 
-const container = d3.select('#container')
-
-const flipper = new Flipper({ element: document.querySelector('#container') })
+const container = d3.select('#graph-container')
 
 const isTopLevel = data => data.name === 'topLevel'
 
 const calculateArea = node => (node.y1 - node.y0) * (node.x1 - node.x0)
 
-// TODO:
-// 1. add "real" size
-// 2. take removed size and add evenly to remaining items
 const removeTooSmallNodes = (data, ids) => {
   const idDict = ids.reduce((acc, curr) => {
     acc[curr] = true
@@ -215,6 +209,30 @@ const removeTooSmallNodes = (data, ids) => {
   return data
 }
 
+const updateGraph = id => {
+  state.data = findBranch(id)
+  renderGraph(state)
+}
+
+const renderBreadCrumbs = ({ data }) => {
+  const breadcrumbContainer = document.querySelector('#breadcrumb-container')
+  const sections = data.id.split('/')
+
+  if (sections.length < 2) return (breadcrumbContainer.innerHTML = '')
+  const breadcrumbs = sections.map((section, i, arr) => {
+    const text = section === 'topLevel' ? 'all bundles' : section
+    return `<li><a href='#' data-value=${arr
+      .slice(0, i + 1)
+      .join('/')}>${text}</a></li>`
+  })
+  breadcrumbContainer.addEventListener('click', e => {
+    updateGraph(e.target.dataset.value)
+  })
+  breadcrumbContainer.innerHTML = `<ul>${breadcrumbs.join(
+    '&nbsp;/&nbsp;'
+  )}</ul>`
+}
+
 const renderGraph = ({ data }) => {
   const dataCopy = JSON.parse(JSON.stringify(data))
   const testRoot = treemap(dataCopy)
@@ -222,18 +240,17 @@ const renderGraph = ({ data }) => {
   const tooSmallNodeIds = testRoot
     .descendants()
     .filter(node => {
-      return calculateArea(node) < 500
+      return calculateArea(node) < 750
     })
     .map(node => node.data.id)
 
   const filteredData = removeTooSmallNodes(dataCopy, tooSmallNodeIds)
   const root = treemap(JSON.parse(JSON.stringify(filteredData)))
-  debugger // eslint-disable-line
 
   const position = selection =>
     selection
-      .style('left', d => `${d.x0}px`)
-      .style('top', d => `${d.y0}px`)
+      .style('transform', d => `translate(${d.x0}px, ${d.y0}px )`)
+      // .style('top', d => `${d.y0}px`)
       .style('width', d => d.x1 - d.x0)
       .style('height', d => d.y1 - d.y0)
       .style('z-index', d => {
@@ -249,31 +266,17 @@ const renderGraph = ({ data }) => {
         const height = d.y1 - d.y0
         return width > 3 && height > 3
       })
-      // // dont show detail inside top level node_modules
-      // .filter(d => {
-      //   return isTopLevel(state.data) ? parentIsNodeModules(d) < 2 : true
-      // })
       .append('div')
       .style('background-color', d => {
         return color(d.data.averageCoverage) || 'white'
       })
-
       .on('click', d => {
-        state.data = findBranch(d.data.id)
-        flipper.recordBeforeUpdate()
-        renderGraph(state)
-        flipper.update()
+        updateGraph(d.data.id)
       })
       .each(function(d) {
         this.classList.add('box')
         if (!isTopLevel(d.data) && !isTopLevel(data))
           this.classList.add('animate-in-box')
-      })
-      .each(function(d) {
-        flipper.addFlipped({
-          element: this,
-          flipId: d.data.id
-        })
       })
 
     entered.append('div').attr('class', 'label')
@@ -295,19 +298,31 @@ const renderGraph = ({ data }) => {
       if (!d) return ''
       return d.data.id
     })
-    .join(createEnteredElements, update => {
-      position(update)
-      return update
-    })
+    .join(
+      createEnteredElements,
+      update => {
+        position(update)
+        return update
+      },
+      exit => {
+        exit.each(function(d) {
+          this.classList.add('animate-out-box')
+        })
+        setTimeout(() => {
+          exit.remove()
+        }, 250)
+      }
+    )
     .each(function(d) {
       const label = `
       <div>${d.data.name}</div> <div>${Math.ceil(
         d.data.realSize / 1000
       )}kb</div>
      `
-
       this.querySelector('.label').innerHTML = label
     })
+
+  renderBreadCrumbs(state)
 }
 
 renderGraph(state)
