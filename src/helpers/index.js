@@ -2,25 +2,25 @@ const fs = require('fs-extra')
 const { explore } = require('source-map-explorer')
 const open = require('open')
 const request = require('request-promise-native')
+const processData = require('./processData')
 
-const visualizeBundles = async ({
-  bundles,
-  jsonFileName,
-  coverageFilePath
-}) => {
+const visualizeBundles = async ({ bundles, coverageFilePath }) => {
   console.log(
     `\n⏳  Generating sourcemap visualization (this might take up to several minutes...)\n`
   )
 
   try {
-    await explore(bundles, {
+    const data = await explore(bundles, {
       output: {
-        format: 'json',
-        filename: jsonFileName
+        format: 'json'
       },
       coverage: coverageFilePath
     })
-    open(jsonFileName)
+    const processedData = processData(data.bundles)
+    fs.writeFileSync(
+      `${__dirname}/coverage.json`,
+      JSON.stringify(processedData)
+    )
     console.log(
       `🎊  Done! A source map visualization should pop up in your default browser.\n`
     )

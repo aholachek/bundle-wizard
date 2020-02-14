@@ -26,14 +26,17 @@
     "enquirer": "^2.3.4",
     "fs-extra": "^8.1.0",
     "jest": "^25.1.0",
+    "lodash.throttle": "^4.1.1",
     "open": "^7.0.2",
     "parcel": "^1.12.4",
     "puppeteer-core": "^2.1.0",
-    "react": "^16.12.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.12.0",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.8",
     "sanitize.css": "^11.0.0",
     "source-map-explorer": "aholachek/source-map-explorer#temp-fix",
+    "tippy.js": "^5.2.1",
     "yargs": "^15.1.0"
   },
   "devDependencies": {

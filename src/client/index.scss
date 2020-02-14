@@ -13,20 +13,40 @@ html {
   margin-left: 2rem;
 }
 
-#graph-container {
+.treemap {
   position: relative;
 }
 
 .box {
   position: absolute;
-  border: 1px solid black;
-  cursor: pointer;
+  width: 100px;
+  height: 100px;
   overflow: hidden;
+  cursor: pointer;
   transform-origin: 0 0;
-  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    box-shadow 0.25s linear;
+  border: 1px solid black;
+  transition: box-shadow 0.25s linear, border 0.2s;
   &:hover {
     box-shadow: 0 10px 30px hsla(0, 0%, 0%, 0.4);
+  }
+  .label-container {
+    overflow: hidden;
+  }
+}
+
+.box-transition-position {
+  .box {
+    transition: box-shadow 0.25s linear,
+      transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+}
+
+.animation-in-progress {
+  .label {
+    opacity: 0;
+  }
+  .box {
+    border: none;
   }
 }
 
@@ -59,17 +79,20 @@ html {
 }
 
 .label {
+  transition: opacity 0.2s;
   padding: 0.3rem;
   display: block;
   white-space: nowrap;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   position: relative;
   z-index: 100;
   display: flex;
   justify-content: space-between;
+  position: relative;
+  z-index: 1;
 }
 
-#breadcrumb-container {
+.breadcrumb-container {
   height: 1.5rem;
   margin: 0.5rem 0;
   ul {
@@ -97,4 +120,15 @@ html {
       }
     }
   }
+}
+
+.tooltip-name {
+  margin-bottom: 0.3rem;
+}
+
+.tippy-content {
+  font-size: 0.9rem;
+}
+.tippy-popper {
+  opacity: 0.9;
 }
