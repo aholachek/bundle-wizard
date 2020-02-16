@@ -26,6 +26,8 @@
     "enquirer": "^2.3.4",
     "fs-extra": "^8.1.0",
     "jest": "^25.1.0",
+    "lodash.clonedeep": "^4.5.0",
+    "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
     "open": "^7.0.2",
     "parcel": "^1.12.4",

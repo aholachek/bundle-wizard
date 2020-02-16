@@ -8,9 +8,8 @@ html {
   font-size: 100%;
 }
 #container {
-  width: calc(100vw - 4rem);
-  height: calc(100vh - 4rem);
-  margin-left: 2rem;
+  width: 100vw;
+  height: calc(100vh - 3rem);
 }
 
 .treemap {
@@ -19,34 +18,36 @@ html {
 
 .box {
   position: absolute;
-  width: 100px;
-  height: 100px;
   overflow: hidden;
   cursor: pointer;
   transform-origin: 0 0;
-  border: 1px solid black;
-  transition: box-shadow 0.25s linear, border 0.2s;
+  will-change: transform;
+  box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.2);
   &:hover {
     box-shadow: 0 10px 30px hsla(0, 0%, 0%, 0.4);
   }
-  .label-container {
-    overflow: hidden;
+}
+
+.box.no-interact {
+  cursor: default;
+  &:hover {
+    box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.2);
   }
 }
 
 .box-transition-position {
   .box {
-    transition: box-shadow 0.25s linear,
-      transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: transform 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 }
 
 .animation-in-progress {
   .label {
     opacity: 0;
+    transition: none;
   }
   .box {
-    border: none;
+    box-shadow: none !important;
   }
 }
 
@@ -71,16 +72,11 @@ html {
 .animate-in-box {
   opacity: 0;
   animation: fadeIn 0.3s forwards;
-  animation-delay: 0.2s;
-}
-
-.animate-out-box {
-  animation: fadeOut 0.25s forwards;
+  animation-delay: 400ms;
 }
 
 .label {
-  transition: opacity 0.2s;
-  padding: 0.3rem;
+  padding: 0.2rem 0.3rem;
   display: block;
   white-space: nowrap;
   font-size: 0.75rem;
@@ -90,11 +86,25 @@ html {
   justify-content: space-between;
   position: relative;
   z-index: 1;
+  transition: opacity 1s;
 }
 
 .breadcrumb-container {
-  height: 1.5rem;
-  margin: 0.5rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 3.5rem;
+
+  margin: 0.5rem 1rem;
+  > div:nth-of-type(2) {
+    min-width: 30rem;
+    font-size: 1rem;
+  }
+  h3 {
+    margin-bottom: 0.1rem;
+    font-size: 1rem;
+    margin-top: 0;
+  }
   ul {
     list-style-type: none;
     margin: 0;
@@ -104,7 +114,7 @@ html {
   li {
     &:last-of-type {
       a {
-        font-weight: 500;
+        font-weight: bold;
         color: black;
         &:hover {
           text-decoration: none;
@@ -122,13 +132,10 @@ html {
   }
 }
 
-.tooltip-name {
-  margin-bottom: 0.3rem;
-}
-
-.tippy-content {
-  font-size: 0.9rem;
-}
-.tippy-popper {
-  opacity: 0.9;
+.hovered-data-row {
+  display: flex;
+  align-items: center;
+  > div {
+    margin-right: 1.5rem;
+  }
 }

@@ -18,7 +18,13 @@ const findBranch = id => {
 }
 
 const Dashboard = () => {
-  const [data, setData] = React.useState(treeData)
+  const [data, _setData] = React.useState(treeData)
+  const [hovered, setHovered] = React.useState(null)
+
+  const setData = data => {
+    _setData(data)
+    setHovered(null)
+  }
 
   const setGraphRoot = id => {
     setData(findBranch(id))
@@ -26,8 +32,12 @@ const Dashboard = () => {
 
   return (
     <div>
-      <Breadcrumbs data={data} setGraphRoot={setGraphRoot} />
-      <Treemap data={data} setGraphRoot={setGraphRoot} />
+      <Breadcrumbs data={data} setGraphRoot={setGraphRoot} hovered={hovered} />
+      <Treemap
+        data={data}
+        setGraphRoot={setGraphRoot}
+        setHovered={setHovered}
+      />
     </div>
   )
 }

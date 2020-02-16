@@ -1,15 +1,12 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import * as d3 from 'd3'
 import { usePrevious } from '../utils'
 import throttle from 'lodash.throttle'
-import tippy from 'tippy.js'
-import 'tippy.js/dist/tippy.css'
+import cloneDeep from 'lodash.clonedeep'
 
 const color = d3.scaleSequential([-0.15, 1.1], d3.interpolateRdYlGn)
 
 const isTopLevel = data => data.name === 'topLevel'
-
-const calculateArea = node => (node.y1 - node.y0) * (node.x1 - node.x0)
 
 const removeTooSmallNodes = (data, ids) => {
   const idDict = ids.reduce((acc, curr) => {
@@ -18,32 +15,46 @@ const removeTooSmallNodes = (data, ids) => {
   }, {})
   const traverseTree = node => {
     if (node.children) {
+      const originalChildCount = node.children.length
+
       const filteredChildren = node.children.filter(child => {
-        return !idDict[child.id]
+        return idDict[child.id]
       })
-      const removedSize = node.children
-        .filter(child => {
-          return idDict[child.id]
-        })
-        .map(child => child.size)
-        .filter(Boolean)
-        .reduce((acc, curr) => acc + curr, 0)
 
-      const allLeafNodes = []
+      let removedSize = 0
 
-      const findLeafNodes = arr => {
-        arr.forEach(child => {
-          if (child.size) allLeafNodes.push(child)
-          else if (child.children) findLeafNodes(child.children)
-        })
+      const traverseSize = node => {
+        if (node.size) removedSize += node.size
+        else if (node.children) node.children.forEach(traverseSize)
       }
 
-      findLeafNodes(filteredChildren)
+      const removedNodes = node.children.filter(child => !idDict[child.id])
+      removedNodes.forEach(traverseSize)
 
-      const additionalFraction = removedSize / allLeafNodes.length
-      allLeafNodes.forEach(node => (node.size += additionalFraction))
+      const additionalFraction = removedSize / filteredChildren.length
+
+      filteredChildren.forEach(node => {
+        const leafChildren = []
+
+        const traverse = node => {
+          if (!node.children) {
+            leafChildren.push(node)
+            return
+          }
+          node.children.forEach(node => {
+            if (!node.children || !node.children.length) leafChildren.push(node)
+            else traverse(node)
+          })
+        }
+        traverse(node)
+
+        leafChildren.forEach(
+          leaf => (leaf.size += additionalFraction / leafChildren.length)
+        )
+      })
 
       node.children = filteredChildren
+      node.originalChildCount = originalChildCount
 
       node.children.forEach(traverseTree)
     }
@@ -58,36 +69,33 @@ const hasOneChild = d => d.children && d.children.length === 1
 const collapse = d => {
   if (hasOneChild(d)) {
     const onlyChild = d.children[0]
-    // only show first and last folder
-    d.name = `${d.name.split('/')[0]}/${onlyChild.name}`
-    const keys = ['children', 'size', 'coveredSize']
-    keys.forEach(key => {
+    const name = `${d.name}/${onlyChild.name}`
+
+    Object.keys(d).forEach(key => delete d[key])
+    Object.keys(onlyChild).forEach(key => {
       d[key] = onlyChild[key]
     })
+
+    d.name = name
+
     collapse(d)
-  } else if (d.children) d.children.forEach(child => collapse(child))
+  }
+  if (d.children) d.children.forEach(child => collapse(child))
 }
 
-const renderGraph = ({ el, data, tippyInstances, setGraphRoot }) => {
-  const width = document.body.clientWidth - 64
-  const height = document.body.clientHeight - 64
-
+const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
   const container = d3.select(el)
 
-  el.classList.add('hide-labels')
+  const isFirstRender = el.childElementCount > 0
 
-  const isNotFirstRender = el.childElementCount > 0
-
-  if (isNotFirstRender) el.classList.add('box-transition-position')
-
-  setTimeout(() => {
-    el.classList.remove('hide-labels')
-  }, 400)
+  if (!isFirstRender) {
+    el.classList.add('box-transition-position')
+    el.classList.remove('animate-in-boxes')
+  }
 
   const treemap = data => {
     return d3
       .treemap()
-      .tile(d3.treemapBinary)
       .size([width, height])
       .paddingOuter(10)
       .paddingTop(24)
@@ -100,122 +108,129 @@ const renderGraph = ({ el, data, tippyInstances, setGraphRoot }) => {
     )
   }
 
-  const dataCopy = JSON.parse(JSON.stringify(data))
+  const dataCopy = cloneDeep(data)
   const testRoot = treemap(dataCopy)
 
-  const tooSmallNodeIds = testRoot
-    .descendants()
-    .filter(node => {
-      return calculateArea(node) < 500
-    })
-    .map(node => node.data.id)
+  const filterData = node => {
+    if (!node.children) return
+    const parentArea = (node.y1 - node.y0) * (node.x1 - node.x0)
+    const maxChildren = Math.ceil(parentArea / 10000)
+    node.children = node.children.slice(0, maxChildren)
 
-  const filteredData = removeTooSmallNodes(dataCopy, tooSmallNodeIds)
-  collapse(filteredData)
-  const root = treemap(filteredData)
-
-  const animDuration = 500
-
-  const position = selection => {
-    selection.style('z-index', d => {
-      return d.depth
-    })
-
-    if (isNotFirstRender) {
-      el.classList.add('animation-in-progress')
-      selection
-        .style('width', d => {
-          const width = d.x1 - d.x0
-          d.prevWidth = width
-          return `${width}px`
-        })
-        .style('height', d => {
-          const height = d.y1 - d.y0
-          d.prevHeight = height
-          return `${height}px`
-        })
-        .style('transform', d => {
-          console.log(d.prevWidth)
-          const scaleX = (d.x1 - d.x0) / (d.prevWidth || 100)
-          const scaleY = (d.y1 - d.y0) / (d.prevHeight || 100)
-
-          console.log(
-            `translate(${d.x0}px, ${d.y0}px) scale(${scaleX}, ${scaleY})`
-          )
-          return `translate(${d.x0}px, ${d.y0}px) scale(${scaleX}, ${scaleY})`
-        })
-        .style('z-index', d => {
-          return d.depth
-        })
-
-      setTimeout(() => {
-        el.classList.remove('animation-in-progress')
-        selection
-          .style('transition', '')
-          .style('transform', d => {
-            return `translate(${d.x0}px, ${d.y0}px) scale(1)`
-          })
-          .style('width', d => {
-            const width = d.x1 - d.x0
-            d.prevWidth = width
-            return `${width}px`
-          })
-          .style('height', d => {
-            const height = d.y1 - d.y0
-            d.prevHeight = height
-            return `${height}px`
-          })
-      }, animDuration)
-    } else {
-      selection
-        .style('transform', d => {
-          return `translate(${d.x0}px, ${d.y0}px) scale(1)`
-        })
-        .style('width', d => {
-          const width = d.x1 - d.x0
-          d.prevWidth = width
-          return `${width}px`
-        })
-        .style('height', d => {
-          const height = d.y1 - d.y0
-          d.prevHeight = height
-          return `${height}px`
-        })
-    }
+    node.children.forEach(c => filterData(c))
   }
+
+  filterData(testRoot)
+  const allowedIds = testRoot.descendants().map(node => node.data.id)
+  collapse(dataCopy)
+  const filteredData = removeTooSmallNodes(dataCopy, allowedIds)
+  const root = treemap(filteredData)
 
   const createEnteredElements = enter => {
     const entered = enter
-      .filter(d => !isTopLevel(d.data))
-      // dont show rects with height = 1 or width = 1
-      .filter(d => {
+      .filter(function(d) {
         const width = d.x1 - d.x0
         const height = d.y1 - d.y0
-        return width > 3 && height > 3
+        return width * height > 100
       })
       .append('div')
       .style('background-color', d => {
-        // return 'white'
+        if (isTopLevel(d.data)) return 'white'
         return color(d.data.averageCoverage) || 'white'
       })
       .on('click', d => {
         setGraphRoot(d.data.id)
       })
+      .on('mouseenter', d => {
+        setHovered(d)
+      })
+      .on('mouseleave', d => {
+        setHovered(null)
+      })
       .each(function(d) {
         this.classList.add('box')
-        this.dataset.tippyContent = `
-          <div class="tooltip-name">${d.data.name}</div>
-          <div><b>Size:</b>&nbsp;${Math.ceil(d.data.realSize / 1000)}kb</div>
-          <div><b>Coverage:</b>&nbsp;${Math.floor(
-            d.data.averageCoverage * 100
-          )}%</div>
-        `
-        if (!isTopLevel(d.data) && !isTopLevel(data))
-          this.classList.add('animate-in-box')
+        this.classList.add('animate-in-box')
+      })
+      .style('z-index', d => {
+        return d.depth
+      })
+      .style('width', d => {
+        const width = d.x1 - d.x0
+        d.prevWidth = width
+        return `${width}px`
+      })
+      .style('height', d => {
+        const height = d.y1 - d.y0
+        d.prevHeight = height
+        return `${height}px`
+      })
+      .style('transform', d => {
+        return `translate(${d.x0}px, ${d.y0}px)`
+      })
+      .classed('no-interact', d => {
+        return !d.parent
+      })
+      .each(function(d) {
+        const width = d.x1 - d.x0
+        const height = d.y1 - d.y0
+        this.dataset.prevWidth = width
+        this.dataset.prevHeight = height
       })
 
-    entered.append('div').attr('class', 'label')
-    return position(entered)
+    const label = entered
+      .append('div')
+      .attr('class', 'label')
+
+      .text(d => {
+        if (isTopLevel(d.data)) return 'all bundles'
+        return d.data.name
+      })
+
+    label.append('div').text(d => `${Math.ceil(d.data.realSize / 1000)}kb`)
+
+    return entered
+  }
+
+  const animateUpdate = selection => {
+    if (selection.size() === 0) return
+    el.classList.add('animation-in-progress')
+
+    const startAnimation = () => {
+      setTimeout(() => {
+        el.classList.remove('animation-in-progress')
+        // show new containers
+        selection.each(function(d) {
+          this.style.transition = 'none'
+
+          requestAnimationFrame(() => {
+            this.style.transform = `translate(${d.x0}px, ${d.y0}px) scale(1)`
+            const width = d.x1 - d.x0
+            this.dataset.prevWidth = width
+            const height = d.y1 - d.y0
+            this.dataset.prevHeight = height
+            this.style.width = `${width}px`
+            this.style.height = `${height}px`
+            requestAnimationFrame(() => {
+              this.style.transition = ''
+            })
+          })
+        })
+      }, 400)
+
+      selection
+        .classed('no-interact', d => {
+          return !d.parent
+        })
+        .style('z-index', d => {
+          return d.depth
+        })
+        .style('transform', function(d) {
+          const scaleX = (d.x1 - d.x0) / (this.dataset.prevWidth || 1)
+          const scaleY = (d.y1 - d.y0) / (this.dataset.prevHeight || 1)
+          return `translate(${d.x0}px, ${d.y0}px) scaleX(${scaleX}) scaleY(${scaleY})`
+        })
+    }
+    startAnimation()
   }
 
   container
@@ -224,49 +239,24 @@ const renderGraph = ({ el, data, tippyInstances, setGraphRoot }) => {
       if (!d) return ''
       return d.data.id
     })
-    .join(
-      createEnteredElements,
-      update => {
-        position(update)
-        return update
-      },
-      exit => {
-        exit.each(function(d) {
-          this.classList.add('animate-out-box')
-        })
-        setTimeout(() => {
-          exit.remove()
-        }, 250)
-      }
-    )
-    .each(function(d) {
-      const isLeaf = Boolean(d.data.coveredSize)
-      const label = `
-      <div>${
-        isLeaf ? d.data.name.split('/').join('/<br/>') : d.data.name
-      }</div> <div>${Math.ceil(d.data.realSize / 1000)}kb</div>
-     `
-      this.querySelector('.label').innerHTML = label
-    })
-
-  tippyInstances.map(i => i.destroy())
-  return tippy('.box', {
-    allowHTML: true,
-    distance: 10
-  })
+    .join(createEnteredElements, animateUpdate)
 }
 
-const Treemap = ({ data, setGraphRoot }) => {
+const Treemap = ({ data, setGraphRoot, setHovered }) => {
   const graphContainerRef = React.useRef(null)
   const previousDataId = usePrevious(data.id)
-  const tippyInstanceRef = React.useRef([])
+  const dimensionsRef = useRef({})
   useEffect(() => {
     const throttledResize = throttle(() => {
+      dimensionsRef.current.width = document.body.clientWidth
+      dimensionsRef.current.height = document.body.clientHeight - 24
+
       renderGraph({
         el: graphContainerRef.current,
         data,
-        tippyInstances: tippyInstanceRef.current,
-        setGraphRoot
+        setGraphRoot,
+        setHovered,
+        ...dimensionsRef.current
       })
     }, 250)
     window.addEventListener('resize', throttledResize)
@@ -276,12 +266,16 @@ const Treemap = ({ data, setGraphRoot }) => {
   }, [])
 
   useEffect(() => {
+    dimensionsRef.current.width = document.body.clientWidth
+    dimensionsRef.current.height = document.body.clientHeight - 24
+
     if (previousDataId !== data.id) {
-      tippyInstanceRef.current = renderGraph({
+      renderGraph({
         el: graphContainerRef.current,
         data,
-        tippyInstances: tippyInstanceRef.current,
-        setGraphRoot
+        setGraphRoot,
+        setHovered,
+        ...dimensionsRef.current
       })
     }
   }, [data.id])
