@@ -9,7 +9,7 @@ This command line utility makes it very easy to create visualizations of the JS 
 
 ## Example
 
-### Visualizing JS loaded by Reddit's mobile homepage:
+Visualizing JS loaded by Reddit's mobile homepage:
 
 <img src="./reddit-mobile-analysis.png" alt="reddit mobile home">
 
