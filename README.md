@@ -15,9 +15,11 @@ Visualizing JS loaded by Reddit's mobile homepage:
 
 ## Quick start
 
-`npx source-map-wizard`
+`npx bundle-wizard`
 
 That's it! The wizard will walk you through the rest.
+
+(You can also do the standard `npm install -g bundle-wizard`, and then run `bundle-wizard` if you plan on using the tool often).
 
 ## Optional command line arguments
 
