@@ -1,24 +1,28 @@
 {
-  "name": "sourcemap-wizard",
-  "description": "A command line wrapper around source-map-explorer for easier analysis",
+  "name": "bundle-wizard",
+  "description": "Analyze the JavaScript loaded by a website",
   "version": "0.0.9-1",
   "main": "src/index.js",
   "engines": {
     "node": ">=10.0.0"
   },
   "bin": {
-    "sourcemap-wizard": "src/index.js"
+    "bundle-wizard": "src/index.js"
   },
   "scripts": {
     "test": "jest",
-    "start": "parcel src/client/index.html"
+    "start": "parcel src/client/index.html",
+    "build": "parcel build src/client/index.html",
+    "preversion": "npm run build"
   },
   "author": "Alex Holachek",
   "license": "ISC",
   "keywords": [
     "source-map",
     "performance",
-    "entry point"
+    "entry point",
+    "bundle",
+    "javascript"
   ],
   "dependencies": {
     "chrome-launcher": "^0.12.0",
@@ -29,19 +33,22 @@
     "lodash.clonedeep": "^4.5.0",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
-    "open": "^7.0.2",
     "parcel": "^1.12.4",
     "puppeteer-core": "^2.1.0",
     "react": "^16.0.0",
     "react-dom": "^16.12.0",
-    "request": "^2.88.0",
+    "request": "^2.88.2",
     "request-promise-native": "^1.0.8",
     "sanitize.css": "^11.0.0",
+    "serve": "^11.3.0",
+    "serve-handler": "^6.1.2",
     "source-map-explorer": "aholachek/source-map-explorer#temp-fix",
+    "static-server": "^2.2.1",
     "tippy.js": "^5.2.1",
     "yargs": "^15.1.0"
   },
   "devDependencies": {
+    "node-sass": "^4.13.1",
     "sass": "^1.25.0"
   }
 }

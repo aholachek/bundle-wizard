@@ -17,9 +17,9 @@ fs.removeSync(downloadsDir)
 fs.mkdirp(downloadsDir)
 
 const main = async () => {
-  console.log(`\n🧙‍  Welcome to sourcemap-wizard\n`)
+  console.log(`\n🧙‍  Welcome to bundle-wizard\n`)
 
-  let urlToFileDict
+  let urlToFileDict, url
 
   if (argv.debug) global.debug = true
 
@@ -33,6 +33,7 @@ const main = async () => {
       tempFolderName
     })
     urlToFileDict = downloadedData.urlToFileDict
+    url = downloadedData.url
   } catch (e) {
     console.error('\n❌  Unable to fetch website data\n')
     console.error(e)
@@ -63,7 +64,8 @@ const main = async () => {
     bundles: `${downloadsDir}/*`,
     jsonFileName,
     downloadsDir,
-    coverageFilePath
+    coverageFilePath,
+    url
   })
 }
 

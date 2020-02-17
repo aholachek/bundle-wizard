@@ -4,7 +4,7 @@ import { usePrevious } from '../utils'
 import throttle from 'lodash.throttle'
 import cloneDeep from 'lodash.clonedeep'
 
-const color = d3.scaleSequential([-0.15, 1.1], d3.interpolateRdYlGn)
+const color = d3.scaleSequential([-0.2, 1.15], d3.interpolateRdYlGn)
 
 const isTopLevel = data => data.name === 'topLevel'
 
@@ -90,7 +90,6 @@ const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
 
   if (!isFirstRender) {
     el.classList.add('box-transition-position')
-    el.classList.remove('animate-in-boxes')
   }
 
   const treemap = data => {
@@ -131,12 +130,16 @@ const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
       .filter(function(d) {
         const width = d.x1 - d.x0
         const height = d.y1 - d.y0
-        return width * height > 100
+        return width > 2 && height > 2 && height * width > 50
       })
       .append('div')
       .style('background-color', d => {
-        if (isTopLevel(d.data)) return 'white'
         return color(d.data.averageCoverage) || 'white'
+      })
+      .style('box-shadow', d => {
+        const background = color(d.data.averageCoverage)
+        const borderColor = d3.hsl(background).darker(1)
+        return `0 0 0 1px ${borderColor}`
       })
       .on('click', d => {
         setGraphRoot(d.data.id)
@@ -147,10 +150,7 @@ const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
       .on('mouseleave', d => {
         setHovered(null)
       })
-      .each(function(d) {
-        this.classList.add('box')
-        this.classList.add('animate-in-box')
-      })
+      .classed(`box ${isFirstRender ? 'animate-in-box' : ''}`, true)
       .style('z-index', d => {
         return d.depth
       })
@@ -193,26 +193,23 @@ const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
 
   const animateUpdate = selection => {
     if (selection.size() === 0) return
-    el.classList.add('animation-in-progress')
+    document.body.classList.add('animation-in-progress')
 
     const startAnimation = () => {
       setTimeout(() => {
-        el.classList.remove('animation-in-progress')
+        document.body.classList.remove('animation-in-progress')
         // show new containers
         selection.each(function(d) {
           this.style.transition = 'none'
-
+          this.style.transform = `translate(${d.x0}px, ${d.y0}px) scale(1)`
+          const width = d.x1 - d.x0
+          this.dataset.prevWidth = width
+          const height = d.y1 - d.y0
+          this.dataset.prevHeight = height
+          this.style.width = `${width}px`
+          this.style.height = `${height}px`
           requestAnimationFrame(() => {
-            this.style.transform = `translate(${d.x0}px, ${d.y0}px) scale(1)`
-            const width = d.x1 - d.x0
-            this.dataset.prevWidth = width
-            const height = d.y1 - d.y0
-            this.dataset.prevHeight = height
-            this.style.width = `${width}px`
-            this.style.height = `${height}px`
-            requestAnimationFrame(() => {
-              this.style.transition = ''
-            })
+            this.style.transition = ''
           })
         })
       }, 400)
@@ -239,17 +236,25 @@ const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
       if (!d) return ''
       return d.data.id
     })
-    .join(createEnteredElements, animateUpdate)
+    .join(createEnteredElements, animateUpdate, exit => {
+      exit.classed('animate-out-box', true)
+      setTimeout(() => {
+        exit.remove()
+      }, 300)
+    })
 }
 
 const Treemap = ({ data, setGraphRoot, setHovered }) => {
   const graphContainerRef = React.useRef(null)
   const previousDataId = usePrevious(data.id)
   const dimensionsRef = useRef({})
+  const cacheWindowSize = () => {
+    dimensionsRef.current.width = window.innerWidth
+    dimensionsRef.current.height = document.body.clientHeight - 120
+  }
   useEffect(() => {
     const throttledResize = throttle(() => {
-      dimensionsRef.current.width = document.body.clientWidth
-      dimensionsRef.current.height = document.body.clientHeight - 24
+      cacheWindowSize()
 
       renderGraph({
         el: graphContainerRef.current,
@@ -266,8 +271,7 @@ const Treemap = ({ data, setGraphRoot, setHovered }) => {
   }, [])
 
   useEffect(() => {
-    dimensionsRef.current.width = document.body.clientWidth
-    dimensionsRef.current.height = document.body.clientHeight - 24
+    cacheWindowSize()
 
     if (previousDataId !== data.id) {
       renderGraph({

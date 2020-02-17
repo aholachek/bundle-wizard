@@ -1,3 +1,4 @@
+$link: hsl(225, 67%, 51%);
 * {
   box-sizing: border-box;
 }
@@ -7,13 +8,11 @@ html {
     'Roboto', 'Helvetica Neue', Arial, sans-serif;
   font-size: 100%;
 }
-#container {
-  width: 100vw;
-  height: calc(100vh - 3rem);
-}
 
 .treemap {
   position: relative;
+  width: 100vw;
+  height: calc(100vh - 120px);
 }
 
 .box {
@@ -22,13 +21,9 @@ html {
   cursor: pointer;
   transform-origin: 0 0;
   will-change: transform;
-  box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.2);
-  &:hover {
-    box-shadow: 0 10px 30px hsla(0, 0%, 0%, 0.4);
-  }
 }
 
-.box.no-interact {
+.no-interact {
   cursor: default;
   &:hover {
     box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.2);
@@ -37,7 +32,7 @@ html {
 
 .box-transition-position {
   .box {
-    transition: transform 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: transform 300ms ease-out;
   }
 }
 
@@ -48,6 +43,9 @@ html {
   }
   .box {
     box-shadow: none !important;
+  }
+  .tooltip {
+    opacity: 0;
   }
 }
 
@@ -71,8 +69,12 @@ html {
 
 .animate-in-box {
   opacity: 0;
-  animation: fadeIn 0.3s forwards;
-  animation-delay: 400ms;
+  animation: fadeIn 0.25s forwards;
+  animation-delay: 350ms;
+}
+
+.animate-out-box {
+  animation: fadeOut 0.3s forwards;
 }
 
 .label {
@@ -90,26 +92,14 @@ html {
 }
 
 .breadcrumb-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 3.5rem;
+  margin: 1rem 0;
+  min-height: 1.5rem;
 
-  margin: 0.5rem 1rem;
-  > div:nth-of-type(2) {
-    min-width: 30rem;
-    font-size: 1rem;
-  }
-  h3 {
-    margin-bottom: 0.1rem;
-    font-size: 1rem;
-    margin-top: 0;
-  }
   ul {
-    list-style-type: none;
-    margin: 0;
+    margin: 0.5rem 1rem;
     padding: 0;
     display: flex;
+    list-style: none;
   }
   li {
     &:last-of-type {
@@ -124,7 +114,7 @@ html {
     a {
       cursor: pointer;
       text-decoration: none;
-      color: hsl(225, 58%, 45%);
+      color: $link;
       &:hover {
         text-decoration: underline;
       }
@@ -132,10 +122,158 @@ html {
   }
 }
 
-.hovered-data-row {
-  display: flex;
-  align-items: center;
-  > div {
-    margin-right: 1.5rem;
+.tooltip {
+  pointer-events: none;
+  opacity: 0.9;
+  min-height: 5.2rem;
+  transition: opacity 0.3s;
+  transition-delay: 0.2s;
+  position: fixed;
+  background-color: black;
+  color: white;
+  padding: 1rem;
+  top: 0;
+  right: 0;
+  width: 100vw;
+  box-shadow: 0 5px 30px hsla(0, 0%, 0%, 0.2);
+  -webkit-font-smoothing: antialiased;
+  @media (min-width: 768px) {
+    width: auto;
+    min-width: 30rem;
+    top: 1rem;
+    right: 1rem;
+    border-radius: 4px;
   }
+
+  z-index: 10000;
+  h3 {
+    margin-bottom: 0.1rem;
+    font-size: 1rem;
+    margin-top: 0;
+  }
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+  }
+  .hovered-data-row {
+    display: flex;
+    align-items: center;
+    > div {
+      margin-right: 1.75rem;
+    }
+  }
+}
+
+.tooltip-hidden {
+  opacity: 0;
+}
+
+.summary {
+  h1 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    font-weight: normal;
+  }
+  max-width: 1400px;
+  margin: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 1rem;
+
+  h2 {
+    font-size: 1rem;
+    margin-top: 2rem;
+  }
+
+  table {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+    td,
+    th {
+      text-align: left;
+      border-bottom: 1px solid hsla(0, 0%, 0%, 0.2);
+      padding: 0.5rem;
+    }
+
+    td,
+    th {
+      width: 8rem;
+    }
+    td:first-of-type,
+    th:first-of-type {
+      width: 2rem;
+    }
+    td:nth-of-type(2),
+    th:nth-of-type(2) {
+      width: 30rem;
+    }
+  }
+}
+
+.screenshot {
+  max-height: 25rem;
+  max-width: 40rem;
+  width: auto;
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
+  margin-right: 2rem;
+  border: 1px solid hsla(0, 0%, 0%, 0.5);
+}
+
+figure {
+  margin: 0;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid hsla(0, 0%, 0%, 0.2);
+  align-items: center;
+  padding-right: 1rem;
+  ul {
+    display: flex;
+    padding: 0;
+    margin: 0;
+  }
+
+  a {
+    height: 100%;
+    display: block;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 0.5rem;
+    color: $link;
+    padding: 1rem;
+    line-height: 1;
+    &:hover {
+      background-color: hsla(225, 58%, 45%, 0.12);
+    }
+  }
+  .active {
+    a {
+      cursor: default;
+      background-color: $link;
+      color: white;
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+.large-screen-only {
+  display: none;
+  @media (min-width: 768px) {
+    display: block;
+  }
+}
+.loading {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

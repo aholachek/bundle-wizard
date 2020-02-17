@@ -1,8 +1,8 @@
-# 🧙‍♂️ sourcemap-wizard
+# 🧙‍♂️ bundle-wizard
 
 This command line utility is built on top of [`source-map-explorer`](https://github.com/danvk/source-map-explorer) to make it very easy to create visualizations of which JS bundles were fetched for any specific entry point of an app.
 
-`sourcemap-wizard` takes a url and generates a visualization that shows you:
+`bundle-wizard` takes a url and generates a visualization that shows you:
 
 1. All first-party JS bundles that were loaded on the page.
 2. What percent of each part of those bundles was actually used to render the page.
@@ -23,19 +23,19 @@ That's it! The wizard will walk you through the rest.
 
 To skip the first prompt, provide a url as an initial argument:
 
-`npx sourcemap-wizard nytimes.com`
+`npx bundle-wizard nytimes.com`
 
 ### `desktop` flag
 
-By default, `sourcemap-wizard` will analyze a mobile version of the site. To analyze the desktop version instead, pass the `--desktop` flag:
+By default, `bundle-wizard` will analyze a mobile version of the site. To analyze the desktop version instead, pass the `--desktop` flag:
 
-`npx sourcemap-wizard --desktop`
+`npx bundle-wizard --desktop`
 
 ### `debug` flag
 
 If you'd like to see more logging and detailed error messages, add this flag.
 
-`npx sourcemap-wizard --debug`
+`npx bundle-wizard --debug`
 
 ## Example Run Through
 

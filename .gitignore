@@ -1,8 +1,7 @@
 node_modules
-sourcemap-wizard-downloads
+bundle-wizard-downloads
 .DS_Store
 TODO
 temp
 .cache
-dist
 yarn-error.log

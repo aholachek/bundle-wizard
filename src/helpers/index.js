@@ -1,12 +1,14 @@
 const fs = require('fs-extra')
 const { explore } = require('source-map-explorer')
-const open = require('open')
+const path = require('path')
 const request = require('request-promise-native')
 const processData = require('./processData')
+const handler = require('serve-handler')
+const http = require('http')
 
-const visualizeBundles = async ({ bundles, coverageFilePath }) => {
+const visualizeBundles = async ({ bundles, coverageFilePath, url }) => {
   console.log(
-    `\n⏳  Generating sourcemap visualization (this might take up to several minutes...)\n`
+    `\n🔮  Generating visualization...\n\n⏳  This might take a while, depending on the complexity of the website being analyzed\n`
   )
 
   try {
@@ -16,18 +18,30 @@ const visualizeBundles = async ({ bundles, coverageFilePath }) => {
       },
       coverage: coverageFilePath
     })
+
+    const tempFolder = path.join(__dirname, '..', '..', 'temp')
+    const distFolder = path.join(__dirname, '..', '..', 'dist')
     const processedData = processData(data.bundles)
-    fs.writeFileSync(
-      `${__dirname}/coverage.json`,
-      JSON.stringify(processedData)
-    )
-    console.log(
-      `🎊  Done! A source map visualization should pop up in your default browser.\n`
-    )
+    const fileName = `${tempFolder}/treeData.json`
+    processedData.url = url
+    fs.writeFileSync(fileName, JSON.stringify(processedData))
+    fs.copySync(fileName, `${distFolder}/treeData.json`)
+    fs.copySync(`${tempFolder}/screenshot.png`, `${distFolder}/screenshot.png`)
+
+    const server = http.createServer((request, response) => {
+      return handler(request, response, {
+        public: distFolder
+      })
+    })
+
+    server.listen(3000, () => {
+      console.log(
+        '🎊  Done! A source map visualization is running at:\n\nhttp://localhost:3000'
+      )
+    })
   } catch (e) {
     console.error('❌  Failed to generate source map visualizationm')
-    console.log(e)
-    if (global.debug) console.error(e)
+    console.error(e)
   }
 }
 
