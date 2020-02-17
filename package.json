@@ -12,7 +12,7 @@
   "scripts": {
     "test": "jest",
     "start": "parcel src/client/index.html",
-    "build": "parcel build src/client/index.html",
+    "build": "rm -rf dist; parcel build src/client/index.html",
     "preversion": "npm run build"
   },
   "author": "Alex Holachek",
@@ -29,10 +29,12 @@
     "d3": "5",
     "enquirer": "^2.3.4",
     "fs-extra": "^8.1.0",
+    "get-port": "^5.1.1",
     "jest": "^25.1.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
+    "open": "^7.0.2",
     "parcel": "^1.12.4",
     "puppeteer-core": "^2.1.0",
     "react": "^16.0.0",

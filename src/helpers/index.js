@@ -5,6 +5,8 @@ const request = require('request-promise-native')
 const processData = require('./processData')
 const handler = require('serve-handler')
 const http = require('http')
+const open = require('open')
+const getPort = require('get-port')
 
 const visualizeBundles = async ({ bundles, coverageFilePath, url }) => {
   console.log(
@@ -12,6 +14,16 @@ const visualizeBundles = async ({ bundles, coverageFilePath, url }) => {
   )
 
   try {
+    // await explore(bundles, {
+    //   output: {
+    //     format: 'html',
+    //     filename: 'test.html'
+    //   },
+    //   coverage: coverageFilePath
+    // })
+
+    // return
+
     const data = await explore(bundles, {
       output: {
         format: 'json'
@@ -34,10 +46,13 @@ const visualizeBundles = async ({ bundles, coverageFilePath, url }) => {
       })
     })
 
-    server.listen(3003, () => {
+    const port = await getPort({ port: [3000, 3001, 3002, 3003] })
+
+    server.listen(port, () => {
       console.log(
-        '🎊  Done! A source map visualization is running at:\n\n  http://localhost:3003'
+        `🎊  Done! A visualization is running at: http://localhost:${port}`
       )
+      open(`http://localhost:${port}`)
     })
   } catch (e) {
     console.error('❌  Failed to generate source map visualizationm')

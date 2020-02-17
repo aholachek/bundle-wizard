@@ -582,8 +582,7 @@ html {
   position: absolute;
   overflow: hidden;
   cursor: pointer;
-  transform-origin: 0 0;
-  will-change: transform; }
+  transform-origin: 0 0; }
 
 .no-interact {
   cursor: default; }
@@ -700,9 +699,7 @@ html {
 .summary {
   max-width: 1400px;
   margin: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-top: 1rem; }
+  padding: 1rem 1rem 2rem 1rem; }
   .summary h2 {
     font-size: 1rem;
     margin-top: 2rem; }

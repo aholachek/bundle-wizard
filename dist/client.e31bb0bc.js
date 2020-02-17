@@ -62951,8 +62951,11 @@ var renderGraph = function renderGraph(_ref) {
       var height = d.y1 - d.y0;
       return width > 2 && height > 2 && height * width > 50;
     }).append('div').style('background-color', function (d) {
-      return color(d.data.averageCoverage) || 'white';
+      if (typeof d.data.averageCoverage !== 'number') return 'hsla(0, 0%, 0%, .04)';
+      if (isTopLevel(d.data)) return 'white';
+      return color(d.data.averageCoverage);
     }).style('box-shadow', function (d) {
+      if (typeof d.data.averageCoverage !== 'number') return '0 0 0 1px hsla(0, 0%, 0%, 0.5)';
       var background = color(d.data.averageCoverage);
       var borderColor = d3.hsl(background).darker(1);
       return "0 0 0 1px ".concat(borderColor);
@@ -63342,7 +63345,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61489" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56273" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

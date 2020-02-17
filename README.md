@@ -1,6 +1,6 @@
 # 🧙‍♂️ bundle-wizard
 
-This command line utility makes it very easy to create visualizations of the JS bundles were fetched for any specific entry point of an app.
+This command line utility makes it very easy to create visualizations of the JS bundles that were fetched for any specific entry point of an app.
 
 `bundle-wizard` simply takes a url and generates a visualization that shows you:
 

@@ -53,7 +53,7 @@ const validateURL = url => {
 const promptForURL = async () => {
   const url = await new Input({
     message: `Which site would you like to analyze?`,
-    initial: 'https://reddit.com'
+    initial: 'https://www.gatsbyjs.org/'
   }).run()
 
   const validUrl = validateURL(url)

@@ -134,9 +134,15 @@ const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
       })
       .append('div')
       .style('background-color', d => {
-        return color(d.data.averageCoverage) || 'white'
+        if (typeof d.data.averageCoverage !== 'number')
+          return 'hsla(0, 0%, 0%, .04)'
+        if (isTopLevel(d.data)) return 'white'
+        return color(d.data.averageCoverage)
       })
       .style('box-shadow', d => {
+        if (typeof d.data.averageCoverage !== 'number')
+          return '0 0 0 1px hsla(0, 0%, 0%, 0.5)'
+
         const background = color(d.data.averageCoverage)
         const borderColor = d3.hsl(background).darker(1)
         return `0 0 0 1px ${borderColor}`

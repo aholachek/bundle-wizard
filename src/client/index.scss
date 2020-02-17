@@ -20,7 +20,6 @@ html {
   overflow: hidden;
   cursor: pointer;
   transform-origin: 0 0;
-  will-change: transform;
 }
 
 .no-interact {
@@ -173,9 +172,7 @@ html {
 .summary {
   max-width: 1400px;
   margin: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-top: 1rem;
+  padding: 1rem 1rem 2rem 1rem;
 
   h2 {
     font-size: 1rem;
