@@ -39,10 +39,6 @@ If you'd like to see more logging and detailed error messages, add this flag.
 
 `npx bundle-wizard --debug`
 
-## Example Run Through
-
-<img src="./example-runthrough.png" alt="example of using the wizard">
-
 ## Requirements
 
 1. Downloadable sourcemaps
