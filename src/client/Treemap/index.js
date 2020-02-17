@@ -134,14 +134,13 @@ const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
       })
       .append('div')
       .style('background-color', d => {
-        if (typeof d.data.averageCoverage !== 'number')
-          return 'hsla(0, 0%, 0%, .04)'
+        if (typeof d.data.averageCoverage !== 'number') return 'white'
         if (isTopLevel(d.data)) return 'white'
         return color(d.data.averageCoverage)
       })
       .style('box-shadow', d => {
         if (typeof d.data.averageCoverage !== 'number')
-          return '0 0 0 1px hsla(0, 0%, 0%, 0.5)'
+          return '0 0 0 1px #a8a8a8'
 
         const background = color(d.data.averageCoverage)
         const borderColor = d3.hsl(background).darker(1)
@@ -162,17 +161,14 @@ const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
       })
       .style('width', d => {
         const width = d.x1 - d.x0
-        d.prevWidth = width
         return `${width}px`
       })
       .style('height', d => {
         const height = d.y1 - d.y0
-        d.prevHeight = height
         return `${height}px`
       })
-      .style('transform', d => {
-        return `translate(${d.x0}px, ${d.y0}px)`
-      })
+      .style('top', d => `${d.y0}px`)
+      .style('left', d => `${d.x0}px`)
       .classed('no-interact', d => {
         return !d.parent
       })
@@ -199,27 +195,8 @@ const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
 
   const animateUpdate = selection => {
     if (selection.size() === 0) return
-    document.body.classList.add('animation-in-progress')
 
     const startAnimation = () => {
-      setTimeout(() => {
-        document.body.classList.remove('animation-in-progress')
-        // show new containers
-        selection.each(function(d) {
-          this.style.transition = 'none'
-          this.style.transform = `translate(${d.x0}px, ${d.y0}px) scale(1)`
-          const width = d.x1 - d.x0
-          this.dataset.prevWidth = width
-          const height = d.y1 - d.y0
-          this.dataset.prevHeight = height
-          this.style.width = `${width}px`
-          this.style.height = `${height}px`
-          requestAnimationFrame(() => {
-            this.style.transition = ''
-          })
-        })
-      }, 400)
-
       selection
         .classed('no-interact', d => {
           return !d.parent
@@ -227,11 +204,16 @@ const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
         .style('z-index', d => {
           return d.depth
         })
-        .style('transform', function(d) {
-          const scaleX = (d.x1 - d.x0) / (this.dataset.prevWidth || 1)
-          const scaleY = (d.y1 - d.y0) / (this.dataset.prevHeight || 1)
-          return `translate(${d.x0}px, ${d.y0}px) scaleX(${scaleX}) scaleY(${scaleY})`
+        .style('width', d => {
+          const width = d.x1 - d.x0
+          return `${width}px`
         })
+        .style('height', d => {
+          const height = d.y1 - d.y0
+          return `${height}px`
+        })
+        .style('top', d => `${d.y0}px`)
+        .style('left', d => `${d.x0}px`)
     }
     startAnimation()
   }

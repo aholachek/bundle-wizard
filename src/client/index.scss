@@ -29,22 +29,11 @@ html {
   }
 }
 
+$anim-duration: 300ms;
 .box-transition-position {
   .box {
-    transition: transform 300ms ease-out;
-  }
-}
-
-.animation-in-progress {
-  .label {
-    opacity: 0;
-    transition: none;
-  }
-  .box {
-    box-shadow: none !important;
-  }
-  .tooltip {
-    opacity: 0;
+    transition: top $anim-duration, left $anim-duration, width $anim-duration,
+      height $anim-duration;
   }
 }
 
