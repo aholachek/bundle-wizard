@@ -697,8 +697,8 @@ html {
   opacity: 0; }
 
 .summary {
-  max-width: 1400px;
-  margin: auto;
+  max-width: 1000px;
+  margin: 0 auto;
   padding: 1rem 1rem 2rem 1rem; }
   .summary h2 {
     font-size: 1rem;
@@ -723,12 +723,11 @@ html {
       width: 30rem; }
 
 .screenshot {
-  max-height: 25rem;
+  display: block;
+  max-height: 27rem;
   max-width: 40rem;
   width: auto;
-  margin-top: 0.5rem;
-  margin-bottom: 2rem;
-  margin-right: 2rem;
+  margin: 0.5rem auto 2.5rem auto;
   border: 1px solid rgba(0, 0, 0, 0.5); }
 
 figure {
