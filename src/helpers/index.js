@@ -8,7 +8,7 @@ const http = require('http')
 
 const visualizeBundles = async ({ bundles, coverageFilePath, url }) => {
   console.log(
-    `\n🔮  Generating visualization...\n\n⏳  This might take a while, depending on the complexity of the website being analyzed\n`
+    `\n🖼️  Generating visualization...\n\n⏳  This might take a while, depending on the complexity of the website being analyzed\n`
   )
 
   try {
@@ -34,9 +34,9 @@ const visualizeBundles = async ({ bundles, coverageFilePath, url }) => {
       })
     })
 
-    server.listen(3000, () => {
+    server.listen(3003, () => {
       console.log(
-        '🎊  Done! A source map visualization is running at:\n\nhttp://localhost:3000'
+        '🎊  Done! A source map visualization is running at:\n\n  http://localhost:3003'
       )
     })
   } catch (e) {

@@ -47,7 +47,11 @@ const Dashboard = () => {
     <div>
       <Tooltip hovered={hovered} />
       <nav className="nav">
+        <div className="logo">
+          🧙‍♂&nbsp;Analysis of <b>{(topLevelData || {}).url}</b>
+        </div>
         <ul>
+          <li></li>
           <li className={!showSummary && 'active'}>
             <a
               href="#"
@@ -71,7 +75,6 @@ const Dashboard = () => {
             </a>
           </li>
         </ul>
-        <div className="large-screen-only">{(topLevelData || {}).url}</div>
       </nav>
       {showSummary ? (
         <Summary data={topLevelData} />

@@ -63140,7 +63140,7 @@ var Summary = function Summary(_ref) {
   var data = _ref.data;
   return _react.default.createElement("div", {
     className: "summary"
-  }, _react.default.createElement("div", null, _react.default.createElement("h1", null, "Analyzing ", _react.default.createElement("b", null, data.url))), _react.default.createElement("img", {
+  }, _react.default.createElement("img", {
     className: "screenshot",
     src: "./screenshot.png",
     alt: "screenshot of website"
@@ -63168,11 +63168,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Tooltip = function Tooltip(_ref) {
   var hovered = _ref.hovered;
+  var name;
+
+  if (hovered) {
+    var parentName = hovered.parent ? hovered.parent.data.name : '';
+    name = "".concat(parentName && parentName !== 'topLevel' ? "".concat(parentName, "/") : '').concat(hovered.data.name).replace('topLevel', 'all bundles');
+  }
+
   return _react.default.createElement("div", {
     className: "tooltip ".concat(!hovered ? 'tooltip-hidden' : '')
-  }, hovered ? _react.default.createElement("div", null, _react.default.createElement("h3", null, hovered.data.id.split('/').filter(function (level) {
-    return level !== 'topLevel';
-  }).slice(-2).join('/') || 'all bundles'), _react.default.createElement("div", {
+  }, hovered ? _react.default.createElement("div", null, _react.default.createElement("h3", null, name), _react.default.createElement("div", {
     className: "hovered-data-row"
   }, _react.default.createElement("div", null, Math.ceil(hovered.data.realSize / 1000), "kb"), _react.default.createElement("div", null, typeof hovered.data.averageCoverage !== 'number' ? 'no coverage data' : "".concat(Math.floor(hovered.data.averageCoverage * 100), "% coverage")), hovered.data.originalChildCount ? _react.default.createElement("div", null, hovered.data.originalChildCount, " direct", ' ', hovered.data.originalChildCount === 1 ? 'child' : 'children', ' ') : null)) : null);
 };
@@ -63277,7 +63282,9 @@ var Dashboard = function Dashboard() {
     hovered: hovered
   }), _react.default.createElement("nav", {
     className: "nav"
-  }, _react.default.createElement("ul", null, _react.default.createElement("li", {
+  }, _react.default.createElement("div", {
+    className: "logo"
+  }, "\uD83E\uDDD9\u200D\u2642\xA0Analysis of ", _react.default.createElement("b", null, (topLevelData || {}).url)), _react.default.createElement("ul", null, _react.default.createElement("li", null), _react.default.createElement("li", {
     className: !showSummary && 'active'
   }, _react.default.createElement("a", {
     href: "#",
@@ -63293,9 +63300,7 @@ var Dashboard = function Dashboard() {
       e.preventDefault();
       setShowSummary(true);
     }
-  }, "\u2139\uFE0F\xA0Summary"))), _react.default.createElement("div", {
-    className: "large-screen-only"
-  }, (topLevelData || {}).url)), showSummary ? _react.default.createElement(_Summary.default, {
+  }, "\u2139\uFE0F\xA0Summary")))), showSummary ? _react.default.createElement(_Summary.default, {
     data: topLevelData
   }) : _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Breadcrumbs.default, {
     data: data,
@@ -63337,7 +63342,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57377" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61489" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -171,11 +171,6 @@ html {
 }
 
 .summary {
-  h1 {
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-    font-weight: normal;
-  }
   max-width: 1400px;
   margin: auto;
   padding-left: 1rem;
@@ -232,7 +227,7 @@ figure {
   justify-content: space-between;
   border-bottom: 1px solid hsla(0, 0%, 0%, 0.2);
   align-items: center;
-  padding-right: 1rem;
+  padding: 0 1rem;
   ul {
     display: flex;
     padding: 0;
@@ -244,19 +239,18 @@ figure {
     display: block;
     text-decoration: none;
     font-weight: bold;
-    padding: 0.5rem;
     color: $link;
-    padding: 1rem;
+    padding: calc(1rem + 4px) 1.5rem 1rem 1rem;
+    border-bottom: 4px solid transparent;
     line-height: 1;
     &:hover {
-      background-color: hsla(225, 58%, 45%, 0.12);
+      border-color: hsla(225, 58%, 45%, 0.5);
     }
   }
   .active {
     a {
       cursor: default;
-      background-color: $link;
-      color: white;
+      border-bottom: 4px solid $link;
       &:hover {
         text-decoration: none;
       }
@@ -264,7 +258,7 @@ figure {
   }
 }
 
-.large-screen-only {
+.logo {
   display: none;
   @media (min-width: 768px) {
     display: block;

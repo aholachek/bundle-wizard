@@ -1,17 +1,19 @@
 import React from 'react'
 
 const Tooltip = ({ hovered }) => {
+  let name
+  if (hovered) {
+    const parentName = hovered.parent ? hovered.parent.data.name : ''
+    name = `${parentName && parentName !== 'topLevel' ? `${parentName}/` : ''}${
+      hovered.data.name
+    }`.replace('topLevel', 'all bundles')
+  }
+
   return (
     <div className={`tooltip ${!hovered ? 'tooltip-hidden' : ''}`}>
       {hovered ? (
         <div>
-          <h3>
-            {hovered.data.id
-              .split('/')
-              .filter(level => level !== 'topLevel')
-              .slice(-2)
-              .join('/') || 'all bundles'}
-          </h3>
+          <h3>{name}</h3>
           <div className="hovered-data-row">
             <div>{Math.ceil(hovered.data.realSize / 1000)}kb</div>
             <div>

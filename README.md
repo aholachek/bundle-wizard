@@ -1,25 +1,27 @@
 # 🧙‍♂️ bundle-wizard
 
-This command line utility is built on top of [`source-map-explorer`](https://github.com/danvk/source-map-explorer) to make it very easy to create visualizations of which JS bundles were fetched for any specific entry point of an app.
+This command line utility makes it very easy to create visualizations of the JS bundles were fetched for any specific entry point of an app.
 
-`bundle-wizard` takes a url and generates a visualization that shows you:
+`bundle-wizard` simply takes a url and generates a visualization that shows you:
 
-1. All first-party JS bundles that were loaded on the page.
-2. What percent of each part of those bundles was actually used to render the page.
+1. The JavaScript bundles that were loaded.
+2. What percent of each part of that JS was actually used to render the page.
 
-### Reddit mobile homepage
+## Example
+
+### Visualizing JS loaded by Reddit's mobile homepage:
 
 <img src="./reddit-mobile-analysis.png" alt="reddit mobile home">
 
 ## Quick start
 
-`npx source-map-wizard`.
+`npx source-map-wizard`
 
 That's it! The wizard will walk you through the rest.
 
 ## Optional command line arguments
 
-### `url`
+### `url` (initial argument)
 
 To skip the first prompt, provide a url as an initial argument:
 
@@ -39,7 +41,7 @@ If you'd like to see more logging and detailed error messages, add this flag.
 
 ## Example Run Through
 
-<img src="./example.png" alt="example of using the wizard">
+<img src="./example-runthrough.png" alt="example of using the wizard">
 
 ## Requirements
 
@@ -53,4 +55,4 @@ If you'd like to see more logging and detailed error messages, add this flag.
 
 ## Credits
 
-This library is based on [`source-map-explorer`](https://github.com/danvk/source-map-explorer).
+The core functionality of this library is provided by the awesome [`source-map-explorer`](https://github.com/danvk/source-map-explorer).

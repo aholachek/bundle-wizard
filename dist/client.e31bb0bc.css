@@ -703,10 +703,6 @@ html {
   padding-left: 1rem;
   padding-right: 1rem;
   padding-top: 1rem; }
-  .summary h1 {
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-    font-weight: normal; }
   .summary h2 {
     font-size: 1rem;
     margin-top: 2rem; }
@@ -746,7 +742,7 @@ figure {
   justify-content: space-between;
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   align-items: center;
-  padding-right: 1rem; }
+  padding: 0 1rem; }
   .nav ul {
     display: flex;
     padding: 0;
@@ -756,23 +752,22 @@ figure {
     display: block;
     text-decoration: none;
     font-weight: bold;
-    padding: 0.5rem;
     color: #2e58d6;
-    padding: 1rem;
+    padding: calc(1rem + 4px) 1.5rem 1rem 1rem;
+    border-bottom: 4px solid transparent;
     line-height: 1; }
     .nav a:hover {
-      background-color: rgba(48, 81, 181, 0.12); }
+      border-color: rgba(48, 81, 181, 0.5); }
   .nav .active a {
     cursor: default;
-    background-color: #2e58d6;
-    color: white; }
+    border-bottom: 4px solid #2e58d6; }
     .nav .active a:hover {
       text-decoration: none; }
 
-.large-screen-only {
+.logo {
   display: none; }
   @media (min-width: 768px) {
-    .large-screen-only {
+    .logo {
       display: block; } }
 
 .loading {

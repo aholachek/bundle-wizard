@@ -3,11 +3,6 @@ import React from 'react'
 const Summary = ({ data }) => {
   return (
     <div className="summary">
-      <div>
-        <h1>
-          Analyzing <b>{data.url}</b>
-        </h1>
-      </div>
       <img
         className="screenshot"
         src="./screenshot.png"
