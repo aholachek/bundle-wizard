@@ -12,7 +12,7 @@ html {
 .treemap {
   position: relative;
   width: 100vw;
-  height: calc(100vh - 120px);
+  height: calc(100vh - 100px);
 }
 
 .box {
@@ -80,7 +80,7 @@ $anim-duration: 300ms;
 }
 
 .breadcrumb-container {
-  margin: 1rem 0;
+  margin: 0.75rem 0 1rem 0;
   min-height: 1.5rem;
 
   ul {
@@ -225,7 +225,7 @@ figure {
     text-decoration: none;
     font-weight: bold;
     color: $link;
-    padding: calc(1rem + 4px) 1.5rem 1rem 1rem;
+    padding: calc(0.75rem + 4px) 1.5rem 0.75rem 1rem;
     border-bottom: 4px solid transparent;
     line-height: 1;
     &:hover {

@@ -238,7 +238,7 @@ const Treemap = ({ data, setGraphRoot, setHovered }) => {
   const dimensionsRef = useRef({})
   const cacheWindowSize = () => {
     dimensionsRef.current.width = window.innerWidth
-    dimensionsRef.current.height = document.body.clientHeight - 120
+    dimensionsRef.current.height = document.body.clientHeight - 100
   }
   useEffect(() => {
     const throttledResize = throttle(() => {
