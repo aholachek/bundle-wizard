@@ -2,7 +2,7 @@
 
 This command line utility makes it very easy to create visualizations of the JS bundles that were fetched for any specific entry point of an app.
 
-`bundle-wizard` simply takes a url and generates a visualization that shows you:
+Give `bundle-wizard` a url it will generate a visualization that shows you:
 
 1. The JavaScript bundles that were loaded.
 2. What percent of each part of that JS was actually used to render the page.
@@ -45,6 +45,10 @@ If you'd like to see more logging and detailed error messages, add this flag.
 
 `npx bundle-wizard --debug`
 
+## Credits
+
+The core functionality of this library is provided by the awesome [`source-map-explorer`](https://github.com/danvk/source-map-explorer).
+
 ## Requirements
 
 1. Downloadable sourcemaps
@@ -54,7 +58,3 @@ If you'd like to see more logging and detailed error messages, add this flag.
 2. A local Chrome installation
 
    The wizard uses `puppeteer-core` to load coverage information from the provided url. This requires you to have a fairly up-to-date version of Chrome installed on your machine.
-
-## Credits
-
-The core functionality of this library is provided by the awesome [`source-map-explorer`](https://github.com/danvk/source-map-explorer).
