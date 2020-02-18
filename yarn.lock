@@ -5493,9 +5493,9 @@ snapdragon@^0.8.1:
     source-map-resolve "^0.5.0"
     use "^3.1.0"
 
-source-map-explorer@aholachek/source-map-explorer#temp-fix:
+source-map-explorer@aholachek/source-map-explorer#temp-fix-2:
   version "2.2.2"
-  resolved "https://codeload.github.com/aholachek/source-map-explorer/tar.gz/54ac7537217948fed2144fc13b14636b66383d47"
+  resolved "https://codeload.github.com/aholachek/source-map-explorer/tar.gz/e2b3dc2785a3b34e0cea3f15334fba0d33760055"
   dependencies:
     btoa "^1.2.1"
     chalk "^3.0.0"
