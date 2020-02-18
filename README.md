@@ -11,7 +11,11 @@ This command line utility makes it very easy to create visualizations of the JS 
 
 Visualizing JS loaded by Reddit's mobile homepage:
 
-<img src="./reddit-mobile-analysis.png" alt="reddit mobile home">
+<a href="bundle-wizard.surge.sh">
+<img src="./reddit-mobile-analysis.png" alt="analysis of the reddit mobile sitee">
+</a>
+
+[Check out a live demo of this visualization](https://bundle-wizard.surge.sh)
 
 ## Quick start
 
