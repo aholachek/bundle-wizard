@@ -76,7 +76,7 @@ const downloadCoverage = async ({
     url = validateURL(url)
   }
 
-  console.log(`🤖  Recording page load info for ${url} ...`)
+  console.log(`🤖  Recording page load info for ${url} ...\n`)
 
   const isMobile = type === 'mobile'
 
@@ -106,7 +106,7 @@ const downloadCoverage = async ({
   await page.goto(url)
 
   const completeCoverage = async () => {
-    console.log('🤖  Writing coverage file to disk...')
+    console.log('📋  Writing coverage file to disk...')
     const jsCoverage = await page.coverage.stopJSCoverage()
     fs.writeFileSync(coverageFilePath, JSON.stringify(jsCoverage))
     await browser.close()
@@ -124,7 +124,6 @@ const downloadCoverage = async ({
       )
       console.log('\n💻  Close the browser window to continue.\n')
     } else {
-      console.log('\n🤖  Finishing up recording...\n')
       // allow page to make any errant http requests.
       // this might not be super necessary
       await delay(3000)

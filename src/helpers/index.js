@@ -10,7 +10,7 @@ const getPort = require('get-port')
 
 const visualizeBundles = async ({ bundles, coverageFilePath, url }) => {
   console.log(
-    `\n🖼️  Generating visualization...\n`
+    `\n🖼️   Generating visualization...\n`
   )
 
   try {
