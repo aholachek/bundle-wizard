@@ -1,8 +1,8 @@
 # 🧙‍♂️ bundle-wizard
 
-This command line utility makes it very easy to create visualizations of the JS bundles that were fetched for any specific entry point of an app.
+This command line utility makes it simple to create visualizations of the JS bundles that were fetched for any specific entry point of an app.
 
-Give `bundle-wizard` a url it will generate a visualization that shows you:
+Give `bundle-wizard` a url and it will generate a visualization that shows you:
 
 1. The JavaScript bundles that were loaded.
 2. What percent of each part of that JS was actually used to render the page.
