@@ -3,6 +3,7 @@ import React from 'react'
 const Summary = ({ data }) => {
   return (
     <div className="summary">
+      <h2>Analyzed page:</h2>
       <img
         className="screenshot"
         src="./screenshot.png"
@@ -15,9 +16,9 @@ const Summary = ({ data }) => {
           <thead>
             <tr>
               <th></th>
-              <th>bundle name</th>
-              <th>size (kb)</th>
-              <th>coverage</th>
+              <th>Bundle name</th>
+              <th>Size (kb)</th>
+              <th>Coverage</th>
             </tr>
           </thead>
           <tbody>
