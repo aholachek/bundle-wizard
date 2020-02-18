@@ -1,7 +1,7 @@
 const fs = require('fs-extra')
 const { explore } = require('source-map-explorer')
 const path = require('path')
-const request = require('request-promise-native')
+const fetch = require('node-fetch')
 const processData = require('./processData')
 const handler = require('serve-handler')
 const http = require('http')
@@ -68,13 +68,11 @@ const downloadSourcemaps = async ({ urlToFileDict }) => {
   let oneSourcemapDownloaded = false
 
   const promises = urls.map(url => {
-    return request({
-      gzip: true,
-      uri: `${url}.map`
-    })
-      .then(response => {
+    return fetch(`${url}.map`)
+      .then(response => response.json())
+      .then(json => {
         oneSourcemapDownloaded = true
-        fs.writeFileSync(`${urlToFileDict[url]}.map`, response)
+        fs.writeFileSync(`${urlToFileDict[url]}.map`, JSON.stringify(json))
       })
       .catch(error => {
         fs.removeSync(urlToFileDict[url])

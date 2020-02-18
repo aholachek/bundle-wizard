@@ -1,8 +1,7 @@
 const chromeLauncher = require('chrome-launcher')
 const puppeteer = require('puppeteer-core')
 const devices = require('puppeteer-core/DeviceDescriptors')
-const request = require('request')
-const util = require('util')
+const fetch = require('node-fetch')
 const fs = require('fs')
 const { Input } = require('enquirer')
 const { delay } = require('./helpers')
@@ -17,10 +16,8 @@ const launchBrowser = async ({ interact, isMobile }) => {
     const chrome = await chromeLauncher.launch(opts)
     opts.port = chrome.port
 
-    const resp = await util.promisify(request)(
-      `http://localhost:${opts.port}/json/version`
-    )
-    const { webSocketDebuggerUrl } = JSON.parse(resp.body)
+    const response = await fetch(`http://localhost:${opts.port}/json/version`)
+    const { webSocketDebuggerUrl } = await response.json()
 
     const browser = await puppeteer.connect({
       browserWSEndpoint: webSocketDebuggerUrl,

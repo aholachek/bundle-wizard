@@ -53,7 +53,7 @@ The core functionality of this library is provided by the awesome [`source-map-e
 
 1. Downloadable sourcemaps
 
-   This utility downloads sourcemaps from the url you provide. This requires the sourcemaps to be publically available, or at least available on your network. You might need to point to a testing instead of production build, for instance, as some apps disable sourcemaps in production.
+   This utility downloads sourcemaps from the url you provide. This requires the sourcemaps to be publically available, or at least available on your network. You might need to point to a testing instead of production build, for instance, as some apps disable sourcemaps in production. 
 
 2. A local Chrome installation
 
