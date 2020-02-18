@@ -108,15 +108,16 @@ $anim-duration: 300ms;
 }
 
 .tooltip {
+  font-size: 0.95rem;
   pointer-events: none;
   opacity: 0.9;
-  min-height: 5.2rem;
+  min-height: 4rem;
   transition: opacity 0.3s;
   transition-delay: 0.2s;
   position: fixed;
   background-color: black;
   color: white;
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   top: 0;
   right: 0;
   width: 100vw;

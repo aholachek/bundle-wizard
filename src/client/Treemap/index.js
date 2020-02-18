@@ -125,6 +125,13 @@ const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
   const filteredData = removeTooSmallNodes(dataCopy, allowedIds)
   const root = treemap(filteredData)
 
+  const renderBoxShadowBorder = d => {
+    if (typeof d.data.averageCoverage !== 'number') return '0 0 0 1px #a8a8a8'
+    const background = color(d.data.averageCoverage)
+    const borderColor = d3.hsl(background).darker(1)
+    return `0 0 0 1px ${borderColor}`
+  }
+
   const createEnteredElements = enter => {
     const entered = enter
       .filter(function(d) {
@@ -138,20 +145,16 @@ const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
         if (isTopLevel(d.data)) return 'white'
         return color(d.data.averageCoverage)
       })
-      .style('box-shadow', d => {
-        if (typeof d.data.averageCoverage !== 'number')
-          return '0 0 0 1px #a8a8a8'
-
-        const background = color(d.data.averageCoverage)
-        const borderColor = d3.hsl(background).darker(1)
-        return `0 0 0 1px ${borderColor}`
-      })
+      .style('box-shadow', renderBoxShadowBorder)
       .on('click', d => {
         setGraphRoot(d.data.id)
       })
       .on('mouseenter', function(d) {
         setHovered(d)
         if (isTopLevel(d.data)) return
+        if (typeof d.data.averageCoverage !== 'number')
+          return (this.style.boxShadow = `0 0 0 1px #a8a8a8, 0 5px 15px #c6c6c6`)
+
         const background = color(d.data.averageCoverage)
         const borderColor = d3.hsl(background).darker(1)
         const shadowColor = d3.hsl(background).darker(2)
@@ -159,10 +162,7 @@ const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
       })
       .on('mouseleave', function(d) {
         setHovered(null)
-        if (isTopLevel(d.data)) return
-        const background = color(d.data.averageCoverage)
-        const borderColor = d3.hsl(background).darker(1)
-        this.style.boxShadow = `0 0 0 1px ${borderColor}`
+        this.style.boxShadow = renderBoxShadowBorder(d)
       })
       .classed(`box ${isFirstRender ? 'animate-in-box' : ''}`, true)
       .style('z-index', d => {
