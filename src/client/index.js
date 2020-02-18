@@ -57,6 +57,7 @@ const Dashboard = () => {
               href="#"
               onClick={e => {
                 e.preventDefault()
+                e.stopPropagation()
                 setShowSummary(false)
               }}
             >
@@ -68,6 +69,7 @@ const Dashboard = () => {
               href="#"
               onClick={e => {
                 e.preventDefault()
+                e.stopPropagation()
                 setShowSummary(true)
               }}
             >

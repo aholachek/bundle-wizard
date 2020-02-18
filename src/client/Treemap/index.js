@@ -149,11 +149,20 @@ const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
       .on('click', d => {
         setGraphRoot(d.data.id)
       })
-      .on('mouseenter', d => {
+      .on('mouseenter', function(d) {
         setHovered(d)
+        if (isTopLevel(d.data)) return
+        const background = color(d.data.averageCoverage)
+        const borderColor = d3.hsl(background).darker(1)
+        const shadowColor = d3.hsl(background).darker(2)
+        this.style.boxShadow = `0 0 0 1px ${borderColor}, 0 5px 15px ${shadowColor}`
       })
-      .on('mouseleave', d => {
+      .on('mouseleave', function(d) {
         setHovered(null)
+        if (isTopLevel(d.data)) return
+        const background = color(d.data.averageCoverage)
+        const borderColor = d3.hsl(background).darker(1)
+        this.style.boxShadow = `0 0 0 1px ${borderColor}`
       })
       .classed(`box ${isFirstRender ? 'animate-in-box' : ''}`, true)
       .style('z-index', d => {
@@ -171,12 +180,6 @@ const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
       .style('left', d => `${d.x0}px`)
       .classed('no-interact', d => {
         return !d.parent
-      })
-      .each(function(d) {
-        const width = d.x1 - d.x0
-        const height = d.y1 - d.y0
-        this.dataset.prevWidth = width
-        this.dataset.prevHeight = height
       })
 
     const label = entered

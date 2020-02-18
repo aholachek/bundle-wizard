@@ -19,21 +19,18 @@ html {
   position: absolute;
   overflow: hidden;
   cursor: pointer;
-  transform-origin: 0 0;
+  transition: box-shadow 0.2s;
 }
 
 .no-interact {
   cursor: default;
-  &:hover {
-    box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.2);
-  }
 }
 
 $anim-duration: 300ms;
 .box-transition-position {
   .box {
     transition: top $anim-duration, left $anim-duration, width $anim-duration,
-      height $anim-duration;
+      height $anim-duration, box-shadow 0.2s;
   }
 }
 
