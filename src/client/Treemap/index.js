@@ -157,18 +157,24 @@ const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
       .on('mouseenter', function(d) {
         setHovered(d)
         if (isTopLevel(d.data)) return
-
-        if (typeof d.data.averageCoverage !== 'number')
-          return (this.style.boxShadow = `0 0 0 1px #a8a8a8, 0 5px 15px #c6c6c6`)
-
         const isBundle = d.parent && isTopLevel(d.parent.data)
 
-        if (isBundle) return `0 0 0 1px #000, 0 5px 15px hsla(0, 0%, 0%, 0.7)`
+        if (isBundle)
+          return (this.style.boxShadow = `0 0 0 1px #000${
+            d.parent ? `, 0 5px 15px hsla(0, 0%, 0%, 0.7)` : ''
+          }`)
+
+        if (typeof d.data.averageCoverage !== 'number')
+          return (this.style.boxShadow = `0 0 0 1px #a8a8a8${
+            d.parent ? `, 0 5px 15px hsla(0, 0%, 0%, 0.5)` : ''
+          }`)
 
         const background = color(d.data.averageCoverage)
         const borderColor = d3.hsl(background).darker(1)
         const shadowColor = d3.hsl(background).darker(2)
-        this.style.boxShadow = `0 0 0 1px ${borderColor}, 0 5px 15px ${shadowColor}`
+        this.style.boxShadow = `0 0 0 1px ${borderColor}${
+          d.parent ? `, 0 5px 15px ${shadowColor}` : ''
+        }`
       })
       .on('mouseleave', function(d) {
         setHovered(null)
