@@ -160,7 +160,6 @@ $anim-duration: 300ms;
   max-width: 1000px;
   margin: 0 auto;
   padding: 1rem 1rem 2rem 1rem;
-  text-align: center;
 
   h2 {
     font-size: 1rem;
@@ -191,6 +190,10 @@ $anim-duration: 300ms;
       width: 30rem;
     }
   }
+  tfoot > tr > td {
+    border-bottom: none;
+    font-weight: bold;
+  }
 }
 
 .screenshot {
@@ -198,7 +201,7 @@ $anim-duration: 300ms;
   max-height: 22rem;
   max-width: 40rem;
   width: auto;
-  margin: 0.5rem auto 2.5rem auto;
+  margin: 0.5rem 0 2.5rem 0;
   border: 1px solid hsla(0, 0%, 0%, 0.5);
 }
 
@@ -208,22 +211,24 @@ figure {
 
 .nav {
   display: flex;
-  justify-content: space-between;
   border-bottom: 1px solid hsla(0, 0%, 0%, 0.2);
   align-items: center;
   padding: 0 1rem;
   ul {
     display: flex;
     padding: 0;
-    margin: 0;
+    margin: 0 0 0 3rem;
+    li {
+      margin-right: 1rem;
+    }
   }
 
   a {
     height: 100%;
     display: block;
     text-decoration: none;
-    font-weight: bold;
-    color: $link;
+    font-weight: normal;
+    color: black;
     padding: calc(0.75rem + 4px) 1.5rem 0.75rem 1rem;
     border-bottom: 4px solid transparent;
     line-height: 1;
@@ -233,6 +238,7 @@ figure {
   }
   .active {
     a {
+      font-weight: bold;
       cursor: default;
       border-bottom: 4px solid $link;
       &:hover {

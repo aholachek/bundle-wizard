@@ -48,7 +48,7 @@ const Dashboard = () => {
       <Tooltip hovered={hovered} />
       <nav className="nav">
         <div className="logo">
-          🧙‍♂&nbsp;Analysis of <b>{(topLevelData || {}).url}</b>
+          Analysis of <b>{(topLevelData || {}).url}</b>
         </div>
         <ul>
           <li></li>
