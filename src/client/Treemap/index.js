@@ -126,6 +126,9 @@ const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
   const root = treemap(filteredData)
 
   const renderBoxShadowBorder = d => {
+    if (d.parent && isTopLevel(d.parent.data)) {
+      return '0 0 0 1px #000'
+    }
     if (typeof d.data.averageCoverage !== 'number') return '0 0 0 1px #a8a8a8'
     const background = color(d.data.averageCoverage)
     const borderColor = d3.hsl(background).darker(1)
@@ -152,8 +155,13 @@ const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
       .on('mouseenter', function(d) {
         setHovered(d)
         if (isTopLevel(d.data)) return
+
         if (typeof d.data.averageCoverage !== 'number')
           return (this.style.boxShadow = `0 0 0 1px #a8a8a8, 0 5px 15px #c6c6c6`)
+
+        const isBundle = d.parent && isTopLevel(d.parent.data)
+
+        if (isBundle) return `0 0 0 1px #000, 0 5px 15px hsla(0, 0%, 0%, 0.7)`
 
         const background = color(d.data.averageCoverage)
         const borderColor = d3.hsl(background).darker(1)
@@ -217,6 +225,7 @@ const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
         })
         .style('top', d => `${d.y0}px`)
         .style('left', d => `${d.x0}px`)
+        .style('box-shadow', renderBoxShadowBorder)
     }
     startAnimation()
   }

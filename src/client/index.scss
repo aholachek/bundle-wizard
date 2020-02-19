@@ -74,6 +74,9 @@ $anim-duration: 300ms;
   position: relative;
   z-index: 1;
   transition: opacity 1s;
+  > div {
+    font-weight: 600;
+  }
 }
 
 .breadcrumb-container {
@@ -167,6 +170,7 @@ $anim-duration: 300ms;
   }
 
   table {
+    margin-top: 1rem;
     table-layout: fixed;
     width: 100%;
     border-collapse: collapse;
@@ -194,6 +198,10 @@ $anim-duration: 300ms;
     border-bottom: none;
     font-weight: bold;
   }
+}
+
+.summary-row {
+  font-weight: bold;
 }
 
 .screenshot {

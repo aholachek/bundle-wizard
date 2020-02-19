@@ -1,9 +1,11 @@
 import React from 'react'
 
 const Summary = ({ data }) => {
-  const totalSize = data.children
-    .map(c => Math.ceil(c.realSize / 1000))
-    .reduce((acc, curr) => acc + curr, 0)
+  const totalSize = Math.ceil(
+    data.children
+      .map(c => c.realSize / 1000)
+      .reduce((acc, curr) => acc + curr, 0)
+  )
 
   const hasCoverage = data.children.filter(
     c => typeof c.averageCoverage === 'number'
@@ -29,6 +31,13 @@ const Summary = ({ data }) => {
             </tr>
           </thead>
           <tbody>
+            <tr className="summary-row">
+              <td></td>
+              <td>All bundles</td>
+              <td>{totalSize} kb</td>
+              <td>{averageCoverage}%</td>
+            </tr>
+
             {data.children
               .sort((a, b) => {
                 return b.realSize - a.realSize
@@ -44,14 +53,6 @@ const Summary = ({ data }) => {
                 )
               })}
           </tbody>
-          <tfoot>
-            <tr>
-              <td></td>
-              <td>All bundles</td>
-              <td>{totalSize} kb</td>
-              <td>{averageCoverage}%</td>
-            </tr>
-          </tfoot>
         </table>
       </div>
       <h2>Analyzed page:</h2>
