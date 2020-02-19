@@ -2,10 +2,13 @@
 
 This command line utility makes it simple to create visualizations of the JS bundles that were fetched for any specific entry point of an app.
 
-Give `bundle-wizard` a url and it will generate a visualization that shows you:
+## Quick start
 
-1. The JavaScript bundles that were loaded.
-2. What percent of each part of that JS was actually used to render the page.
+`npx bundle-wizard`
+
+That's it! The wizard will walk you through the rest.
+
+(You can also do the standard `npm install -g bundle-wizard`, and then run `bundle-wizard` if you plan on using the tool often).
 
 ## Example
 
@@ -17,19 +20,11 @@ Visualizing JS loaded by Reddit's mobile homepage:
 
 [Check out a live demo of this visualization](https://bundle-wizard.surge.sh)
 
-## Quick start
-
-`npx bundle-wizard`
-
-That's it! The wizard will walk you through the rest.
-
-(You can also do the standard `npm install -g bundle-wizard`, and then run `bundle-wizard` if you plan on using the tool often).
-
 ## Optional command line arguments
 
 ### `url` (initial argument)
 
-To skip the first prompt, provide a url as an initial argument:
+To skip the prompt, provide a url as an initial argument:
 
 `npx bundle-wizard nytimes.com`
 
@@ -53,7 +48,7 @@ The core functionality of this library is provided by the awesome [`source-map-e
 
 1. Downloadable sourcemaps
 
-   This utility downloads sourcemaps from the url you provide. This requires the sourcemaps to be publically available, or at least available on your network. You might need to point to a testing instead of production build, for instance, as some apps disable sourcemaps in production. 
+   This utility downloads sourcemaps from the url you provide. This requires the sourcemaps to be publically available, or at least available on your network. You might need to point to a testing instead of production build, for instance, as some apps disable sourcemaps in production.
 
 2. A local Chrome installation
 
