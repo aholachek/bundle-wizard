@@ -126,6 +126,8 @@ const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
   const root = treemap(filteredData)
 
   const renderBoxShadowBorder = d => {
+    if (isTopLevel(d.data)) return 'white'
+
     if (d.parent && isTopLevel(d.parent.data)) {
       return '0 0 0 1px #000'
     }

@@ -48,7 +48,11 @@ const Summary = ({ data }) => {
                     <td>{i + 1}</td>
                     <td>{node.name}</td>
                     <td>{Math.ceil(node.realSize / 1000)} kb</td>
-                    <td>{Math.floor(node.averageCoverage * 100)}%</td>
+                    <td>
+                      {typeof node.averageCoverage === 'number'
+                        ? `${Math.floor(node.averageCoverage * 100)}%`
+                        : 'n/a'}
+                    </td>
                   </tr>
                 )
               })}

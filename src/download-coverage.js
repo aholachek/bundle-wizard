@@ -126,9 +126,8 @@ const downloadCoverage = async ({
     } else {
       // allow page to make any errant http requests.
       // this might not be super necessary
-      await delay(3000)
+      await delay(1000)
       await page.screenshot({ path: `${tempFolderName}/screenshot.png` })
-
       resolve(await completeCoverage())
     }
   })
