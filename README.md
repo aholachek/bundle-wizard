@@ -28,7 +28,7 @@ Try any of the following commands to take a peek at the JavaScript code differen
 2. `npx bundle-wizard codesandbox.io`
 3. `npx bundle-wizard gatsbyjs.org`
 4. `npx bundle-wizard codecademy.com`
-5. `npx bundle-wizard https://id.atlassian.com/login`
+5. `npx bundle-wizard id.atlassian.com`
 
 ## Optional command line arguments
 
