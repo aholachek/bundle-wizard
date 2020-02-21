@@ -51,7 +51,8 @@ const main = async () => {
 
   await downloadSourcemaps({
     downloadsDir,
-    urlToFileDict
+    urlToFileDict,
+    url
   })
 
   const jsonFileName = `${tempFolderName}/sourcemap-analysis.json`

@@ -9,9 +9,7 @@ const open = require('open')
 const getPort = require('get-port')
 
 const visualizeBundles = async ({ bundles, coverageFilePath, url }) => {
-  console.log(
-    `\n🖼️   Generating visualization...\n`
-  )
+  console.log(`\n🖼️   Generating visualization...\n`)
 
   try {
     // await explore(bundles, {
@@ -60,14 +58,22 @@ const visualizeBundles = async ({ bundles, coverageFilePath, url }) => {
   }
 }
 
-const downloadSourcemaps = async ({ urlToFileDict }) => {
+const downloadSourcemaps = async ({ urlToFileDict, url: baseUrl }) => {
   const urls = Object.keys(urlToFileDict)
 
   console.log('\n⬇️   Downloading sourcemaps...')
 
   let oneSourcemapDownloaded = false
 
+  const firstPartyFailures = []
+
+  // hack
+  const normalizeHost = host => host.replace('www.', '')
+
+  const baseHost = normalizeHost(new URL(baseUrl).host)
+
   const promises = urls.map(url => {
+    const isFirstParty = normalizeHost(new URL(url).host) === baseHost
     return fetch(`${url}.map`)
       .then(response => response.json())
       .then(json => {
@@ -75,8 +81,9 @@ const downloadSourcemaps = async ({ urlToFileDict }) => {
         fs.writeFileSync(`${urlToFileDict[url]}.map`, JSON.stringify(json))
       })
       .catch(error => {
+        if (isFirstParty) firstPartyFailures.push(url)
         fs.removeSync(urlToFileDict[url])
-        if (global.debug) {
+        if (global.debug && !isFirstParty) {
           console.error(
             `\nUnable to download sourcemap: ${url}.map (this might not be an actual problem)\n`
           )
@@ -93,6 +100,12 @@ const downloadSourcemaps = async ({ urlToFileDict }) => {
         `❌  No sourcemaps could be downloaded, analysis cannot proceed.`
       )
       process.exit()
+    } else if (firstPartyFailures.length) {
+      console.error(
+        `\n🙅  Unable to download sourcemaps for the following asset urls. They will be removed from the analysis:\n\n${firstPartyFailures.join(
+          '\n'
+        )}`
+      )
     }
   })
 }
