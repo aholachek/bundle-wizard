@@ -292,7 +292,7 @@ const Treemap = ({ data, setGraphRoot, setHovered }) => {
     }
   }, [data.id])
 
-  return <svg ref={graphContainerRef} className="treemap"></div>
+  return <div ref={graphContainerRef} className="treemap"></div>
 }
 
 export default Treemap

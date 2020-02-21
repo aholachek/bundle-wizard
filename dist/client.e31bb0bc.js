@@ -63084,7 +63084,7 @@ var Treemap = function Treemap(_ref2) {
       }, dimensionsRef.current));
     }
   }, [data.id]);
-  return _react.default.createElement("svg", {
+  return _react.default.createElement("div", {
     ref: graphContainerRef,
     className: "treemap"
   });
