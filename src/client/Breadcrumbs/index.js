@@ -24,28 +24,26 @@ const Breadcrumbs = ({ data, setGraphRoot, hovered }) => {
   return (
     <div className="breadcrumb-container">
       {sections.length >= 2 ? (
-        <div>
-          <ul>
-            {sections.map((section, i, arr) => {
-              const text = section === 'topLevel' ? ' ⬅ all bundles' : section
-              return (
-                <>
-                  <li>
-                    <a
-                      onClick={() => {
-                        setGraphRoot(arr.slice(0, i + 1).join('/'))
-                      }}
-                      href="#"
-                    >
-                      {text}
-                    </a>
-                  </li>
-                  {i !== arr.length - 1 && <>&nbsp;/&nbsp;</>}
-                </>
-              )
-            })}
-          </ul>
-        </div>
+        <ul>
+          {sections.map((section, i, arr) => {
+            const text = section === 'topLevel' ? ' ⬅ all bundles' : section
+            return (
+              <>
+                <li>
+                  <a
+                    onClick={() => {
+                      setGraphRoot(arr.slice(0, i + 1).join('/'))
+                    }}
+                    href="#"
+                  >
+                    {text}
+                  </a>
+                </li>
+                {i !== arr.length - 1 && <>&nbsp;/&nbsp;</>}
+              </>
+            )
+          })}
+        </ul>
       ) : null}
       <Legend />
     </div>
