@@ -66,7 +66,7 @@ $anim-duration: 300ms;
   padding: 0.2rem 0.3rem;
   display: block;
   white-space: nowrap;
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   position: relative;
   z-index: 100;
   display: flex;
@@ -79,9 +79,49 @@ $anim-duration: 300ms;
   }
 }
 
+.legend {
+  margin-left: auto;
+  margin-right: .25rem;
+  position: relative;
+  text-align: center;
+  font-size: 0.8rem;
+  > div:first-of-type {
+    margin-bottom: 0.2rem;
+  }
+}
+
+.legend__text {
+  display: flex;
+  font-size: 0.8rem;
+  justify-content: space-between;
+  > div:nth-of-type(2) {
+    position: relative;
+    right: -1rem;
+  }
+}
+
+.legend__colors {
+  display: flex;
+  align-items: center;
+  > div {
+    width: 15px;
+    height: 10px;
+  }
+  .legend__label {
+    width: 40px;
+    position: relative;
+    top: -4px;
+  }
+  > .legend__label:last-of-type {
+    margin-left: .3rem;
+  }
+}
+
 .breadcrumb-container {
-  margin: 0.75rem 0 1rem 0;
+  margin: 0.5rem 0;
   min-height: 1.5rem;
+  display: flex;
+  justify-content: space-between;
 
   ul {
     margin: 0.5rem 1rem;

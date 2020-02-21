@@ -1,6 +1,6 @@
 # 🧙‍♂️ bundle-wizard
 
-This command line utility makes it simple to create visualizations of the JS bundles that were fetched for any specific entry point of an app.
+This command line utility makes it simple to create visualizations of the JS bundles that were fetched for any specific page (or "entry point") of a web app.
 
 ## Quick start
 
@@ -20,13 +20,22 @@ Visualizing JS loaded by Reddit's mobile homepage:
 
 [Check out a live demo of this visualization](https://bundle-wizard.surge.sh)
 
+## Fun
+
+Try any of the following commands to take a peek at the JavaScript code different sites are shipping to production:
+
+1. `npx bundle-wizard reddit.com`
+2. `npx bundle-wizard codesandbox.io`
+3. `npx bundle-wizard gatsbyjs.org`
+4. `npx bundle-wizard codecademy.com`
+
 ## Optional command line arguments
 
 ### `url` (initial argument)
 
-To skip the prompt, provide a url as an initial argument:
+To skip the initial prompt, provide a url as a first argument:
 
-`npx bundle-wizard nytimes.com`
+`npx bundle-wizard reddit.com`
 
 ### `desktop` flag
 

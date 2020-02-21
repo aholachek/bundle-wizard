@@ -63084,7 +63084,7 @@ var Treemap = function Treemap(_ref2) {
       }, dimensionsRef.current));
     }
   }, [data.id]);
-  return _react.default.createElement("div", {
+  return _react.default.createElement("svg", {
     ref: graphContainerRef,
     className: "treemap"
   });
@@ -63102,7 +63102,41 @@ exports.default = void 0;
 
 var _react = _interopRequireDefault(require("react"));
 
+var d3 = _interopRequireWildcard(require("d3"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
+var color = d3.scaleSequential([-0.2, 1.15], d3.interpolateRdYlGn);
+
+var Legend = function Legend() {
+  return _react.default.createElement("div", {
+    className: "legend"
+  }, _react.default.createElement("div", null, "code coverage"), _react.default.createElement("div", {
+    className: "legend__colors"
+  }, _react.default.createElement("div", {
+    className: "legend__label"
+  }, "0%"), _toConsumableArray(Array(11).keys()).map(function (i) {
+    return _react.default.createElement("div", {
+      style: {
+        backgroundColor: color(i / 10)
+      }
+    });
+  }), _react.default.createElement("div", {
+    className: "legend__label"
+  }, "100%")));
+};
 
 var Breadcrumbs = function Breadcrumbs(_ref) {
   var data = _ref.data,
@@ -63119,13 +63153,13 @@ var Breadcrumbs = function Breadcrumbs(_ref) {
       },
       href: "#"
     }, text)), i !== arr.length - 1 && _react.default.createElement(_react.default.Fragment, null, "\xA0/\xA0"));
-  }))) : null);
+  }))) : null, _react.default.createElement(Legend, null));
 };
 
 Breadcrumbs.propTypes = {};
 var _default = Breadcrumbs;
 exports.default = _default;
-},{"react":"../../node_modules/react/index.js"}],"Summary/index.js":[function(require,module,exports) {
+},{"react":"../../node_modules/react/index.js","d3":"../../node_modules/d3/index.js"}],"Summary/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -63360,7 +63394,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62766" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53388" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

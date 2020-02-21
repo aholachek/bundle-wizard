@@ -626,7 +626,7 @@ html {
   padding: 0.2rem 0.3rem;
   display: block;
   white-space: nowrap;
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   position: relative;
   z-index: 100;
   display: flex;
@@ -639,9 +639,49 @@ html {
   font-weight: 600;
 }
 
+.legend {
+  margin-left: auto;
+  margin-right: 0.25rem;
+  position: relative;
+  text-align: center;
+  font-size: 0.8rem;
+}
+.legend > div:first-of-type {
+  margin-bottom: 0.2rem;
+}
+
+.legend__text {
+  display: flex;
+  font-size: 0.8rem;
+  justify-content: space-between;
+}
+.legend__text > div:nth-of-type(2) {
+  position: relative;
+  right: -1rem;
+}
+
+.legend__colors {
+  display: flex;
+  align-items: center;
+}
+.legend__colors > div {
+  width: 15px;
+  height: 10px;
+}
+.legend__colors .legend__label {
+  width: 40px;
+  position: relative;
+  top: -4px;
+}
+.legend__colors > .legend__label:last-of-type {
+  margin-left: 0.3rem;
+}
+
 .breadcrumb-container {
-  margin: 0.75rem 0 1rem 0;
+  margin: 0.5rem 0;
   min-height: 1.5rem;
+  display: flex;
+  justify-content: space-between;
 }
 .breadcrumb-container ul {
   margin: 0.5rem 1rem;
