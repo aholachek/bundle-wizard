@@ -4,7 +4,7 @@ This command line utility makes it simple to create visualizations of the JS bun
 
 ## Quick start
 
-`npx bundle-wizard`
+Simply run the command `npx bundle-wizard` to get started.
 
 ## Example
 
