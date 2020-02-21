@@ -6,7 +6,7 @@ const fs = require('fs')
 const { Input } = require('enquirer')
 const { delay } = require('./helpers')
 
-const launchBrowser = async ({ interact, isMobile }) => {
+const launchBrowser = async ({ interact, isMobile, ignoreHTTPSErrors }) => {
   const opts = {
     chromeFlags: interact ? [] : ['--headless'],
     logLevel: global.debug ? 'info' : 'error',
@@ -18,10 +18,10 @@ const launchBrowser = async ({ interact, isMobile }) => {
 
     const response = await fetch(`http://localhost:${opts.port}/json/version`)
     const { webSocketDebuggerUrl } = await response.json()
-
     const browser = await puppeteer.connect({
       browserWSEndpoint: webSocketDebuggerUrl,
-      isMobile
+      isMobile,
+      ignoreHTTPSErrors
     })
     return [chrome, browser]
   } catch (e) {
@@ -33,7 +33,10 @@ const launchBrowser = async ({ interact, isMobile }) => {
 
 const validateURL = url => {
   if (!/^http/.test(url)) {
-    url = `https://${url}`
+    const isLocalhostHack =
+      url.includes('localhost') || url.includes('127.0.0.1')
+    if (isLocalhostHack) url = `http://${url}`
+    else url = `https://${url}`
     return url
   }
   try {
@@ -63,6 +66,7 @@ const promptForURL = async () => {
 
 const downloadCoverage = async ({
   url,
+  ignoreHTTPSErrors,
   type,
   interact,
   downloadsDir,
@@ -80,7 +84,11 @@ const downloadCoverage = async ({
 
   const isMobile = type === 'mobile'
 
-  const [chrome, browser] = await launchBrowser({ interact, isMobile })
+  const [chrome, browser] = await launchBrowser({
+    interact,
+    isMobile,
+    ignoreHTTPSErrors
+  })
 
   const page = await (await browser.pages())[0]
 

@@ -23,9 +23,12 @@ const main = async () => {
 
   if (argv.debug) global.debug = true
 
+  const ignoreHTTPSErrors = argv.ignoreHTTPSErrors || false
+
   try {
     const downloadedData = await downloadCoverage({
       url: (argv._ && argv._[0]) || argv.url,
+      ignoreHTTPSErrors,
       type: argv.desktop ? 'desktop' : 'mobile',
       interact: argv.interact,
       downloadsDir,
@@ -52,7 +55,8 @@ const main = async () => {
   await downloadSourcemaps({
     downloadsDir,
     urlToFileDict,
-    url
+    url,
+    ignoreHTTPSErrors
   })
 
   const jsonFileName = `${tempFolderName}/sourcemap-analysis.json`
