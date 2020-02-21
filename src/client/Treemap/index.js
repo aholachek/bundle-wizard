@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react'
 import * as d3 from 'd3'
-import { usePrevious } from '../utils'
 import throttle from 'lodash.throttle'
 import cloneDeep from 'lodash.clonedeep'
 
@@ -254,7 +253,6 @@ const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
 
 const Treemap = ({ data, setGraphRoot, setHovered }) => {
   const graphContainerRef = React.useRef(null)
-  const previousDataId = usePrevious(data.id)
   const dimensionsRef = useRef({})
   const cacheWindowSize = () => {
     dimensionsRef.current.width = window.innerWidth
@@ -280,19 +278,16 @@ const Treemap = ({ data, setGraphRoot, setHovered }) => {
 
   useEffect(() => {
     cacheWindowSize()
-
-    if (previousDataId !== data.id) {
-      renderGraph({
-        el: graphContainerRef.current,
-        data,
-        setGraphRoot,
-        setHovered,
-        ...dimensionsRef.current
-      })
-    }
+    renderGraph({
+      el: graphContainerRef.current,
+      data,
+      setGraphRoot,
+      setHovered,
+      ...dimensionsRef.current
+    })
   }, [data.id])
 
   return <div ref={graphContainerRef} className="treemap"></div>
 }
 
-export default Treemap
+export default React.memo(Treemap)

@@ -24,14 +24,21 @@ const Dashboard = () => {
   const [showSummary, setShowSummary] = React.useState(false)
   const [topLevelData, setTopLevelData] = React.useState({})
 
-  const setData = data => {
-    _setData(data)
-    setHovered(null)
-  }
+  const setData = React.useCallback(
+    data => {
+      _setData(data)
+      setHovered(null)
+    },
+    [_setData, setHovered]
+  )
 
-  const setGraphRoot = id => {
-    setData(findBranch(id, topLevelData))
-  }
+  const setGraphRoot = React.useCallback(
+    id => {
+      setData(findBranch(id, topLevelData))
+    },
+    [setData, topLevelData]
+  )
+
   useEffect(() => {
     fetch('./treeData.json').then(response => {
       response.json().then(data => {

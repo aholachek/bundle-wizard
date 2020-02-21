@@ -585,7 +585,6 @@ html {
   position: absolute;
   overflow: hidden;
   cursor: pointer;
-  transition: box-shadow 0.2s;
 }
 
 .no-interact {
@@ -593,7 +592,7 @@ html {
 }
 
 .box-transition-position .box {
-  transition: top 300ms, left 300ms, width 300ms, height 300ms, box-shadow 0.2s;
+  transition: top 500ms, left 500ms, width 500ms, height 500ms;
 }
 
 @keyframes fadeIn {
@@ -614,8 +613,8 @@ html {
 }
 .animate-in-box {
   opacity: 0;
-  animation: fadeIn 0.25s forwards;
-  animation-delay: 350ms;
+  animation: fadeIn 400ms forwards;
+  animation-delay: 500ms;
 }
 
 .animate-out-box {

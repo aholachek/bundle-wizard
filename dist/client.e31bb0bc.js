@@ -60575,28 +60575,7 @@ Object.keys(_d3Zoom).forEach(function (key) {
     }
   });
 });
-},{"./dist/package.js":"../../node_modules/d3/dist/package.js","d3-array":"../../node_modules/d3-array/src/index.js","d3-axis":"../../node_modules/d3-axis/src/index.js","d3-brush":"../../node_modules/d3-brush/src/index.js","d3-chord":"../../node_modules/d3-chord/src/index.js","d3-collection":"../../node_modules/d3-collection/src/index.js","d3-color":"../../node_modules/d3-color/src/index.js","d3-contour":"../../node_modules/d3-contour/src/index.js","d3-dispatch":"../../node_modules/d3-dispatch/src/index.js","d3-drag":"../../node_modules/d3-drag/src/index.js","d3-dsv":"../../node_modules/d3-dsv/src/index.js","d3-ease":"../../node_modules/d3-ease/src/index.js","d3-fetch":"../../node_modules/d3-fetch/src/index.js","d3-force":"../../node_modules/d3-force/src/index.js","d3-format":"../../node_modules/d3-format/src/index.js","d3-geo":"../../node_modules/d3-geo/src/index.js","d3-hierarchy":"../../node_modules/d3-hierarchy/src/index.js","d3-interpolate":"../../node_modules/d3-interpolate/src/index.js","d3-path":"../../node_modules/d3-path/src/index.js","d3-polygon":"../../node_modules/d3-polygon/src/index.js","d3-quadtree":"../../node_modules/d3-quadtree/src/index.js","d3-random":"../../node_modules/d3-random/src/index.js","d3-scale":"../../node_modules/d3-scale/src/index.js","d3-scale-chromatic":"../../node_modules/d3-scale-chromatic/src/index.js","d3-selection":"../../node_modules/d3-selection/src/index.js","d3-shape":"../../node_modules/d3-shape/src/index.js","d3-time":"../../node_modules/d3-time/src/index.js","d3-time-format":"../../node_modules/d3-time-format/src/index.js","d3-timer":"../../node_modules/d3-timer/src/index.js","d3-transition":"../../node_modules/d3-transition/src/index.js","d3-voronoi":"../../node_modules/d3-voronoi/src/index.js","d3-zoom":"../../node_modules/d3-zoom/src/index.js"}],"utils.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.usePrevious = usePrevious;
-
-var _react = _interopRequireDefault(require("react"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function usePrevious(value) {
-  var ref = _react.default.useRef();
-
-  _react.default.useEffect(function () {
-    ref.current = value;
-  }, [value]);
-
-  return ref.current;
-}
-},{"react":"../../node_modules/react/index.js"}],"../../node_modules/lodash.throttle/index.js":[function(require,module,exports) {
+},{"./dist/package.js":"../../node_modules/d3/dist/package.js","d3-array":"../../node_modules/d3-array/src/index.js","d3-axis":"../../node_modules/d3-axis/src/index.js","d3-brush":"../../node_modules/d3-brush/src/index.js","d3-chord":"../../node_modules/d3-chord/src/index.js","d3-collection":"../../node_modules/d3-collection/src/index.js","d3-color":"../../node_modules/d3-color/src/index.js","d3-contour":"../../node_modules/d3-contour/src/index.js","d3-dispatch":"../../node_modules/d3-dispatch/src/index.js","d3-drag":"../../node_modules/d3-drag/src/index.js","d3-dsv":"../../node_modules/d3-dsv/src/index.js","d3-ease":"../../node_modules/d3-ease/src/index.js","d3-fetch":"../../node_modules/d3-fetch/src/index.js","d3-force":"../../node_modules/d3-force/src/index.js","d3-format":"../../node_modules/d3-format/src/index.js","d3-geo":"../../node_modules/d3-geo/src/index.js","d3-hierarchy":"../../node_modules/d3-hierarchy/src/index.js","d3-interpolate":"../../node_modules/d3-interpolate/src/index.js","d3-path":"../../node_modules/d3-path/src/index.js","d3-polygon":"../../node_modules/d3-polygon/src/index.js","d3-quadtree":"../../node_modules/d3-quadtree/src/index.js","d3-random":"../../node_modules/d3-random/src/index.js","d3-scale":"../../node_modules/d3-scale/src/index.js","d3-scale-chromatic":"../../node_modules/d3-scale-chromatic/src/index.js","d3-selection":"../../node_modules/d3-selection/src/index.js","d3-shape":"../../node_modules/d3-shape/src/index.js","d3-time":"../../node_modules/d3-time/src/index.js","d3-time-format":"../../node_modules/d3-time-format/src/index.js","d3-timer":"../../node_modules/d3-timer/src/index.js","d3-transition":"../../node_modules/d3-transition/src/index.js","d3-voronoi":"../../node_modules/d3-voronoi/src/index.js","d3-zoom":"../../node_modules/d3-zoom/src/index.js"}],"../../node_modules/lodash.throttle/index.js":[function(require,module,exports) {
 var global = arguments[3];
 /**
  * lodash (Custom Build) <https://lodash.com/>
@@ -62802,8 +62781,6 @@ var _react = _interopRequireWildcard(require("react"));
 
 var d3 = _interopRequireWildcard(require("d3"));
 
-var _utils = require("../utils");
-
 var _lodash = _interopRequireDefault(require("lodash.throttle"));
 
 var _lodash2 = _interopRequireDefault(require("lodash.clonedeep"));
@@ -63049,7 +63026,6 @@ var Treemap = function Treemap(_ref2) {
 
   var graphContainerRef = _react.default.useRef(null);
 
-  var previousDataId = (0, _utils.usePrevious)(data.id);
   var dimensionsRef = (0, _react.useRef)({});
 
   var cacheWindowSize = function cacheWindowSize() {
@@ -63074,15 +63050,12 @@ var Treemap = function Treemap(_ref2) {
   }, []);
   (0, _react.useEffect)(function () {
     cacheWindowSize();
-
-    if (previousDataId !== data.id) {
-      renderGraph(_objectSpread({
-        el: graphContainerRef.current,
-        data: data,
-        setGraphRoot: setGraphRoot,
-        setHovered: setHovered
-      }, dimensionsRef.current));
-    }
+    renderGraph(_objectSpread({
+      el: graphContainerRef.current,
+      data: data,
+      setGraphRoot: setGraphRoot,
+      setHovered: setHovered
+    }, dimensionsRef.current));
   }, [data.id]);
   return _react.default.createElement("div", {
     ref: graphContainerRef,
@@ -63090,9 +63063,10 @@ var Treemap = function Treemap(_ref2) {
   });
 };
 
-var _default = Treemap;
+var _default = _react.default.memo(Treemap);
+
 exports.default = _default;
-},{"react":"../../node_modules/react/index.js","d3":"../../node_modules/d3/index.js","../utils":"utils.js","lodash.throttle":"../../node_modules/lodash.throttle/index.js","lodash.clonedeep":"../../node_modules/lodash.clonedeep/index.js"}],"Breadcrumbs/index.js":[function(require,module,exports) {
+},{"react":"../../node_modules/react/index.js","d3":"../../node_modules/d3/index.js","lodash.throttle":"../../node_modules/lodash.throttle/index.js","lodash.clonedeep":"../../node_modules/lodash.clonedeep/index.js"}],"Breadcrumbs/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -63306,15 +63280,15 @@ var Dashboard = function Dashboard() {
       topLevelData = _React$useState8[0],
       setTopLevelData = _React$useState8[1];
 
-  var setData = function setData(data) {
+  var setData = _react.default.useCallback(function (data) {
     _setData(data);
 
     setHovered(null);
-  };
+  }, [_setData, setHovered]);
 
-  var setGraphRoot = function setGraphRoot(id) {
+  var setGraphRoot = _react.default.useCallback(function (id) {
     setData(findBranch(id, topLevelData));
-  };
+  }, [setData, topLevelData]);
 
   (0, _react.useEffect)(function () {
     fetch('./treeData.json').then(function (response) {
