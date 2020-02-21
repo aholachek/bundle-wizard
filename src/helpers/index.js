@@ -1,6 +1,7 @@
 const fs = require('fs-extra')
 const { explore } = require('source-map-explorer')
 const path = require('path')
+const https = require('https')
 const fetch = require('node-fetch')
 const processData = require('./processData')
 const handler = require('serve-handler')
@@ -12,15 +13,6 @@ const visualizeBundles = async ({ bundles, coverageFilePath, url }) => {
   console.log(`\n🖼️   Generating visualization...\n`)
 
   try {
-    // await explore(bundles, {
-    //   output: {
-    //     format: 'html',
-    //     filename: 'test.html'
-    //   },
-    //   coverage: coverageFilePath
-    // })
-
-    // return
 
     const data = await explore(bundles, {
       output: {
@@ -58,7 +50,11 @@ const visualizeBundles = async ({ bundles, coverageFilePath, url }) => {
   }
 }
 
-const downloadSourcemaps = async ({ urlToFileDict, url: baseUrl }) => {
+const downloadSourcemaps = async ({
+  urlToFileDict,
+  url: baseUrl,
+  ignoreHTTPSErrors
+}) => {
   const urls = Object.keys(urlToFileDict)
 
   console.log('\n⬇️   Downloading sourcemaps...')
@@ -72,9 +68,15 @@ const downloadSourcemaps = async ({ urlToFileDict, url: baseUrl }) => {
 
   const baseHost = normalizeHost(new URL(baseUrl).host)
 
+  const ignoreHTTPSErrorsAgent = new https.Agent({
+    rejectUnauthorized: false
+  })
+
   const promises = urls.map(url => {
     const isFirstParty = normalizeHost(new URL(url).host) === baseHost
-    return fetch(`${url}.map`)
+    return fetch(`${url}.map`, {
+      agent: ignoreHTTPSErrors ? ignoreHTTPSErrorsAgent : undefined
+    })
       .then(response => response.json())
       .then(json => {
         oneSourcemapDownloaded = true
@@ -83,10 +85,9 @@ const downloadSourcemaps = async ({ urlToFileDict, url: baseUrl }) => {
       .catch(error => {
         if (isFirstParty) firstPartyFailures.push(url)
         fs.removeSync(urlToFileDict[url])
-        if (global.debug && !isFirstParty) {
-          console.error(
-            `\nUnable to download sourcemap: ${url}.map (this might not be an actual problem)\n`
-          )
+        if (global.debug) {
+          console.error(`\nUnable to download sourcemap: ${url}.map\n`)
+          console.error(error)
 
           if (error.statusCode)
             console.error(`Request failed with statuscode: ${error.statusCode}`)
@@ -102,7 +103,7 @@ const downloadSourcemaps = async ({ urlToFileDict, url: baseUrl }) => {
       process.exit()
     } else if (firstPartyFailures.length) {
       console.error(
-        `\n🙅  Unable to download sourcemaps for the following asset urls. They will be removed from the analysis:\n\n${firstPartyFailures.join(
+        `\n🙅  Unable to download sourcemaps for the following urls. They will be removed from the analysis:\n\n${firstPartyFailures.join(
           '\n'
         )}`
       )

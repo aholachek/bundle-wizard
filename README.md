@@ -50,6 +50,12 @@ If you'd like to see more logging and detailed error messages, add this flag.
 
 `npx bundle-wizard --debug`
 
+### `ignoreHTTPSErrors` flag
+
+If you are running an HTTPS connection on localhost and want to test a local site, you'll need to use this setting to prevent self-signed certificate errors:
+
+`npx bundle-wizard https://localhost:5000 --ignoreHTTPSErrors`
+
 ## Credits
 
 The core functionality of this library is provided by the awesome [`source-map-explorer`](https://github.com/danvk/source-map-explorer).
