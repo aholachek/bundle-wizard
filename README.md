@@ -6,13 +6,9 @@ This command line utility makes it simple to create visualizations of the JS bun
 
 `npx bundle-wizard`
 
-That's it! The wizard will walk you through the rest.
-
-(You can also do the standard `npm install -g bundle-wizard`, and then run `bundle-wizard` if you plan on using the tool often).
-
 ## Example
 
-Visualizing JS loaded by Reddit's mobile homepage:
+`npx bundle-wizard reddit.com`
 
 <a href="https://bundle-wizard.surge.sh">
 <img src="./reddit-mobile-analysis.png" alt="analysis of the reddit mobile sitee">
