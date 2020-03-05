@@ -18,7 +18,31 @@ const Legend = () => {
   )
 }
 
-const Breadcrumbs = ({ data, setGraphRoot, hovered }) => {
+const ScriptsWithoutSourcemapControl = ({
+  toggleScriptsWithoutSourcemaps,
+  showScriptsWithoutSourcemaps
+}) => {
+  return (
+    <div>
+      <label htmlFor="swsc">show sourcemap-less scripts</label>
+      <input
+        type="checkbox"
+        name=""
+        id="swsc"
+        onChange={toggleScriptsWithoutSourcemaps}
+        checked={showScriptsWithoutSourcemaps}
+      />
+    </div>
+  )
+}
+
+const Breadcrumbs = ({
+  data,
+  setGraphRoot,
+  hovered,
+  toggleScriptsWithoutSourcemaps,
+  showScriptsWithoutSourcemaps
+}) => {
   const sections = data.id.split('/')
 
   return (
@@ -45,6 +69,10 @@ const Breadcrumbs = ({ data, setGraphRoot, hovered }) => {
           })}
         </ul>
       ) : null}
+      <ScriptsWithoutSourcemapControl
+        showScriptsWithoutSourcemaps={showScriptsWithoutSourcemaps}
+        toggleScriptsWithoutSourcemaps={toggleScriptsWithoutSourcemaps}
+      />
       <Legend />
     </div>
   )

@@ -23,6 +23,14 @@ const Dashboard = () => {
   const [hovered, setHovered] = React.useState(null)
   const [showSummary, setShowSummary] = React.useState(false)
   const [topLevelData, setTopLevelData] = React.useState({})
+  const [
+    showScriptsWithoutSourcemaps,
+    setShowScriptsWithoutSourcemaps
+  ] = React.useState(false)
+
+  const toggleScriptsWithoutSourcemaps = () => {
+    setShowScriptsWithoutSourcemaps(!showScriptsWithoutSourcemaps)
+  }
 
   const setData = React.useCallback(
     data => {
@@ -93,11 +101,14 @@ const Dashboard = () => {
             data={data}
             setGraphRoot={setGraphRoot}
             hovered={hovered}
+            toggleScriptsWithoutSourcemaps={toggleScriptsWithoutSourcemaps}
+            showScriptsWithoutSourcemaps={showScriptsWithoutSourcemaps}
           />
           <Treemap
             data={data}
             setGraphRoot={setGraphRoot}
             setHovered={setHovered}
+            showScriptsWithoutSourcemaps={showScriptsWithoutSourcemaps}
           />
         </>
       )}
