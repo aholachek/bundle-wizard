@@ -12,7 +12,8 @@ const visualizeBundles = async ({
   bundles,
   coverageFilePath,
   url,
-  scriptsWithoutSourcemapsDict
+  scriptsWithoutSourcemapsDict,
+  priorities
 }) => {
   console.log(`\n🖼️   Generating visualization...\n`)
 
@@ -31,7 +32,9 @@ const visualizeBundles = async ({
       scriptsWithoutSourcemapsDict
     )
     const fileName = `${tempFolder}/treeData.json`
-    processedData.url = url
+
+    Object.assign(processedData, { url, priorities })
+
     fs.writeFileSync(fileName, JSON.stringify(processedData))
     fs.copySync(fileName, `${distFolder}/treeData.json`)
     fs.copySync(`${tempFolder}/screenshot.png`, `${distFolder}/screenshot.png`)

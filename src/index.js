@@ -96,7 +96,10 @@ const main = async () => {
     })
   })
 
-  await processTracing(JSON.parse(tracing), downloadsDir)
+  const { priorities } = await processTracing(
+    JSON.parse(tracing),
+    downloadsDir
+  )
 
   const jsonFileName = `${tempFolderName}/sourcemap-analysis.json`
 
@@ -110,7 +113,8 @@ const main = async () => {
     downloadsDir,
     coverageFilePath,
     url,
-    scriptsWithoutSourcemapsDict
+    scriptsWithoutSourcemapsDict,
+    priorities
   })
 }
 

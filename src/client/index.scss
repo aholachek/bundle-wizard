@@ -200,6 +200,10 @@ $anim-duration: 400ms;
   opacity: 0;
 }
 
+.summary-row {
+  font-weight: bold;
+}
+
 .summary {
   max-width: 1000px;
   margin: 0 auto;
@@ -228,21 +232,25 @@ $anim-duration: 400ms;
     }
     td:first-of-type,
     th:first-of-type {
-      width: 2rem;
+      width: 3rem;
     }
     td:nth-of-type(2),
     th:nth-of-type(2) {
       width: 30rem;
     }
+
+    td:last-of-type,
+    th:last-of-type {
+      width: 15rem;
+    }
+  }
+  td:last-of-type {
+    text-align: center;
   }
   tfoot > tr > td {
     border-bottom: none;
     font-weight: bold;
   }
-}
-
-.summary-row {
-  font-weight: bold;
 }
 
 .screenshot {
@@ -309,4 +317,13 @@ figure {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.sourcemap-control {
+  position: absolute;
+  top: 0.7rem;
+  right: 1rem;
+  font-weight: bold;
+  display: flex;
+  align-items:center;
 }

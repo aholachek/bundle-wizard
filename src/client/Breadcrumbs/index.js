@@ -23,15 +23,18 @@ const ScriptsWithoutSourcemapControl = ({
   showScriptsWithoutSourcemaps
 }) => {
   return (
-    <div>
-      <label htmlFor="swsc">show sourcemap-less scripts</label>
+    <div className="sourcemap-control" title="By default, scripts without sourcemaps are not shown. Toggle this setting to view all scripts.">
       <input
         type="checkbox"
         name=""
         id="swsc"
         onChange={toggleScriptsWithoutSourcemaps}
-        checked={showScriptsWithoutSourcemaps}
+        checked={!showScriptsWithoutSourcemaps}
       />
+      &nbsp;&nbsp;
+      <label htmlFor="swsc">
+        only show JS bundles with sourcemaps
+      </label>
     </div>
   )
 }
@@ -39,7 +42,6 @@ const ScriptsWithoutSourcemapControl = ({
 const Breadcrumbs = ({
   data,
   setGraphRoot,
-  hovered,
   toggleScriptsWithoutSourcemaps,
   showScriptsWithoutSourcemaps
 }) => {
