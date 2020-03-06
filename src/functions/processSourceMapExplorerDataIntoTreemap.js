@@ -113,6 +113,4 @@ const processData = (data, scriptsWithoutSourcemapsDict) => {
   return processed
 }
 
-// now update the top level data to contain info about
-
 module.exports = processData
