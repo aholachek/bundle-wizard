@@ -28,6 +28,8 @@ const Dashboard = () => {
     setShowScriptsWithoutSourcemaps
   ] = React.useState(false)
 
+  const isTopLevel =  data && data.name === 'topLevel'
+
   const toggleScriptsWithoutSourcemaps = () => {
     setShowScriptsWithoutSourcemaps(!showScriptsWithoutSourcemaps)
   }
@@ -94,11 +96,18 @@ const Dashboard = () => {
         </ul>
       </nav>
       {showSummary ? (
-        <Summary data={topLevelData} />
+        <Summary
+          data={topLevelData}
+          setGraphRoot={(...args) => {
+            setShowSummary(false)
+            setGraphRoot(...args)
+          }}
+        />
       ) : (
         <>
           <Breadcrumbs
             data={data}
+            isTopLevel={isTopLevel}
             setGraphRoot={setGraphRoot}
             hovered={hovered}
             toggleScriptsWithoutSourcemaps={toggleScriptsWithoutSourcemaps}

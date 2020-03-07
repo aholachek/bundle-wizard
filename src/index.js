@@ -96,10 +96,7 @@ const main = async () => {
     })
   })
 
-  const { priorities } = await processTracing(
-    JSON.parse(tracing),
-    downloadsDir
-  )
+  const priorities = await processTracing(JSON.parse(tracing), downloadsDir)
 
   const jsonFileName = `${tempFolderName}/sourcemap-analysis.json`
 

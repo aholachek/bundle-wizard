@@ -2275,7 +2275,7 @@ debug@2.6.9, debug@^2.2.0, debug@^2.3.3, debug@^2.6.8:
   dependencies:
     ms "2.0.0"
 
-debug@4, debug@^4.1.0, debug@^4.1.1:
+debug@4, debug@^4.1.0:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/debug/-/debug-4.1.1.tgz#3b72260255109c6b589cee050f1d516139664791"
   integrity sha512-pYAIzeRo8J6KPEaJ0VWOh5Pzkbw/RetuzehGM7QRRX5he4fPHx2rdKMB256ehJCkX+XRQm16eZLqLNS8RSZXZw==
@@ -4163,7 +4163,7 @@ onetime@^2.0.0:
   dependencies:
     mimic-fn "^1.0.0"
 
-open@^7.0.0, open@^7.0.2:
+open@^7.0.2:
   version "7.0.2"
   resolved "https://registry.yarnpkg.com/open/-/open-7.0.2.tgz#fb3681f11f157f2361d2392307548ca1792960e8"
   integrity sha512-70E/pFTPr7nZ9nLDPNTcj3IVqnNvKuP4VsBmoKV9YGTnChe0mlS3C4qM7qKarhZ8rGaHKLfo+vBTHXDp6ZSyLQ==
@@ -5488,9 +5488,10 @@ snapdragon@^0.8.1:
     source-map-resolve "^0.5.0"
     use "^3.1.0"
 
-source-map-explorer@aholachek/source-map-explorer#temp-fix-2:
-  version "2.2.2"
-  resolved "https://codeload.github.com/aholachek/source-map-explorer/tar.gz/e2b3dc2785a3b34e0cea3f15334fba0d33760055"
+source-map-explorer@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/source-map-explorer/-/source-map-explorer-2.3.1.tgz#d91615a19ad1f4e08d05616bee6e30ddb770ae70"
+  integrity sha512-l3WQUCwaqia5x7EBnNp4GYwhXnROMz3NqKM2QMwQ3ADgjekp+enP+PHkjjbjoVX6WJ2G5mbvM6TjeE/q7fnIFw==
   dependencies:
     btoa "^1.2.1"
     chalk "^3.0.0"
@@ -5500,7 +5501,7 @@ source-map-explorer@aholachek/source-map-explorer#temp-fix-2:
     glob "^7.1.6"
     gzip-size "^5.1.1"
     lodash "^4.17.15"
-    open "^7.0.0"
+    open "^7.0.2"
     source-map "^0.7.3"
     temp "^0.9.1"
     yargs "^15.1.0"
@@ -5954,13 +5955,6 @@ tr46@^1.0.1:
   integrity sha1-qLE/1r/SSJUZZ0zN5VujaTtwbQk=
   dependencies:
     punycode "^2.1.0"
-
-tracium@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/tracium/-/tracium-0.2.1.tgz#b75753e03ce57e05847fd6a0f747dc39971b6230"
-  integrity sha512-ERoaMqbl9h9qxXrHIh15ZMe2MuYKSN3lXoIrkvDnlQh09Ribn3fzrCQN774ewwS/DbX1wwuipyrhOFqrp5/1qg==
-  dependencies:
-    debug "^4.1.1"
 
 tty-browserify@0.0.0:
   version "0.0.0"

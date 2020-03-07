@@ -15,9 +15,11 @@ const editTopLevelData = (filteredData, childArray) => {
   }, 0)
   const originalChildCount = childArray.length
   const averageCoverage =
-    childArray.reduce((acc, curr) => {
-      return acc + curr.averageCoverage
-    }, 0) / childArray.length
+    childArray
+      .filter(child => typeof child.averageCoverage === 'number')
+      .reduce((acc, curr) => {
+        return acc + curr.averageCoverage
+      }, 0) / childArray.length
 
   return {
     ...filteredData,
@@ -154,19 +156,24 @@ const renderGraph = ({
   collapse(dataCopy)
   const filteredData = removeTooSmallNodes(dataCopy, allowedIds)
 
-  const editedFilteredData = showScriptsWithoutSourcemaps
-    ? editTopLevelData(filteredData, filteredData.children)
-    : editTopLevelData(
-        filteredData,
-        filteredData.children.filter(c => !c.noSourcemap)
-      )
+  const editedFilteredData =
+    filteredData.name !== 'topLevel'
+      ? filteredData
+      : showScriptsWithoutSourcemaps
+      ? editTopLevelData(filteredData, filteredData.children)
+      : editTopLevelData(
+          filteredData,
+          filteredData.children
+            ? filteredData.children.filter(c => !c.noSourcemap)
+            : []
+        )
 
   const root = treemap(editedFilteredData)
 
   const renderBoxShadowBorder = d => {
     if (isTopLevel(d)) return 'white'
 
-    if (d.parent && isTopLevel(d.parent.data)) {
+    if (d.parent && isTopLevel(d.parent)) {
       return '0 0 0 1px #000'
     }
     if (typeof d.data.averageCoverage !== 'number') return '0 0 0 1px #a8a8a8'
@@ -180,13 +187,9 @@ const renderGraph = ({
   const createEnteredElements = enter => {
     const entered = enter
       .filter(function(d) {
-        // render all bundles, even if tiny
-        if (d.parent && isTopLevel(d.parent)) {
-          return true
-        }
         const width = d.x1 - d.x0
         const height = d.y1 - d.y0
-        return width > 2 && height > 2 && height * width > 50
+        return width > 2 && height > 2
       })
       .append('div')
       .style('background-color', d => {

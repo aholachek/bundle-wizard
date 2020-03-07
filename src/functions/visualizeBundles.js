@@ -33,6 +33,18 @@ const visualizeBundles = async ({
     )
     const fileName = `${tempFolder}/treeData.json`
 
+    const getFileName = url => url.split(/\//g).slice(-1)[0]
+
+    processedData.children.forEach(bundle => {
+      bundle.request = priorities.find(priority => {
+        if (!priority.url) return
+        return (
+          priority.url === bundle.name ||
+          getFileName(priority.url) === bundle.name
+        )
+      })
+    })
+
     Object.assign(processedData, { url, priorities })
 
     fs.writeFileSync(fileName, JSON.stringify(processedData))
