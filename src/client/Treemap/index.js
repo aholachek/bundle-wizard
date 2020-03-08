@@ -205,6 +205,7 @@ const renderGraph = ({
       })
       .style('box-shadow', renderBoxShadowBorder)
       .on('click', d => {
+        if (d.data.noSourcemap) return
         setGraphRoot(d.data.id)
       })
       .on('mouseenter', function(d) {
@@ -221,6 +222,8 @@ const renderGraph = ({
           return (this.style.boxShadow = `0 0 0 1px #a8a8a8${
             d.parent ? `, 0 5px 15px hsla(0, 0%, 0%, 0.5)` : ''
           }`)
+
+        if (d.data.noSourcemap) return
 
         const background = color(d.data.averageCoverage)
         const borderColor = d3.hsl(background).darker(1)
@@ -248,7 +251,7 @@ const renderGraph = ({
       .style('top', d => `${d.y0}px`)
       .style('left', d => `${d.x0}px`)
       .classed('no-interact', d => {
-        return !d.parent
+        return !d.parent || d.data.noSourcemap
       })
 
     const label = entered

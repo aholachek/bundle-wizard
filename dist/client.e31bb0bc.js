@@ -62976,6 +62976,7 @@ var renderGraph = function renderGraph(_ref) {
       if (isTopLevel(d)) return 'white';
       return color(d.data.averageCoverage);
     }).style('box-shadow', renderBoxShadowBorder).on('click', function (d) {
+      if (d.data.noSourcemap) return;
       setGraphRoot(d.data.id);
     }).on('mouseenter', function (d) {
       setHovered(d);
@@ -62983,6 +62984,7 @@ var renderGraph = function renderGraph(_ref) {
       var isBundle = d.parent && isTopLevel(d.parent.data);
       if (isBundle) return this.style.boxShadow = "0 0 0 1px #000".concat(d.parent ? ", 0 5px 15px hsla(0, 0%, 0%, 0.7)" : '');
       if (typeof d.data.averageCoverage !== 'number') return this.style.boxShadow = "0 0 0 1px #a8a8a8".concat(d.parent ? ", 0 5px 15px hsla(0, 0%, 0%, 0.5)" : '');
+      if (d.data.noSourcemap) return;
       var background = color(d.data.averageCoverage);
       var borderColor = d3.hsl(background).darker(1);
       var shadowColor = d3.hsl(background).darker(2);
@@ -63003,7 +63005,7 @@ var renderGraph = function renderGraph(_ref) {
     }).style('left', function (d) {
       return "".concat(d.x0, "px");
     }).classed('no-interact', function (d) {
-      return !d.parent;
+      return !d.parent || d.data.noSourcemap;
     });
     var label = entered.append('div').attr('class', 'label').text(function (d) {
       if (isTopLevel(d)) return 'all bundles';
@@ -63501,7 +63503,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49601" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50783" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
