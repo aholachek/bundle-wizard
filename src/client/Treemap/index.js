@@ -123,13 +123,13 @@ const renderGraph = ({
     el.classList.add('box-transition-position')
   }
 
-  const treemap = data => {
+  const treemap = (data, noPadding) => {
     return d3
       .treemap()
       .size([width, height])
-      .paddingOuter(10)
-      .paddingTop(24)
-      .paddingInner(4)
+      .paddingOuter(noPadding ? 0 : 10)
+      .paddingTop(noPadding ? 0 : 24)
+      .paddingInner(noPadding ? 0 : 4)
       .round(false)(
       d3
         .hierarchy(data)
@@ -140,18 +140,24 @@ const renderGraph = ({
 
   const dataCopy = cloneDeep(data)
 
-  const testRoot = treemap(dataCopy)
+  const testRoot = treemap(dataCopy, true)
 
   const filterData = node => {
     if (!node.children) return
     const parentArea = (node.y1 - node.y0) * (node.x1 - node.x0)
-    const maxChildren = Math.ceil(parentArea / 10000)
-    node.children = node.children.slice(0, maxChildren)
 
+    const maxChildren = Math.ceil(parentArea / 10000)
+
+    const filteredChildArray = node.children
+      .sort((a, b) => b.value - a.value)
+      .slice(0, maxChildren)
+
+    node.children = filteredChildArray
     node.children.forEach(c => filterData(c))
   }
 
   filterData(testRoot)
+
   const allowedIds = testRoot.descendants().map(node => node.data.id)
   collapse(dataCopy)
   const filteredData = removeTooSmallNodes(dataCopy, allowedIds)
@@ -189,7 +195,7 @@ const renderGraph = ({
       .filter(function(d) {
         const width = d.x1 - d.x0
         const height = d.y1 - d.y0
-        return width > 2 && height > 2
+        return width > 3 && height > 3 && width * height > 50
       })
       .append('div')
       .style('background-color', d => {

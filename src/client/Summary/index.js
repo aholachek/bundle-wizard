@@ -97,7 +97,7 @@ const Summary = ({ data, setGraphRoot }) => {
           <Table
             onBundleNameClick={onBundleNameClick}
             bundles={highPriorityBundles}
-            title="Higher Priority Bundles"
+            title="High Priority Bundles"
             description={
               <>
                 These bundles were{' '}
