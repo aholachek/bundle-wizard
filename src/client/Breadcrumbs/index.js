@@ -18,7 +18,35 @@ const Legend = () => {
   )
 }
 
-const Breadcrumbs = ({ data, setGraphRoot, hovered }) => {
+const ScriptsWithoutSourcemapControl = ({
+  toggleScriptsWithoutSourcemaps,
+  showScriptsWithoutSourcemaps
+}) => {
+  return (
+    <div
+      className="sourcemap-control"
+      title="By default, scripts without sourcemaps are not shown. Toggle this setting to view all scripts."
+    >
+      <input
+        type="checkbox"
+        name=""
+        id="swsc"
+        onChange={toggleScriptsWithoutSourcemaps}
+        checked={!showScriptsWithoutSourcemaps}
+      />
+      &nbsp;&nbsp;
+      <label htmlFor="swsc">only show JS bundles with sourcemaps</label>
+    </div>
+  )
+}
+
+const Breadcrumbs = ({
+  data,
+  setGraphRoot,
+  toggleScriptsWithoutSourcemaps,
+  showScriptsWithoutSourcemaps,
+  isTopLevel
+}) => {
   const sections = data.id.split('/')
 
   return (
@@ -45,6 +73,12 @@ const Breadcrumbs = ({ data, setGraphRoot, hovered }) => {
           })}
         </ul>
       ) : null}
+      {isTopLevel && (
+        <ScriptsWithoutSourcemapControl
+          showScriptsWithoutSourcemaps={showScriptsWithoutSourcemaps}
+          toggleScriptsWithoutSourcemaps={toggleScriptsWithoutSourcemaps}
+        />
+      )}
       <Legend />
     </div>
   )

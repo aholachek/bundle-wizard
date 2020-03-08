@@ -1,4 +1,4 @@
-$link: hsl(225, 67%, 51%);
+$link: #0c3ccb;
 * {
   box-sizing: border-box;
 }
@@ -7,6 +7,18 @@ html {
   font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI',
     'Roboto', 'Helvetica Neue', Arial, sans-serif;
   font-size: 100%;
+}
+
+a {
+  cursor: pointer;
+  text-decoration: none;
+  color: $link;
+  &:visited {
+    color: $link;
+  }
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .treemap {
@@ -140,14 +152,6 @@ $anim-duration: 400ms;
         }
       }
     }
-    a {
-      cursor: pointer;
-      text-decoration: none;
-      color: $link;
-      &:hover {
-        text-decoration: underline;
-      }
-    }
   }
 }
 
@@ -156,8 +160,7 @@ $anim-duration: 400ms;
   pointer-events: none;
   opacity: 0.9;
   min-height: 4rem;
-  transition: opacity 0.3s;
-  transition-delay: 0.2s;
+  transition: opacity 0.25s;
   position: fixed;
   background-color: black;
   color: white;
@@ -201,17 +204,24 @@ $anim-duration: 400ms;
 }
 
 .summary {
-  max-width: 1000px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 1rem 1rem 2rem 1rem;
 
+  a {
+    text-decoration: none;
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+    }
+  }
+
   h2 {
-    font-size: 1rem;
+    font-size: 1.2rem;
     margin-top: 2rem;
   }
 
   table {
-    margin-top: 1rem;
     table-layout: fixed;
     width: 100%;
     border-collapse: collapse;
@@ -221,28 +231,27 @@ $anim-duration: 400ms;
       border-bottom: 1px solid hsla(0, 0%, 0%, 0.2);
       padding: 0.5rem;
     }
-
-    td,
-    th {
-      width: 8rem;
+    th,
+    td {
+      text-align: center;
     }
+
     td:first-of-type,
     th:first-of-type {
-      width: 2rem;
+      width: 3rem;
     }
     td:nth-of-type(2),
     th:nth-of-type(2) {
       width: 30rem;
+      padding-right: 2rem;
+      text-align: left;
     }
   }
+
   tfoot > tr > td {
     border-bottom: none;
     font-weight: bold;
   }
-}
-
-.summary-row {
-  font-weight: bold;
 }
 
 .screenshot {
@@ -275,21 +284,24 @@ figure {
   a {
     height: 100%;
     display: block;
+    cursor: pointer;
     text-decoration: none;
     font-weight: normal;
-    color: black;
     padding: calc(0.75rem + 4px) 1.5rem 0.75rem 1rem;
     border-bottom: 4px solid transparent;
     line-height: 1;
+    font-weight: bold;
+
+
     &:hover {
       border-color: hsla(225, 58%, 45%, 0.5);
     }
   }
   .active {
     a {
-      font-weight: bold;
       cursor: default;
       border-bottom: 4px solid $link;
+      color: black;
       &:hover {
         text-decoration: none;
       }
@@ -308,5 +320,14 @@ figure {
   width: 100vw;
   display: flex;
   justify-content: center;
+  align-items: center;
+}
+
+.sourcemap-control {
+  position: absolute;
+  top: 0.7rem;
+  right: 1rem;
+  font-weight: bold;
+  display: flex;
   align-items: center;
 }

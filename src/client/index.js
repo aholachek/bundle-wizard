@@ -23,6 +23,16 @@ const Dashboard = () => {
   const [hovered, setHovered] = React.useState(null)
   const [showSummary, setShowSummary] = React.useState(false)
   const [topLevelData, setTopLevelData] = React.useState({})
+  const [
+    showScriptsWithoutSourcemaps,
+    setShowScriptsWithoutSourcemaps
+  ] = React.useState(false)
+
+  const isTopLevel =  data && data.name === 'topLevel'
+
+  const toggleScriptsWithoutSourcemaps = () => {
+    setShowScriptsWithoutSourcemaps(!showScriptsWithoutSourcemaps)
+  }
 
   const setData = React.useCallback(
     data => {
@@ -86,18 +96,28 @@ const Dashboard = () => {
         </ul>
       </nav>
       {showSummary ? (
-        <Summary data={topLevelData} />
+        <Summary
+          data={topLevelData}
+          setGraphRoot={(...args) => {
+            setShowSummary(false)
+            setGraphRoot(...args)
+          }}
+        />
       ) : (
         <>
           <Breadcrumbs
             data={data}
+            isTopLevel={isTopLevel}
             setGraphRoot={setGraphRoot}
             hovered={hovered}
+            toggleScriptsWithoutSourcemaps={toggleScriptsWithoutSourcemaps}
+            showScriptsWithoutSourcemaps={showScriptsWithoutSourcemaps}
           />
           <Treemap
             data={data}
             setGraphRoot={setGraphRoot}
             setHovered={setHovered}
+            showScriptsWithoutSourcemaps={showScriptsWithoutSourcemaps}
           />
         </>
       )}

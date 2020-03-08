@@ -41,9 +41,8 @@
     "sanitize.css": "^11.0.0",
     "serve": "^11.3.0",
     "serve-handler": "^6.1.2",
-    "source-map-explorer": "aholachek/source-map-explorer#temp-fix-2",
+    "source-map-explorer": "^2.3.1",
     "static-server": "^2.2.1",
-    "tippy.js": "^5.2.1",
     "yargs": "^15.1.0"
   },
   "devDependencies": {

@@ -5,13 +5,37 @@ import cloneDeep from 'lodash.clonedeep'
 
 const color = d3.scaleSequential([-0.2, 1.15], d3.interpolateRdYlGn)
 
-const isTopLevel = data => data.name === 'topLevel'
+const isTopLevel = d => d && d.data && d.data.name === 'topLevel'
+
+// adjust based on whether we are showing scripts without
+// sourcemaps
+const editTopLevelData = (filteredData, childArray) => {
+  const realSize = childArray.reduce((acc, curr) => {
+    return acc + curr.realSize
+  }, 0)
+  const originalChildCount = childArray.length
+  const averageCoverage =
+    childArray
+      .filter(child => typeof child.averageCoverage === 'number')
+      .reduce((acc, curr) => {
+        return acc + curr.averageCoverage
+      }, 0) / childArray.length
+
+  return {
+    ...filteredData,
+    realSize,
+    originalChildCount,
+    averageCoverage,
+    children: childArray
+  }
+}
 
 const removeTooSmallNodes = (data, ids) => {
   const idDict = ids.reduce((acc, curr) => {
     acc[curr] = true
     return acc
   }, {})
+
   const traverseTree = node => {
     if (node.children) {
       const originalChildCount = node.children.length
@@ -82,7 +106,15 @@ const collapse = d => {
   if (d.children) d.children.forEach(child => collapse(child))
 }
 
-const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
+const renderGraph = ({
+  el,
+  data,
+  setGraphRoot,
+  width,
+  height,
+  setHovered,
+  showScriptsWithoutSourcemaps
+}) => {
   const container = d3.select(el)
 
   const isFirstRender = el.childElementCount > 0
@@ -91,13 +123,13 @@ const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
     el.classList.add('box-transition-position')
   }
 
-  const treemap = data => {
+  const treemap = (data, noPadding) => {
     return d3
       .treemap()
       .size([width, height])
-      .paddingOuter(10)
-      .paddingTop(24)
-      .paddingInner(4)
+      .paddingOuter(noPadding ? 0 : 10)
+      .paddingTop(noPadding ? 0 : 24)
+      .paddingInner(noPadding ? 0 : 4)
       .round(false)(
       d3
         .hierarchy(data)
@@ -107,27 +139,47 @@ const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
   }
 
   const dataCopy = cloneDeep(data)
-  const testRoot = treemap(dataCopy)
+
+  const testRoot = treemap(dataCopy, true)
 
   const filterData = node => {
     if (!node.children) return
     const parentArea = (node.y1 - node.y0) * (node.x1 - node.x0)
-    const maxChildren = Math.ceil(parentArea / 10000)
-    node.children = node.children.slice(0, maxChildren)
 
+    const maxChildren = Math.ceil(parentArea / 10000)
+
+    const filteredChildArray = node.children
+      .sort((a, b) => b.value - a.value)
+      .slice(0, maxChildren)
+
+    node.children = filteredChildArray
     node.children.forEach(c => filterData(c))
   }
 
   filterData(testRoot)
+
   const allowedIds = testRoot.descendants().map(node => node.data.id)
   collapse(dataCopy)
   const filteredData = removeTooSmallNodes(dataCopy, allowedIds)
-  const root = treemap(filteredData)
+
+  const editedFilteredData =
+    filteredData.name !== 'topLevel'
+      ? filteredData
+      : showScriptsWithoutSourcemaps
+      ? editTopLevelData(filteredData, filteredData.children)
+      : editTopLevelData(
+          filteredData,
+          filteredData.children
+            ? filteredData.children.filter(c => !c.noSourcemap)
+            : []
+        )
+
+  const root = treemap(editedFilteredData)
 
   const renderBoxShadowBorder = d => {
-    if (isTopLevel(d.data)) return 'white'
+    if (isTopLevel(d)) return 'white'
 
-    if (d.parent && isTopLevel(d.parent.data)) {
+    if (d.parent && isTopLevel(d.parent)) {
       return '0 0 0 1px #000'
     }
     if (typeof d.data.averageCoverage !== 'number') return '0 0 0 1px #a8a8a8'
@@ -136,17 +188,19 @@ const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
     return `0 0 0 1px ${borderColor}`
   }
 
+  const createSizeLabel = d => `${Math.ceil(d.data.realSize / 1000)}kb`
+
   const createEnteredElements = enter => {
     const entered = enter
       .filter(function(d) {
         const width = d.x1 - d.x0
         const height = d.y1 - d.y0
-        return width > 2 && height > 2 && height * width > 50
+        return width > 3 && height > 3 && width * height > 50
       })
       .append('div')
       .style('background-color', d => {
         if (typeof d.data.averageCoverage !== 'number') return 'white'
-        if (isTopLevel(d.data)) return 'white'
+        if (isTopLevel(d)) return 'white'
         return color(d.data.averageCoverage)
       })
       .style('box-shadow', renderBoxShadowBorder)
@@ -155,7 +209,7 @@ const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
       })
       .on('mouseenter', function(d) {
         setHovered(d)
-        if (isTopLevel(d.data)) return
+        if (isTopLevel(d)) return
         const isBundle = d.parent && isTopLevel(d.parent.data)
 
         if (isBundle)
@@ -202,11 +256,14 @@ const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
       .attr('class', 'label')
 
       .text(d => {
-        if (isTopLevel(d.data)) return 'all bundles'
+        if (isTopLevel(d)) return 'all bundles'
         return d.data.name
       })
 
-    label.append('div').text(d => `${Math.ceil(d.data.realSize / 1000)}kb`)
+    label
+      .append('div')
+      .attr('data-size', true)
+      .text(createSizeLabel)
 
     return entered
   }
@@ -233,6 +290,9 @@ const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
         .style('top', d => `${d.y0}px`)
         .style('left', d => `${d.x0}px`)
         .style('box-shadow', renderBoxShadowBorder)
+        .each(function(d) {
+          this.querySelector('[data-size]').innerText = createSizeLabel(d)
+        })
     }
     startAnimation()
   }
@@ -251,7 +311,12 @@ const renderGraph = ({ el, data, setGraphRoot, width, height, setHovered }) => {
     })
 }
 
-const Treemap = ({ data, setGraphRoot, setHovered }) => {
+const Treemap = ({
+  data,
+  setGraphRoot,
+  setHovered,
+  showScriptsWithoutSourcemaps
+}) => {
   const graphContainerRef = React.useRef(null)
   const dimensionsRef = useRef({})
   const cacheWindowSize = () => {
@@ -267,6 +332,7 @@ const Treemap = ({ data, setGraphRoot, setHovered }) => {
         data,
         setGraphRoot,
         setHovered,
+        showScriptsWithoutSourcemaps,
         ...dimensionsRef.current
       })
     }, 250)
@@ -283,9 +349,10 @@ const Treemap = ({ data, setGraphRoot, setHovered }) => {
       data,
       setGraphRoot,
       setHovered,
-      ...dimensionsRef.current
+      ...dimensionsRef.current,
+      showScriptsWithoutSourcemaps
     })
-  }, [data.id])
+  }, [data.id, showScriptsWithoutSourcemaps])
 
   return <div ref={graphContainerRef} className="treemap"></div>
 }
