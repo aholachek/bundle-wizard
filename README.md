@@ -4,7 +4,7 @@ This command line utility makes it simple to create visualizations of the JS bun
 
 ## Quick start
 
-Simply run the command `npx bundle-wizard` to get started.
+Simply run the command `npx bundle-wizard`
 
 ## Example
 
@@ -16,7 +16,7 @@ Simply run the command `npx bundle-wizard` to get started.
 
 [Check out a live demo of this visualization](https://bundle-wizard.surge.sh)
 
-## Fun
+## Try it out on a production app:
 
 Try any of the following commands to take a peek at the JavaScript code different sites are shipping:
 
@@ -26,6 +26,24 @@ Try any of the following commands to take a peek at the JavaScript code differen
 4. `npx bundle-wizard gatsbyjs.org`
 5. `npx bundle-wizard codecademy.com`
 6. `npx bundle-wizard id.atlassian.com`
+
+## Try it out on an app running locally:
+
+Want to use bundle-wizard but haven't deployed your app yet? It's as easy as:
+
+### 1. Build your app locally
+
+Many apps will do this via the command: `npm run build`
+
+### 2. Serve the build
+
+`npx serve -s [build folder name here]`
+
+e.g. `npx serve -s build`
+
+### 3. Finally, call bundle-wizard with the correct localhost url
+
+e.g. `npx bundle-wizard localhost:5000`
 
 ## Optional command line arguments
 
@@ -62,6 +80,8 @@ The core functionality of this library is provided by the awesome [`source-map-e
 1. Downloadable sourcemaps
 
    This utility downloads sourcemaps from the url you provide. This requires the sourcemaps to be publically available, or at least available on your network. You might need to point to a testing instead of production build, for instance, as some apps disable sourcemaps in production.
+
+   Don't have access to sourcemaps in your prod app? Try [building your app locally](#try-it-out-on-an-app-running-locally)
 
 2. A local Chrome installation
 
