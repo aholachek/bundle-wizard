@@ -10,7 +10,7 @@ This command line utility makes it simple to create visualizations of the JS bun
 <img src="./reddit-mobile-analysis.png" alt="analysis of the reddit mobile sitee">
 </a>
 
-[Check out a live demo of this visualization](https://bundle-wizard.surge.sh)
+[Check out a live demo of this visualization](https://bundle-wizard.netlify.com/)
 
 ## Try it out on a production app:
 
