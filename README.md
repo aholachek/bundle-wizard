@@ -27,17 +27,15 @@ Try any of the following commands to take a peek at the JavaScript code differen
 
 Want to use bundle-wizard but haven't deployed your app yet? It's as easy as:
 
-### 1. Build your app locally
+#### 1. Build your app locally
 
 Many apps will do this via the command: `npm run build`
 
-### 2. Serve the build
-
-`npx serve -s [build folder name here]`
+#### 2. Serve the build folder
 
 e.g. `npx serve -s build`
 
-### 3. Finally, call bundle-wizard with the correct localhost url
+#### 3. Finally, call bundle-wizard with the correct localhost url
 
 e.g. `npx bundle-wizard localhost:5000`
 
