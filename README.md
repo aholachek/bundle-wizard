@@ -29,7 +29,7 @@ Want to use bundle-wizard but haven't deployed your app yet? It's as easy as:
 
 #### 1. Build your app locally
 
-Many apps will do this via the command: `npm run build`
+e.g. `npm run build`
 
 #### 2. Serve the build folder
 
