@@ -14,7 +14,7 @@ const visualizeBundles = async ({
   url,
   scriptsWithoutSourcemapsDict,
   priorities,
-  savePath
+  save
 }) => {
   console.log(`\n🖼️   Generating visualization...\n`)
 
@@ -66,7 +66,8 @@ const visualizeBundles = async ({
       )
       open(`http://localhost:${port}`)
 
-      if (savePath) {
+      if (save) {
+        const savePath = save === true ? '~/desktop' : save
         const savedDistPath = `${pathWithTilde(
           savePath
         )}/bundle-wizard-visualization`

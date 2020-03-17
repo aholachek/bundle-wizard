@@ -47,11 +47,17 @@ To skip the initial prompt, provide a url as a first argument:
 
 `npx bundle-wizard reddit.com`
 
-### `savePath`
+### `save`
 
-If you want to save the visualization files to disk (maybe in order to deploy it somewhere to share with your team), provide a path:
+If you want to save the visualization files to disk (maybe in order to deploy it somewhere to share with your team), provide the `--save` flag:
 
-`npx bundle-wizard savePath="~/desktop"`
+This will save a folder called `bundle-wizard-visualization` to desktop:
+
+`npx bundle-wizard --save`
+
+You can provide a path to save the files somewhere else:
+
+`npx bundle-wizard --save="~/desktop/foo"`
 
 ### `desktop` flag
 

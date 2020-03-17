@@ -112,7 +112,7 @@ const main = async () => {
     url,
     scriptsWithoutSourcemapsDict,
     priorities,
-    savePath: argv.savePath
+    save: argv.save
   })
 }
 
