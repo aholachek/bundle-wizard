@@ -67,7 +67,7 @@ const visualizeBundles = async ({
       open(`http://localhost:${port}`)
 
       if (save) {
-        const savePath = save === true ? '~/desktop' : save
+        const savePath = save === true ? '~/desktop' : save.trim()
         const savedDistPath = `${pathWithTilde(
           savePath
         )}/bundle-wizard-visualization`

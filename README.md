@@ -51,7 +51,7 @@ To skip the initial prompt, provide a url as a first argument:
 
 If you want to save the visualization files to disk (maybe in order to deploy it somewhere to share with your team), provide the `--save` flag:
 
-This will save a folder called `bundle-wizard-visualization` to desktop:
+This will save a folder called `bundle-wizard-visualization` to your desktop directory:
 
 `npx bundle-wizard --save`
 
