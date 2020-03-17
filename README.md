@@ -2,10 +2,6 @@
 
 This command line utility makes it simple to create visualizations of the JS bundles that were fetched for any specific page (or "entry point") of a web app.
 
-## Quick start
-
-Simply run the command `npx bundle-wizard`
-
 ## Example
 
 `npx bundle-wizard reddit.com`
@@ -81,7 +77,7 @@ The core functionality of this library is provided by the awesome [`source-map-e
 
    This utility downloads sourcemaps from the url you provide. This requires the sourcemaps to be publically available, or at least available on your network. You might need to point to a testing instead of production build, for instance, as some apps disable sourcemaps in production.
 
-   Don't have access to sourcemaps in your prod app? Try [building your app locally](#try-it-out-on-an-app-running-locally)
+   Don't have access to sourcemaps in your prod app? Try [building your app locally.](#try-it-out-on-an-app-running-locally)
 
 2. A local Chrome installation
 
