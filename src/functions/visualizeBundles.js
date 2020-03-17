@@ -1,12 +1,13 @@
 const fs = require('fs-extra')
 const { explore } = require('source-map-explorer')
 const path = require('path')
-
-const processSourceMapExplorerData = require('./processSourceMapExplorerDataIntoTreemap')
+const { Input, Select } = require('enquirer')
 const handler = require('serve-handler')
 const http = require('http')
 const open = require('open')
 const getPort = require('get-port')
+const pathWithTilde = require('./pathWithTilde')
+const processSourceMapExplorerData = require('./processSourceMapExplorerDataIntoTreemap')
 
 const visualizeBundles = async ({
   bundles,
@@ -59,14 +60,45 @@ const visualizeBundles = async ({
 
     const port = await getPort({ port: [3000, 3001, 3002, 3003] })
 
-    server.listen(port, () => {
+    server.listen(port, async () => {
       console.log(
-        `🎊  Done! A visualization is running at: http://localhost:${port}`
+        `🎊  Done! A visualization is running at: http://localhost:${port}\n`
       )
       open(`http://localhost:${port}`)
+
+      const saveChoice = 'save visualization to disk'
+      const exitChoice = 'exit bundle-wizard'
+
+      try {
+        const prompt = await new Select({
+          name: 'next-steps',
+          message: 'Next steps:',
+          choices: [exitChoice, saveChoice]
+        }).run()
+
+        if (prompt === exitChoice) process.exit(1)
+
+        const pathname = await new Input({
+          message: `Where should the visualization be saved?`,
+          initial: '~/desktop'
+        }).run()
+
+        const savedDistPath = `${pathWithTilde(
+          pathname
+        )}/bundle-wizard-vis-files`
+
+        fs.copy(distFolder, savedDistPath).then(() => {
+          console.log(
+            `\n💽  Success! Visualization was saved to:\n\n ${savedDistPath}\n`
+          )
+          process.exit(1)
+        })
+      } catch (e) {
+        console.error(`❌  Error: ${e.message}`)
+      }
     })
   } catch (e) {
-    console.error('❌  Failed to generate source map visualizationm')
+    console.error('❌  Failed to generate source map visualization')
     console.error(e)
   }
 }

@@ -25,7 +25,7 @@
     "javascript"
   ],
   "dependencies": {
-    "chrome-launcher": "^0.12.0",
+    "chrome-launcher": "^0.13.0",
     "d3": "5",
     "enquirer": "^2.3.4",
     "fs-extra": "^8.1.0",
@@ -33,19 +33,19 @@
     "lodash.clonedeep": "^4.5.0",
     "lodash.throttle": "^4.1.1",
     "node-fetch": "^2.6.0",
-    "open": "^7.0.2",
+    "open": "^7.0.3",
     "parcel": "^1.12.4",
     "puppeteer-core": "^2.1.1",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0",
     "sanitize.css": "^11.0.0",
     "serve": "^11.3.0",
     "serve-handler": "^6.1.2",
-    "source-map-explorer": "^2.3.1",
+    "source-map-explorer": "^2.4.0",
     "static-server": "^2.2.1",
-    "yargs": "^15.1.0"
+    "yargs": "^15.3.1"
   },
   "devDependencies": {
-    "sass": "^1.25.0"
+    "sass": "^1.26.3"
   }
 }

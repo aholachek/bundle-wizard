@@ -80,7 +80,7 @@ const downloadCoverage = async ({
     url = validateURL(url)
   }
 
-  console.log(`🤖  Recording page load info for ${url} ...\n`)
+  console.log(`🤖  Loading ${url} ...\n`)
 
   const isMobile = type === 'mobile'
 
