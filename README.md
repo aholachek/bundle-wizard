@@ -35,7 +35,7 @@ e.g. `npm run build`
 
 e.g. `npx serve -s build`
 
-#### 3. Finally, call bundle-wizard with the correct localhost url
+#### 3. Call bundle-wizard with the correct localhost url
 
 e.g. `npx bundle-wizard localhost:5000`
 
