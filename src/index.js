@@ -111,8 +111,7 @@ const main = async () => {
     coverageFilePath,
     url,
     scriptsWithoutSourcemapsDict,
-    priorities,
-    save: argv.save
+    priorities
   })
 }
 

@@ -47,18 +47,6 @@ To skip the initial prompt, provide a url as a first argument:
 
 `npx bundle-wizard reddit.com`
 
-### `save`
-
-If you want to save the visualization files to disk (maybe in order to deploy it somewhere to share with your team), provide the `--save` flag:
-
-This will save a folder called `bundle-wizard-visualization` to your desktop directory:
-
-`npx bundle-wizard --save`
-
-You can provide a path to save the files somewhere else:
-
-`npx bundle-wizard --save="~/desktop/foo"`
-
 ### `desktop` flag
 
 By default, `bundle-wizard` will analyze a mobile version of the site. To analyze the desktop version instead, pass the `--desktop` flag:

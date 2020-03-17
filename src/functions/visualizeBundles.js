@@ -5,7 +5,6 @@ const handler = require('serve-handler')
 const http = require('http')
 const open = require('open')
 const getPort = require('get-port')
-const pathWithTilde = require('./pathWithTilde')
 const processSourceMapExplorerData = require('./processSourceMapExplorerDataIntoTreemap')
 
 const visualizeBundles = async ({
@@ -14,7 +13,6 @@ const visualizeBundles = async ({
   url,
   scriptsWithoutSourcemapsDict,
   priorities,
-  save
 }) => {
   console.log(`\n🖼️   Generating visualization...\n`)
 
@@ -66,18 +64,9 @@ const visualizeBundles = async ({
       )
       open(`http://localhost:${port}`)
 
-      if (save) {
-        const savePath = save === true ? '~/desktop' : save.trim()
-        const savedDistPath = `${pathWithTilde(
-          savePath
-        )}/bundle-wizard-visualization`
-
-        fs.copy(distFolder, savedDistPath).then(() => {
-          console.log(
-            `💽  Visualization files were saved to:\n\n ${savedDistPath}\n`
-          )
-        })
-      }
+      console.log(
+        `If you wish to save or share them, the visualization files can be found in the following directory:\n\n ${distFolder}`
+      )
     })
   } catch (e) {
     console.error('❌  Failed to generate source map visualization')
