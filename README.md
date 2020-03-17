@@ -53,6 +53,12 @@ By default, `bundle-wizard` will analyze a mobile version of the site. To analyz
 
 `npx bundle-wizard --desktop`
 
+### `savePath` argument
+
+If you want to save the visualization files to disk (maybe in order to deploy it somewhere to share with your team), provide a path:
+
+`npx bundle-wizard savePath="~/desktop"`
+
 ### `debug` flag
 
 If you'd like to see more logging and detailed error messages, add this flag.

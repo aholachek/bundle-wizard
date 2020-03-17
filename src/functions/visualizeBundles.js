@@ -1,7 +1,6 @@
 const fs = require('fs-extra')
 const { explore } = require('source-map-explorer')
 const path = require('path')
-const { Input, Select } = require('enquirer')
 const handler = require('serve-handler')
 const http = require('http')
 const open = require('open')
@@ -14,7 +13,8 @@ const visualizeBundles = async ({
   coverageFilePath,
   url,
   scriptsWithoutSourcemapsDict,
-  priorities
+  priorities,
+  savePath
 }) => {
   console.log(`\n🖼️   Generating visualization...\n`)
 
@@ -66,35 +66,16 @@ const visualizeBundles = async ({
       )
       open(`http://localhost:${port}`)
 
-      const saveChoice = 'save visualization to disk'
-      const exitChoice = 'exit bundle-wizard'
-
-      try {
-        const prompt = await new Select({
-          name: 'next-steps',
-          message: 'Next steps:',
-          choices: [exitChoice, saveChoice]
-        }).run()
-
-        if (prompt === exitChoice) process.exit(1)
-
-        const pathname = await new Input({
-          message: `Where should the visualization be saved?`,
-          initial: '~/desktop'
-        }).run()
-
+      if (savePath) {
         const savedDistPath = `${pathWithTilde(
-          pathname
-        )}/bundle-wizard-vis-files`
+          savePath
+        )}/bundle-wizard-visualization`
 
         fs.copy(distFolder, savedDistPath).then(() => {
           console.log(
-            `\n💽  Success! Visualization was saved to:\n\n ${savedDistPath}\n`
+            `💽  Visualization files were saved to:\n\n ${savedDistPath}\n`
           )
-          process.exit(1)
         })
-      } catch (e) {
-        console.error(`❌  Error: ${e.message}`)
       }
     })
   } catch (e) {
