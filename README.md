@@ -6,7 +6,7 @@ This command line utility makes it simple to create visualizations of the JS bun
 
 `npx bundle-wizard reddit.com`
 
-<a href="https://bundle-wizard.surge.sh">
+<a href="https://bundle-wizard.netlify.com/">
 <img src="./reddit-mobile-analysis.png" alt="analysis of the reddit mobile sitee">
 </a>
 
