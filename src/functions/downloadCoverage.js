@@ -99,6 +99,10 @@ const downloadCoverage = async ({
   const urlToFileDict = {}
 
   page.on('response', response => {
+    const status = response.status()
+    if (status >= 300 && status <= 399) {
+      return
+    }
     const url = new URL(response.url())
     const fileName = url.pathname.split('/').slice(-1)[0]
     const isJSFile = fileName.match(/\.(m)?js$/)
