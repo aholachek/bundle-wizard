@@ -65,7 +65,7 @@ const visualizeBundles = async ({
       open(`http://localhost:${port}`)
 
       console.log(
-        `If you wish to save or share them, the visualization files can be found in the following directory:\n\n ${distFolder}`
+        `If you wish to save or share them, the visualization files can be found in the following directory:\n\n📂 ${distFolder}`
       )
     })
   } catch (e) {

@@ -143,8 +143,9 @@ const downloadCoverage = async ({
       console.log('\n💻  Close the browser window to continue.\n')
     } else {
       // allow page to make any errant http requests.
-      // this might not be super necessary
       await delay(1000)
+      console.log('🐢  Finishing up loading...\n')
+      await delay(3000)
       await page.screenshot({ path: `${tempFolderName}/screenshot.png` })
       resolve(await completeCoverage())
     }
