@@ -1,7 +1,8 @@
 import React from 'react'
 
 const isHighPriority = node =>
-  node.request.priority === 'VeryHigh' || node.request.priority === 'High'
+  node.request &&
+  (node.request.priority === 'VeryHigh' || node.request.priority === 'High')
 
 const Table = ({ bundles, title, description, onBundleNameClick }) => {
   return (
