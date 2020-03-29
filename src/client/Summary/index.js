@@ -4,7 +4,7 @@ const isHighPriority = node =>
   node.request &&
   (node.request.priority === 'VeryHigh' || node.request.priority === 'High')
 
-const Table = ({ bundles, title, description, onBundleNameClick }) => {
+const Table = ({ bundles, title, description, onBundleNameClick, noWarn }) => {
   return (
     <div>
       {title && <h2>{title}</h2>}
@@ -40,7 +40,12 @@ const Table = ({ bundles, title, description, onBundleNameClick }) => {
                       </span>
                     )}
                   </td>
-                  <td>{Math.ceil(node.realSize / 1000)} kb</td>
+                  <td>
+                    {!noWarn && Math.ceil(node.realSize / 1000) > 100
+                      ? '❌'
+                      : ''}
+                    {Math.ceil(node.realSize / 1000)} kb{' '}
+                  </td>
                   <td>
                     {typeof node.averageCoverage === 'number'
                       ? `${Math.floor(node.averageCoverage * 100)}%`
@@ -76,6 +81,8 @@ const Summary = ({ data, setGraphRoot }) => {
     .sort((a, b) => b.realSize - a.realSize)
     .filter(node => !isHighPriority(node))
 
+  const hasLargeBundles = data.children.find(c => c.realSize > 100)
+
   const onBundleNameClick = name => e => {
     e.preventDefault()
     e.stopPropagation()
@@ -86,6 +93,7 @@ const Summary = ({ data, setGraphRoot }) => {
     <div className="summary">
       <div>
         <Table
+          noWarn
           bundles={[
             {
               name: 'All bundles',
@@ -94,6 +102,16 @@ const Summary = ({ data, setGraphRoot }) => {
             }
           ]}
         />
+        {hasLargeBundles && (
+          <div>
+            <p style={{ marginTop: '2rem' }}>
+              <a href="https://v8.dev/blog/cost-of-javascript-2019">
+                Your JS bundles should generally be smaller than 100kb for best
+                performance.
+              </a>{' '}Bundles larger than 100kb are marked with an ❌.
+            </p>
+          </div>
+        )}
         {Boolean(highPriorityBundles.length) && (
           <Table
             onBundleNameClick={onBundleNameClick}
