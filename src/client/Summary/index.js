@@ -22,7 +22,11 @@ const Table = ({ bundles, title, description, onBundleNameClick, noWarn }) => {
           {bundles
             .sort((a, b) => b.realSize - a.realSize)
             .map((node, i) => {
-              const longTaskWarning = node.longTask ? ' 🚨' : ''
+              const longTaskWarning = node.longTask ? (
+                <span title={`${node.longTask}ms long task`}>{' '}🚨</span>
+              ) : (
+                ''
+              )
               return (
                 <tr>
                   <td>{bundles.length > 1 && i + 1}</td>
@@ -38,8 +42,8 @@ const Table = ({ bundles, title, description, onBundleNameClick, noWarn }) => {
                       </a>
                     ) : (
                       <span title="Sourcemaps were not downloaded for this bundle">
-                        {longTaskWarning}
                         {node.name}
+                        {longTaskWarning}
                       </span>
                     )}
                   </td>
