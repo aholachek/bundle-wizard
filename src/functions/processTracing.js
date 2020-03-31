@@ -7,7 +7,7 @@ const processTracing = async tracing => {
 
   const longTasks = tasks
     .filter(t => t.kind === 'scriptEvaluation')
-    .filter(t => t.duration > 60)
+    .filter(t => t.duration > 100)
 
   const priorities = tracing.traceEvents
     .filter(event => event.args.data && event.args.data.priority)
