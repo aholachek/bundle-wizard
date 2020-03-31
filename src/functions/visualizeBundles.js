@@ -34,7 +34,7 @@ const visualizeBundles = async ({
     const fileName = `${tempFolder}/treeData.json`
 
     const getFileName = url => (url ? url.split(/\//g).slice(-1)[0] : '')
-
+    debugger
     processedData.children.forEach(bundle => {
       bundle.request = priorities.find(priority => {
         if (!priority.url) return
@@ -45,8 +45,8 @@ const visualizeBundles = async ({
       })
       const bundleLongTasks = longTasks.filter(task => {
         return (
-          task.attributableURLs[0] === bundle.name ||
-          getFileName(task.attributableURLs[0]) === bundle.name
+          task.attributableURLs.find(n => n === bundle.name) ||
+          task.attributableURLs.map(getFileName).find(n => n === bundle.name)
         )
       })
       if (bundleLongTasks.length) {
