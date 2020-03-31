@@ -42,7 +42,7 @@
     "serve": "^11.3.0",
     "serve-handler": "^6.1.2",
     "source-map": "^0.7.3",
-    "source-map-explorer": "^2.4.1",
+    "source-map-explorer": "^2.4.2",
     "static-server": "^2.2.1",
     "tracium": "^0.2.1",
     "yargs": "^15.3.1"
