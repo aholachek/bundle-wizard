@@ -125,7 +125,7 @@ const Summary = ({ data, setGraphRoot }) => {
                 it can generate long tasks
               </a>{' '}
               that delay page interactivity. Bundles that kicked off long tasks
-              are marked here with a 🚨 icon.
+              > 100ms are marked here with a 🚨 icon.
             </p>
           </div>
         )}

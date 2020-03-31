@@ -59875,7 +59875,7 @@ var Summary = function Summary(_ref2) {
     href: "https://v8.dev/blog/cost-of-javascript-2019"
   }, "JS bundles should generally be smaller than 100kb for best performance."), ' ', "Bundles larger than 100kb are marked with a \u26A0\uFE0F icon.")), hasLongTasks && _react.default.createElement("div", null, _react.default.createElement("p", null, _react.default.createElement("a", {
     href: "https://web.dev/long-tasks-devtools/"
-  }, "When the code in Javascript bundles is executed on app startup, it can generate long tasks"), ' ', "that delay page interactivity. Bundles that kicked off long tasks are marked here with a \uD83D\uDEA8 icon.")), Boolean(highPriorityBundles.length) && _react.default.createElement(Table, {
+  }, "When the code in Javascript bundles is executed on app startup, it can generate long tasks"), ' ', "that delay page interactivity. Bundles that kicked off long tasks > 100ms are marked here with a \uD83D\uDEA8 icon.")), Boolean(highPriorityBundles.length) && _react.default.createElement(Table, {
     onBundleNameClick: onBundleNameClick,
     bundles: highPriorityBundles,
     title: "High Priority Bundles",
