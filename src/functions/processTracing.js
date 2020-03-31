@@ -1,5 +1,7 @@
 const tracium = require('tracium')
 
+const longTaskThreshold = 150
+
 const processTracing = async tracing => {
   const tasks = tracium.computeMainThreadTasks(tracing, {
     flatten: true
@@ -7,7 +9,7 @@ const processTracing = async tracing => {
 
   const longTasks = tasks
     .filter(t => t.kind === 'scriptEvaluation')
-    .filter(t => t.duration > 100)
+    .filter(t => t.duration > longTaskThreshold)
 
   const priorities = tracing.traceEvents
     .filter(event => event.args.data && event.args.data.priority)

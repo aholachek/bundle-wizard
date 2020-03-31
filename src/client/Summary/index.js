@@ -23,7 +23,10 @@ const Table = ({ bundles, title, description, onBundleNameClick, noWarn }) => {
             .sort((a, b) => b.realSize - a.realSize)
             .map((node, i) => {
               const longTaskWarning = node.longTask ? (
-                <span title={`${node.longTask}ms long task`}>{' '}🚨</span>
+                <span title={`${Math.ceil(node.longTask)}ms long task`}>
+                  {' '}
+                  🚨
+                </span>
               ) : (
                 ''
               )
@@ -124,12 +127,16 @@ const Summary = ({ data, setGraphRoot }) => {
         {hasLongTasks && (
           <div>
             <p>
+              When JavaScript code is executed on app startup, it
+              can generate long tasks that delay page interactivity. Bundles
+              that kicked off long tasks > 150ms are marked here with a 🚨 icon.{' '}
+              However, just because a bundle initiated a long task, doesn't mean
+              the majority of the task's time was spent executing code from that
+              particular bundle.{' '}
               <a href="https://web.dev/long-tasks-devtools/">
-                When the code in Javascript bundles is executed on app startup,
-                it can generate long tasks
-              </a>{' '}
-              that delay page interactivity. Bundles that kicked off long tasks
-              > 100ms are marked here with a 🚨 icon.
+                For instructions on how to hunt down the causes of long tasks,
+                check out this article.
+              </a>
             </p>
           </div>
         )}
