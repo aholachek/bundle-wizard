@@ -34,7 +34,6 @@ const visualizeBundles = async ({
     const fileName = `${tempFolder}/treeData.json`
 
     const getFileName = url => (url ? url.split(/\//g).slice(-1)[0] : '')
-    debugger
     processedData.children.forEach(bundle => {
       bundle.request = priorities.find(priority => {
         if (!priority.url) return
