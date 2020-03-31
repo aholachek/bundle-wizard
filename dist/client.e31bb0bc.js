@@ -59927,7 +59927,7 @@ var Tooltip = function Tooltip(_ref) {
     style: {
       marginBottom: '.15rem'
     }
-  }, "\uD83D\uDEA8 This bundle initiated a ", Math.ceil(hovered.data.longTask), "ms \"long task\" in the browser when it was evaluated") : '', _react.default.createElement("h3", null, name), _react.default.createElement("div", {
+  }, "\uD83D\uDEA8 This bundle originated a ", Math.ceil(hovered.data.longTask), "ms \"long task\" in the browser") : '', _react.default.createElement("h3", null, name), _react.default.createElement("div", {
     className: "hovered-data-row"
   }, _react.default.createElement("div", null, Math.ceil(hovered.data.realSize / 1000), "kb minified"), _react.default.createElement("div", null, typeof hovered.data.averageCoverage !== 'number' ? 'no coverage data' : "".concat(Math.floor(hovered.data.averageCoverage * 100), "% coverage")), hovered.data.originalChildCount ? _react.default.createElement("div", null, hovered.data.originalChildCount, " direct", ' ', hovered.data.originalChildCount === 1 ? 'child' : 'children', ' ') : null)) : null);
 };
