@@ -85,7 +85,7 @@ const visualizeBundles = async ({
       )
 
       console.log(
-        `\nIf you want to further explore the collected performance data, you can drag and drop the trace from\n\n📂 ${tempFolder}/trace.json\n\nto the online trace viewer at \n\n🌐 https://chromedevtools.github.io/timeline-viewer/.`
+        `\nIf you want to further explore the collected performance data, you can drag and drop the trace file from\n\n📂 ${tempFolder}/trace.json\n\nto the online trace viewer at \n\n🌐 https://chromedevtools.github.io/timeline-viewer/.`
       )
     })
   } catch (e) {
