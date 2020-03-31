@@ -13,6 +13,7 @@ const visualizeBundles = async ({
   url,
   scriptsWithoutSourcemapsDict,
   priorities,
+  longTasks
 }) => {
   console.log(`\n🖼️   Generating visualization...\n`)
 
@@ -32,7 +33,7 @@ const visualizeBundles = async ({
     )
     const fileName = `${tempFolder}/treeData.json`
 
-    const getFileName = url => url.split(/\//g).slice(-1)[0]
+    const getFileName = url => (url ? url.split(/\//g).slice(-1)[0] : '')
 
     processedData.children.forEach(bundle => {
       bundle.request = priorities.find(priority => {
@@ -42,6 +43,21 @@ const visualizeBundles = async ({
           getFileName(priority.url) === bundle.name
         )
       })
+      const bundleLongTasks = longTasks.filter(task => {
+        return (
+          task.attributableURLs[0] === bundle.name ||
+          getFileName(task.attributableURLs[0]) === bundle.name
+        )
+      })
+      if (bundleLongTasks.length) {
+        // just take  the longest
+        bundle.longTask = bundleLongTasks
+          .map(task => task.duration)
+          .reduce((acc, curr) => {
+            if (curr > acc) return curr
+            return acc
+          }, 0)
+      }
     })
 
     Object.assign(processedData, { url, priorities })
@@ -69,7 +85,7 @@ const visualizeBundles = async ({
       )
     })
   } catch (e) {
-    console.error('❌  Failed to generate source map visualization')
+    console.error('⚠️  Failed to generate source map visualization')
     console.error(e)
   }
 }

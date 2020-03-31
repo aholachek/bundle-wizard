@@ -37,7 +37,7 @@ const main = async () => {
     urlToFileDict = downloadedData.urlToFileDict
     ;(url = downloadedData.url), (tracing = downloadedData.tracing)
   } catch (e) {
-    console.error('\n❌  Unable to fetch website data\n')
+    console.error('\n⚠️  Unable to fetch website data\n')
     console.error(e)
     process.exit()
   }
@@ -46,7 +46,7 @@ const main = async () => {
 
   if (coverageFileStats['size'] === 0) {
     console.error(
-      '❌  The coverage file is empty. Please try again with a new file.'
+      '⚠️  The coverage file is empty. Please try again with a new file.'
     )
     process.exit()
   }
@@ -96,7 +96,10 @@ const main = async () => {
     })
   })
 
-  const priorities = await processTracing(JSON.parse(tracing), downloadsDir)
+  const { priorities, longTasks } = await processTracing(
+    JSON.parse(tracing),
+    downloadsDir
+  )
 
   const jsonFileName = `${tempFolderName}/sourcemap-analysis.json`
 
@@ -111,7 +114,8 @@ const main = async () => {
     coverageFilePath,
     url,
     scriptsWithoutSourcemapsDict,
-    priorities
+    priorities,
+    longTasks
   })
 }
 

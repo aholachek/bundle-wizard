@@ -22,6 +22,7 @@ const Table = ({ bundles, title, description, onBundleNameClick, noWarn }) => {
           {bundles
             .sort((a, b) => b.realSize - a.realSize)
             .map((node, i) => {
+              const longTaskWarning = node.longTask ? ' 🚨' : ''
               return (
                 <tr>
                   <td>{bundles.length > 1 && i + 1}</td>
@@ -33,18 +34,20 @@ const Table = ({ bundles, title, description, onBundleNameClick, noWarn }) => {
                         title="Click to see treemap of this bundle and its children"
                       >
                         {node.name}
+                        {longTaskWarning}
                       </a>
                     ) : (
                       <span title="Sourcemaps were not downloaded for this bundle">
+                        {longTaskWarning}
                         {node.name}
                       </span>
                     )}
                   </td>
                   <td>
-                    {!noWarn && Math.ceil(node.realSize / 1000) > 100
-                      ? '❌'
-                      : ''}
                     {Math.ceil(node.realSize / 1000)} kb{' '}
+                    {!noWarn && Math.ceil(node.realSize / 1000) > 100
+                      ? '⚠️'
+                      : ''}
                   </td>
                   <td>
                     {typeof node.averageCoverage === 'number'
@@ -82,6 +85,7 @@ const Summary = ({ data, setGraphRoot }) => {
     .filter(node => !isHighPriority(node))
 
   const hasLargeBundles = data.children.find(c => c.realSize > 100)
+  const hasLongTasks = data.children.find(d => d.longTask)
 
   const onBundleNameClick = name => e => {
     e.preventDefault()
@@ -106,9 +110,22 @@ const Summary = ({ data, setGraphRoot }) => {
           <div>
             <p style={{ marginTop: '2rem' }}>
               <a href="https://v8.dev/blog/cost-of-javascript-2019">
-                Your JS bundles should generally be smaller than 100kb for best
+                JS bundles should generally be smaller than 100kb for best
                 performance.
-              </a>{' '}Bundles larger than 100kb are marked with an ❌.
+              </a>{' '}
+              Bundles larger than 100kb are marked with a ⚠️ icon.
+            </p>
+          </div>
+        )}
+        {hasLongTasks && (
+          <div>
+            <p>
+              <a href="https://web.dev/long-tasks-devtools/">
+                When the code in Javascript bundles is executed on app startup,
+                it can generate long tasks
+              </a>{' '}
+              that delay page interactivity. Bundles that kicked off long tasks
+              are marked here with a 🚨 icon.
             </p>
           </div>
         )}

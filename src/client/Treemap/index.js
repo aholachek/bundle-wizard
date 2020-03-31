@@ -175,11 +175,12 @@ const renderGraph = ({
         )
 
   const root = treemap(editedFilteredData)
+  const isBundle = d => d.parent && isTopLevel(d.parent)
 
   const renderBoxShadowBorder = d => {
     if (isTopLevel(d)) return 'white'
 
-    if (d.parent && isTopLevel(d.parent)) {
+    if (isBundle(d)) {
       return '0 0 0 1px #000'
     }
     if (typeof d.data.averageCoverage !== 'number') return '0 0 0 1px #a8a8a8'
@@ -236,7 +237,12 @@ const renderGraph = ({
         setHovered(null)
         this.style.boxShadow = renderBoxShadowBorder(d)
       })
-      .classed(`box ${isFirstRender ? 'animate-in-box' : ''}`, true)
+      .classed(`box ${isFirstRender ? 'animate-in-box' : ''} `, true)
+      .each(function(d) {
+        if (d.data.longTask) {
+          this.classList.add('long-task-warning')
+        }
+      })
       .style('z-index', d => {
         return d.depth
       })
@@ -260,14 +266,13 @@ const renderGraph = ({
 
       .text(d => {
         if (isTopLevel(d)) return 'all bundles'
-        return d.data.name
+        return `${d.data.longTask ? '🚨 ' : ''}${d.data.name}`
       })
 
     label
       .append('div')
       .attr('data-size', true)
       .text(createSizeLabel)
-
     return entered
   }
 

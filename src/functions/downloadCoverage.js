@@ -25,7 +25,7 @@ const launchBrowser = async ({ interact, isMobile, ignoreHTTPSErrors }) => {
     })
     return [chrome, browser]
   } catch (e) {
-    console.error('❌  Unable to launch Chrome:\n')
+    console.error('⚠️  Unable to launch Chrome:\n')
     console.error(e)
     process.exit(1)
   }
@@ -44,7 +44,7 @@ const validateURL = url => {
     return url
   } catch (e) {
     console.error(
-      `❌  The provided url: ${url} is not valid, please try again.`
+      `⚠️  The provided url: ${url} is not valid, please try again.`
     )
     return false
   }

@@ -8,12 +8,23 @@ const Tooltip = ({ hovered }) => {
       hovered.data.name
     }`.replace('topLevel', 'all bundles')
   }
+  console.log(hovered)
 
   return (
     <div className={`tooltip ${!hovered ? 'tooltip-hidden' : ''}`}>
       {hovered ? (
         <div>
+          {hovered.data.longTask ? (
+            <div style={{ marginBottom: '.15rem' }}>
+              🚨 This bundle initiated a {Math.ceil(hovered.data.longTask)}ms "long task" in the browser
+              when it was evaluated
+            </div>
+          ) : (
+            ''
+          )}
+
           <h3>{name}</h3>
+
           <div className="hovered-data-row">
             <div>{Math.ceil(hovered.data.realSize / 1000)}kb minified</div>
             <div>

@@ -43,7 +43,7 @@ const downloadSourcemaps = async ({
   await Promise.all(promises).then(() => {
     if (!oneSourcemapDownloaded) {
       console.error(
-        `❌  No sourcemaps could be downloaded, analysis cannot proceed.`
+        `⚠️  No sourcemaps could be downloaded, analysis cannot proceed.`
       )
       process.exit()
     }

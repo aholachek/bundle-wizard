@@ -73,6 +73,10 @@ $anim-duration: 400ms;
   animation: fadeOut 0.3s forwards;
 }
 
+.long-task-warning {
+  box-shadow: 0 0 100px black;
+}
+
 .label {
   padding: 0.2rem 0.3rem;
   display: block;
@@ -92,10 +96,12 @@ $anim-duration: 400ms;
 
 .legend {
   margin-left: auto;
-  margin-right: 0.25rem;
+  margin-right: 0;
   position: relative;
   text-align: center;
   font-size: 0.8rem;
+  position: relative;
+  left: 0.7rem;
   > div:first-of-type {
     margin-bottom: 0.2rem;
     line-height: 1;
@@ -291,7 +297,6 @@ figure {
     line-height: 1;
     font-weight: bold;
 
-
     &:hover {
       border-color: hsla(225, 58%, 45%, 0.5);
     }
@@ -326,7 +331,6 @@ figure {
   position: absolute;
   top: 0.7rem;
   right: 1rem;
-  font-weight: bold;
   display: flex;
   align-items: center;
 }
