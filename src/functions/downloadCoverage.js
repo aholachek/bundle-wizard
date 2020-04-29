@@ -145,7 +145,7 @@ const downloadCoverage = async ({
       // allow page to make any errant http requests.
       await delay(1000)
       console.log('🐢  Finishing up loading...\n')
-      await delay(3000)
+      await delay(4000)
       await page.screenshot({ path: `${tempFolderName}/screenshot.png` })
       resolve(await completeCoverage())
     }

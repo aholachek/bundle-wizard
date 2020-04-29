@@ -32,7 +32,7 @@ const main = async () => {
       interact: argv.interact,
       downloadsDir,
       coverageFilePath,
-      tempFolderName
+      tempFolderName,
     })
     urlToFileDict = downloadedData.urlToFileDict
     ;(url = downloadedData.url), (tracing = downloadedData.tracing)
@@ -56,27 +56,27 @@ const main = async () => {
     downloadsDir,
     urlToFileDict,
     url,
-    ignoreHTTPSErrors
+    ignoreHTTPSErrors,
   })
 
   const coverageArr = require(coverageFilePath)
 
-  Object.keys(scriptsWithoutSourcemapsDict).forEach(url => {
+  Object.keys(scriptsWithoutSourcemapsDict).forEach((url) => {
     const localFile = scriptsWithoutSourcemapsDict[url]
     const size = fs.statSync(localFile).size
-    const coverageEntry = coverageArr.find(c => {
+    const coverageEntry = coverageArr.find((c) => {
       return c.url === url
     })
 
     if (!coverageEntry) {
       scriptsWithoutSourcemapsDict[url] = {
         size,
-        coveragePercent: 'N/A'
+        coveragePercent: 'N/A',
       }
     } else {
       scriptsWithoutSourcemapsDict[url] = {
         size,
-        coveragePercent: findCoveragePercent(size, coverageEntry.ranges)
+        coveragePercent: findCoveragePercent(size, coverageEntry.ranges),
       }
     }
     // we don't need the file going forward
@@ -86,7 +86,7 @@ const main = async () => {
   await new Promise((resolve, reject) => {
     // get rid of file hashes
     fs.readdir(downloadsDir, (err, files) => {
-      files.forEach(file => {
+      files.forEach((file) => {
         fs.renameSync(
           `${downloadsDir}/${file}`,
           `${downloadsDir}/${file.split('--')[1]}`
@@ -115,7 +115,7 @@ const main = async () => {
     url,
     scriptsWithoutSourcemapsDict,
     priorities,
-    longTasks
+    longTasks,
   })
 }
 
