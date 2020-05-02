@@ -57,6 +57,9 @@ const threshold = 70000
 export default function Code({ text, setHovered, animatingOut }) {
   React.useEffect(() => {
     setHovered(null)
+    setTimeout(() => {
+      setHovered(null)
+    }, 10)
   }, [text])
   if (text.length > threshold) {
     return (
