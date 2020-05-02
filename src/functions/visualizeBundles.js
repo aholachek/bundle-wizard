@@ -13,16 +13,16 @@ const visualizeBundles = async ({
   url,
   scriptsWithoutSourcemapsDict,
   priorities,
-  longTasks
+  longTasks,
 }) => {
   console.log(`\n🖼️   Generating visualization...\n`)
 
   try {
     const data = await explore(bundles, {
       output: {
-        format: 'json'
+        format: 'json',
       },
-      coverage: coverageFilePath
+      coverage: coverageFilePath,
     })
 
     const tempFolder = path.join(__dirname, '..', '..', 'temp')
@@ -33,25 +33,25 @@ const visualizeBundles = async ({
     )
     const fileName = `${tempFolder}/treeData.json`
 
-    const getFileName = url => (url ? url.split(/\//g).slice(-1)[0] : '')
-    processedData.children.forEach(bundle => {
-      bundle.request = priorities.find(priority => {
+    const getFileName = (url) => (url ? url.split(/\//g).slice(-1)[0] : '')
+    processedData.children.forEach((bundle) => {
+      bundle.request = priorities.find((priority) => {
         if (!priority.url) return
         return (
           priority.url === bundle.name ||
           getFileName(priority.url) === bundle.name
         )
       })
-      const bundleLongTasks = longTasks.filter(task => {
+      const bundleLongTasks = longTasks.filter((task) => {
         return (
-          task.attributableURLs.find(n => n === bundle.name) ||
-          task.attributableURLs.map(getFileName).find(n => n === bundle.name)
+          task.attributableURLs.find((n) => n === bundle.name) ||
+          task.attributableURLs.map(getFileName).find((n) => n === bundle.name)
         )
       })
       if (bundleLongTasks.length) {
         // just take  the longest
         bundle.longTask = bundleLongTasks
-          .map(task => task.duration)
+          .map((task) => task.duration)
           .reduce((acc, curr) => {
             if (curr > acc) return curr
             return acc
@@ -63,11 +63,16 @@ const visualizeBundles = async ({
 
     fs.writeFileSync(fileName, JSON.stringify(processedData))
     fs.copySync(fileName, `${distFolder}/treeData.json`)
+    fs.copySync(
+      `${tempFolder}/originalFileMapping.json`,
+      `${distFolder}/originalFileMapping.json`
+    )
+
     fs.copySync(`${tempFolder}/screenshot.png`, `${distFolder}/screenshot.png`)
 
     const server = http.createServer((request, response) => {
       return handler(request, response, {
-        public: distFolder
+        public: distFolder,
       })
     })
 

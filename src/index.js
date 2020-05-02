@@ -7,7 +7,7 @@ const processTracing = require('./functions/processTracing')
 const downloadSourcemaps = require('./functions/downloadSourcemaps')
 const visualizeBundles = require('./functions/visualizeBundles')
 const findCoveragePercent = require('./functions/calculateCoverage')
-
+const mapToOriginalFiles = require('./functions/mapToOriginalFiles')
 const tempFolderName = path.join(__dirname, '..', 'temp')
 const coverageFilePath = `${tempFolderName}/coverage.json`
 const downloadsDir = `${tempFolderName}/downloads`
@@ -100,6 +100,8 @@ const main = async () => {
     JSON.parse(tracing),
     downloadsDir
   )
+
+  await mapToOriginalFiles({downloadsDir, tempFolderName})
 
   const jsonFileName = `${tempFolderName}/sourcemap-analysis.json`
 

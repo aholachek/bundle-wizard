@@ -6,6 +6,9 @@ import Treemap from './Treemap'
 import Breadcrumbs from './Breadcrumbs'
 import Summary from './Summary'
 import Tooltip from './Tooltip'
+import originalFileMapping from './originalFileMapping.json'
+import Code from './Code'
+import { findMostLikelyPath } from './utils'
 
 const findBranch = (id, data) => {
   let cachedBranch
@@ -25,10 +28,11 @@ const Dashboard = () => {
   const [topLevelData, setTopLevelData] = React.useState({})
   const [
     showScriptsWithoutSourcemaps,
-    setShowScriptsWithoutSourcemaps
+    setShowScriptsWithoutSourcemaps,
   ] = React.useState(false)
+  const [code, setCode] = React.useState(false)
 
-  const isTopLevel =  data && data.name === 'topLevel'
+  const isTopLevel = data && data.name === 'topLevel'
 
   const toggleScriptsWithoutSourcemaps = () => {
     setShowScriptsWithoutSourcemaps(!showScriptsWithoutSourcemaps)
@@ -44,7 +48,18 @@ const Dashboard = () => {
 
   const setGraphRoot = React.useCallback(
     id => {
-      setData(findBranch(id, topLevelData))
+      const data = findBranch(id, topLevelData)
+      if (!data.children) {
+        const matchingKeys = Object.keys(originalFileMapping).filter(
+          key => key.indexOf(data.name) !== -1
+        )
+        const mostLikelyPath = findMostLikelyPath(matchingKeys, data.name)
+        const text = originalFileMapping[mostLikelyPath]
+        setCode(text)
+      } else {
+        setCode(null)
+      }
+      setData(data)
     },
     [setData, topLevelData]
   )
@@ -59,6 +74,8 @@ const Dashboard = () => {
     })
   }, [])
   if (!data) return <div className="loading">loading...</div>
+
+  const showingCode = Boolean(code)
 
   return (
     <div>
@@ -118,7 +135,9 @@ const Dashboard = () => {
             setGraphRoot={setGraphRoot}
             setHovered={setHovered}
             showScriptsWithoutSourcemaps={showScriptsWithoutSourcemaps}
+            showingCode={showingCode}
           />
+          {showingCode && <Code code={code} />}
         </>
       )}
     </div>

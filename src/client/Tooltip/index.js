@@ -8,7 +8,6 @@ const Tooltip = ({ hovered }) => {
       hovered.data.name
     }`.replace('topLevel', 'all bundles')
   }
-  console.log(hovered)
 
   return (
     <div className={`tooltip ${!hovered ? 'tooltip-hidden' : ''}`}>

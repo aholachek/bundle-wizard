@@ -26,7 +26,7 @@ const editTopLevelData = (filteredData, childArray) => {
     realSize,
     originalChildCount,
     averageCoverage,
-    children: childArray
+    children: childArray,
   }
 }
 
@@ -113,7 +113,7 @@ const renderGraph = ({
   width,
   height,
   setHovered,
-  showScriptsWithoutSourcemaps
+  showScriptsWithoutSourcemaps,
 }) => {
   const container = d3.select(el)
 
@@ -193,7 +193,7 @@ const renderGraph = ({
 
   const createEnteredElements = enter => {
     const entered = enter
-      .filter(function(d) {
+      .filter(function (d) {
         const width = d.x1 - d.x0
         const height = d.y1 - d.y0
         return width > 3 && height > 3 && width * height > 50
@@ -209,7 +209,7 @@ const renderGraph = ({
         if (d.data.noSourcemap) return
         setGraphRoot(d.data.id)
       })
-      .on('mouseenter', function(d) {
+      .on('mouseenter', function (d) {
         setHovered(d)
         if (isTopLevel(d)) return
         const isBundle = d.parent && isTopLevel(d.parent.data)
@@ -233,12 +233,12 @@ const renderGraph = ({
           d.parent ? `, 0 5px 15px ${shadowColor}` : ''
         }`
       })
-      .on('mouseleave', function(d) {
+      .on('mouseleave', function (d) {
         setHovered(null)
         this.style.boxShadow = renderBoxShadowBorder(d)
       })
       .classed(`box ${isFirstRender ? 'animate-in-box' : ''} `, true)
-      .each(function(d) {
+      .each(function (d) {
         if (d.data.longTask) {
           this.classList.add('long-task-warning')
         }
@@ -269,10 +269,7 @@ const renderGraph = ({
         return `${d.data.longTask ? '🚨 ' : ''}${d.data.name}`
       })
 
-    label
-      .append('div')
-      .attr('data-size', true)
-      .text(createSizeLabel)
+    label.append('div').attr('data-size', true).text(createSizeLabel)
     return entered
   }
 
@@ -298,7 +295,7 @@ const renderGraph = ({
         .style('top', d => `${d.y0}px`)
         .style('left', d => `${d.x0}px`)
         .style('box-shadow', renderBoxShadowBorder)
-        .each(function(d) {
+        .each(function (d) {
           this.querySelector('[data-size]').innerText = createSizeLabel(d)
         })
     }
@@ -323,7 +320,8 @@ const Treemap = ({
   data,
   setGraphRoot,
   setHovered,
-  showScriptsWithoutSourcemaps
+  showScriptsWithoutSourcemaps,
+  showingCode,
 }) => {
   const graphContainerRef = React.useRef(null)
   const dimensionsRef = useRef({})
@@ -332,6 +330,7 @@ const Treemap = ({
     dimensionsRef.current.height = document.body.clientHeight - 100
   }
   useEffect(() => {
+    if (showingCode) return
     const throttledResize = throttle(() => {
       cacheWindowSize()
 
@@ -341,14 +340,14 @@ const Treemap = ({
         setGraphRoot,
         setHovered,
         showScriptsWithoutSourcemaps,
-        ...dimensionsRef.current
+        ...dimensionsRef.current,
       })
-    }, 250)
+    }, 300)
     window.addEventListener('resize', throttledResize)
     return () => {
       window.removeEventListener('resize', throttledResize)
     }
-  }, [])
+  }, [showingCode])
 
   useEffect(() => {
     cacheWindowSize()
@@ -358,7 +357,7 @@ const Treemap = ({
       setGraphRoot,
       setHovered,
       ...dimensionsRef.current,
-      showScriptsWithoutSourcemaps
+      showScriptsWithoutSourcemaps,
     })
   }, [data.id, showScriptsWithoutSourcemaps])
 
