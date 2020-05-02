@@ -24,11 +24,22 @@ const Container = styled.div`
   overflow: auto;
   height: 100vh;
   background: rgb(41, 45, 62);
+  color: white;
   padding: 2rem;
-  font-family: 'Source Code Pro';
+  padding-top: 1rem;
 `
+const threshold = 70000
 
-export default function Code({ code }) {
+export default function Code({ code, title }) {
+  console.log('showing file from computed location: ', title)
+  if (code.length > threshold) {
+    return (
+      <Container>
+        <div>{code}</div>
+      </Container>
+    )
+  }
+
   return (
     <Container>
       <Highlight {...defaultProps} code={code} language="jsx" theme={theme}>

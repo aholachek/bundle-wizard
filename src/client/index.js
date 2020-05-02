@@ -50,12 +50,18 @@ const Dashboard = () => {
     id => {
       const data = findBranch(id, topLevelData)
       if (!data.children) {
+        const simplifiedName = data.name.replace('.js', '')
         const matchingKeys = Object.keys(originalFileMapping).filter(
-          key => key.indexOf(data.name) !== -1
+          key => key.indexOf(simplifiedName) !== -1
         )
-        const mostLikelyPath = findMostLikelyPath(matchingKeys, data.name)
+        const mostLikelyPath = findMostLikelyPath(matchingKeys, data.id)
+
         const text = originalFileMapping[mostLikelyPath]
-        setCode(text)
+        if (!text) {
+          return setCode(null)
+        }
+        setCode({ text, name: mostLikelyPath })
+        setHovered(null)
       } else {
         setCode(null)
       }
@@ -137,7 +143,7 @@ const Dashboard = () => {
             showScriptsWithoutSourcemaps={showScriptsWithoutSourcemaps}
             showingCode={showingCode}
           />
-          {showingCode && <Code code={code} />}
+          {showingCode && <Code code={code.text} title={code.name} />}
         </>
       )}
     </div>

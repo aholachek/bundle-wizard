@@ -61,10 +61,10 @@ const main = async () => {
 
   const coverageArr = require(coverageFilePath)
 
-  Object.keys(scriptsWithoutSourcemapsDict).forEach((url) => {
+  Object.keys(scriptsWithoutSourcemapsDict).forEach(url => {
     const localFile = scriptsWithoutSourcemapsDict[url]
     const size = fs.statSync(localFile).size
-    const coverageEntry = coverageArr.find((c) => {
+    const coverageEntry = coverageArr.find(c => {
       return c.url === url
     })
 
@@ -86,7 +86,7 @@ const main = async () => {
   await new Promise((resolve, reject) => {
     // get rid of file hashes
     fs.readdir(downloadsDir, (err, files) => {
-      files.forEach((file) => {
+      files.forEach(file => {
         fs.renameSync(
           `${downloadsDir}/${file}`,
           `${downloadsDir}/${file.split('--')[1]}`
@@ -101,7 +101,7 @@ const main = async () => {
     downloadsDir
   )
 
-  await mapToOriginalFiles({downloadsDir, tempFolderName})
+  await mapToOriginalFiles({ downloadsDir, tempFolderName })
 
   const jsonFileName = `${tempFolderName}/sourcemap-analysis.json`
 
