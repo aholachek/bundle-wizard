@@ -20,7 +20,7 @@ const Legend = () => {
 
 const ScriptsWithoutSourcemapControl = ({
   toggleScriptsWithoutSourcemaps,
-  showScriptsWithoutSourcemaps
+  showScriptsWithoutSourcemaps,
 }) => {
   return (
     <div
@@ -45,7 +45,7 @@ const Breadcrumbs = ({
   setGraphRoot,
   toggleScriptsWithoutSourcemaps,
   showScriptsWithoutSourcemaps,
-  isTopLevel
+  isTopLevel,
 }) => {
   const sections = data.id.split('/')
 

@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import * as d3 from 'd3'
 import throttle from 'lodash.throttle'
 import cloneDeep from 'lodash.clonedeep'
+import { collapse } from '../utils'
 
 const color = d3.scaleSequential([-0.2, 1.15], d3.interpolateRdYlGn)
 
@@ -84,26 +85,6 @@ const removeTooSmallNodes = (data, ids) => {
   }
   traverseTree(data)
   return data
-}
-
-// any dict with only one key should turn into a key1/key
-const hasOneChild = d => d.children && d.children.length === 1
-
-const collapse = d => {
-  if (hasOneChild(d)) {
-    const onlyChild = d.children[0]
-    const name = `${d.name}/${onlyChild.name}`
-
-    Object.keys(d).forEach(key => delete d[key])
-    Object.keys(onlyChild).forEach(key => {
-      d[key] = onlyChild[key]
-    })
-
-    d.name = name
-
-    collapse(d)
-  }
-  if (d.children) d.children.forEach(child => collapse(child))
 }
 
 const renderGraph = ({

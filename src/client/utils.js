@@ -23,3 +23,24 @@ export function findMostLikelyPath (arr, name) {
   })
   return mostProbablePath
 }
+
+
+// any dict with only one key should turn into a key1/key
+const hasOneChild = d => d.children && d.children.length === 1
+
+export const collapse = d => {
+  if (hasOneChild(d)) {
+    const onlyChild = d.children[0]
+    const name = `${d.name}/${onlyChild.name}`
+
+    Object.keys(d).forEach(key => delete d[key])
+    Object.keys(onlyChild).forEach(key => {
+      d[key] = onlyChild[key]
+    })
+
+    d.name = name
+
+    collapse(d)
+  }
+  if (d.children) d.children.forEach(child => collapse(child))
+}
