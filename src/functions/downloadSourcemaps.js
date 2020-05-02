@@ -5,7 +5,7 @@ const fetch = require('node-fetch')
 const downloadSourcemaps = async ({
   urlToFileDict,
   url: baseUrl,
-  ignoreHTTPSErrors
+  ignoreHTTPSErrors,
 }) => {
   const urls = Object.keys(urlToFileDict)
 
@@ -16,17 +16,19 @@ const downloadSourcemaps = async ({
   const scriptsWithoutSourcemaps = {}
 
   const ignoreHTTPSErrorsAgent = new https.Agent({
-    rejectUnauthorized: false
+    rejectUnauthorized: false,
   })
 
   const promises = urls.map(url => {
     return fetch(`${url}.map`, {
-      agent: ignoreHTTPSErrors ? ignoreHTTPSErrorsAgent : undefined
+      agent: ignoreHTTPSErrors ? ignoreHTTPSErrorsAgent : undefined,
     })
       .then(response => response.json())
       .then(json => {
+        const stringified = JSON.stringify(json)
+        if (stringified.length < 5) throw new Error('invalid map')
         oneSourcemapDownloaded = true
-        fs.writeFileSync(`${urlToFileDict[url]}.map`, JSON.stringify(json))
+        fs.writeFileSync(`${urlToFileDict[url]}.map`, stringified)
       })
       .catch(error => {
         scriptsWithoutSourcemaps[url] = urlToFileDict[url]
