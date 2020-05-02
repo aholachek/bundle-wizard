@@ -61,13 +61,17 @@ const Dashboard = () => {
           return setCode(null)
         }
         setCode({ text, name: mostLikelyPath })
-        setHovered(null)
       } else {
-        setCode(null)
+        if (code) {
+          setCode({ ...code, animatingOut: true })
+          setTimeout(() => {
+            setCode(null)
+          }, 500)
+        }
       }
       setData(data)
     },
-    [setData, topLevelData]
+    [setData, topLevelData, code]
   )
 
   useEffect(() => {
@@ -143,7 +147,7 @@ const Dashboard = () => {
             showScriptsWithoutSourcemaps={showScriptsWithoutSourcemaps}
             showingCode={showingCode}
           />
-          {showingCode && <Code code={code.text} title={code.name} />}
+          {showingCode && <Code {...code} setHovered={setHovered} />}
         </>
       )}
     </div>

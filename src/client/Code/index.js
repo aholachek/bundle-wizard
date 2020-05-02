@@ -1,5 +1,5 @@
 import React from 'react'
-import styled, { keyframes } from 'styled-components'
+import styled, { keyframes, css } from 'styled-components'
 import Highlight, { defaultProps } from 'prism-react-renderer'
 import theme from 'prism-react-renderer/themes/palenight'
 
@@ -7,15 +7,33 @@ const fadeIn = keyframes`
   from {
     opacity: 0
   }
-
   to {
     opacity: 1;
   }
 `
 
+const fadeOut = keyframes`
+  from {
+    opacity: 1
+  }
+  to {
+    opacity: 0;
+  }
+`
+
+const fontFamily = `font-family: 'Source Code Pro', 'SFMono-Regular', Consolas, 'Liberation Mono',
+    Menlo, Courier, monospace;`
+
 const Container = styled.div`
   top: 5.75rem;
-  animation: ${fadeIn} 2s forwards;
+  animation: ${props =>
+    props.animatingOut
+      ? css`
+          ${fadeOut} .5s forwards;
+        `
+      : css`
+          ${fadeIn} 2s forwards;
+        `}
   position: fixed;
   left: 0;
   bottom: 0;
@@ -27,22 +45,30 @@ const Container = styled.div`
   color: white;
   padding: 2rem;
   padding-top: 1rem;
+  ${fontFamily};
+  pre,
+  code {
+    ${fontFamily}
+  }
 `
+
 const threshold = 70000
 
-export default function Code({ code, title }) {
-  console.log('showing file from computed location: ', title)
-  if (code.length > threshold) {
+export default function Code({ text, setHovered, animatingOut }) {
+  React.useEffect(() => {
+    setHovered(null)
+  }, [text])
+  if (text.length > threshold) {
     return (
-      <Container>
-        <div>{code}</div>
+      <Container animatingOut={animatingOut}>
+        <div>{text}</div>
       </Container>
     )
   }
 
   return (
-    <Container>
-      <Highlight {...defaultProps} code={code} language="jsx" theme={theme}>
+    <Container animatingOut={animatingOut}>
+      <Highlight {...defaultProps} code={text} language="jsx" theme={theme}>
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
           <pre className={className} style={style}>
             {tokens.map((line, i) => (

@@ -20,7 +20,6 @@ async function mapToOriginalFiles({ downloadsDir, tempFolderName }) {
         )
 
         consumer.sources.forEach(fileName => {
-          if (fileName.match('components')) console.log(fileName, consumer.sourceContentFor(fileName), '\n')
           allFiles[fileName] = consumer.sourceContentFor(fileName)
         })
         consumer.destroy()
