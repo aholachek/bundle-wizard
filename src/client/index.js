@@ -58,6 +58,7 @@ const Dashboard = () => {
 
         const text = originalFileMapping[mostLikelyPath]
         if (!text) {
+          setData(data)
           return setCode(null)
         }
         setCode({ text, name: mostLikelyPath })
