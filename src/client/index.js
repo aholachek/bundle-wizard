@@ -6,7 +6,6 @@ import Treemap from './Treemap'
 import Breadcrumbs from './Breadcrumbs'
 import Summary from './Summary'
 import Tooltip from './Tooltip'
-import originalFileMapping from './originalFileMapping.json'
 import Code from './Code'
 import { findMostLikelyPath } from './utils'
 
@@ -22,15 +21,16 @@ const findBranch = (id, data) => {
 }
 
 const Dashboard = () => {
-  const [data, _setData] = React.useState()
+  const [data, _setData] = React.useState(null)
   const [hovered, setHovered] = React.useState(null)
   const [showSummary, setShowSummary] = React.useState(false)
   const [topLevelData, setTopLevelData] = React.useState({})
   const [
     showScriptsWithoutSourcemaps,
-    setShowScriptsWithoutSourcemaps,
+    setShowScriptsWithoutSourcemaps
   ] = React.useState(false)
   const [code, setCode] = React.useState(false)
+  const [originalFileMapping, setOriginalFileMapping] = React.useState({})
 
   const isTopLevel = data && data.name === 'topLevel'
 
@@ -46,6 +46,24 @@ const Dashboard = () => {
     [_setData, setHovered]
   )
 
+  useEffect(() => {
+    fetch('./originalFileMapping.json').then(response => {
+      response
+        .json()
+        .then(data => {
+          setOriginalFileMapping(data)
+        })
+        .catch(e => {})
+    })
+    fetch('./treeData.json').then(response => {
+      response.json().then(data => {
+        // order is important here for setGraphRoot
+        setTopLevelData(data)
+        setData(data)
+      })
+    })
+  }, [])
+
   const setGraphRoot = React.useCallback(
     id => {
       const data = findBranch(id, topLevelData)
@@ -57,7 +75,6 @@ const Dashboard = () => {
         const mostLikelyPath = findMostLikelyPath(matchingKeys, data.id)
 
         const text = originalFileMapping[mostLikelyPath]
-        debugger
         if (!text) {
           setData(data)
           return setCode(null)
@@ -73,18 +90,9 @@ const Dashboard = () => {
       }
       setData(data)
     },
-    [setData, topLevelData, code]
+    [setData, topLevelData, code, originalFileMapping]
   )
 
-  useEffect(() => {
-    fetch('./treeData.json').then(response => {
-      response.json().then(data => {
-        // order is important here for setGraphRoot
-        setTopLevelData(data)
-        setData(data)
-      })
-    })
-  }, [])
   if (!data) return <div className="loading">loading...</div>
 
   const showingCode = Boolean(code)
