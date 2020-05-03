@@ -53,7 +53,9 @@ const Dashboard = () => {
         .then(data => {
           setOriginalFileMapping(data)
         })
-        .catch(e => {})
+        .catch(e => {
+          console.error('couldnt load originalFileMapping.json!')
+        })
     })
     fetch('./treeData.json').then(response => {
       response.json().then(data => {
@@ -69,17 +71,22 @@ const Dashboard = () => {
       const data = findBranch(id, topLevelData)
       if (!data.children) {
         const simplifiedName = data.name.replace('.js', '')
-        const matchingKeys = Object.keys(originalFileMapping).filter(
-          key => key.indexOf(simplifiedName) !== -1
-        )
-        const mostLikelyPath = findMostLikelyPath(matchingKeys, data.id)
+        const fileKeys = Object.keys(originalFileMapping)
+        if (!fileKeys) {
+          console.error('unable to access original file data')
+        } else {
+          const matchingKeys = fileKeys.filter(
+            key => key.indexOf(simplifiedName) !== -1
+          )
+          const mostLikelyPath = findMostLikelyPath(matchingKeys, data.id)
 
-        const text = originalFileMapping[mostLikelyPath]
-        if (!text) {
-          setData(data)
-          return setCode(null)
+          const text = originalFileMapping[mostLikelyPath]
+          if (!text) {
+            setData(data)
+            return setCode(null)
+          }
+          setCode({ text, name: mostLikelyPath })
         }
-        setCode({ text, name: mostLikelyPath })
       } else {
         if (code) {
           setCode({ ...code, animatingOut: true })
