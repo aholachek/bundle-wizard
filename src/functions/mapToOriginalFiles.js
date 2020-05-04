@@ -1,9 +1,14 @@
 const fs = require('fs-extra')
 const sourceMap = require('source-map')
+const { v4: uuidv4 } = require('uuid')
 
 async function mapToOriginalFiles({ downloadsDir, tempFolderName }) {
+  const originalFilesDir = `${tempFolderName}/originalFiles`
+
   try {
     const files = fs.readdirSync(downloadsDir)
+
+    fs.mkdirpSync(originalFilesDir)
 
     const sourcemapFiles = files.filter(file => file.match(/.map$/))
 
@@ -20,10 +25,18 @@ async function mapToOriginalFiles({ downloadsDir, tempFolderName }) {
         )
 
         consumer.sources.forEach(fileName => {
-          allFiles[fileName] = consumer.sourceContentFor(fileName)
+          const id = uuidv4()
+          allFiles[fileName] = id
+
+          fs.writeFileSync(
+            `${originalFilesDir}/${id}.json`,
+            JSON.stringify(consumer.sourceContentFor(fileName))
+          )
         })
         consumer.destroy()
-      } catch (e) {}
+      } catch (e) {
+        console.error(e)
+      }
     })
 
     await Promise.all(promises)
@@ -33,6 +46,7 @@ async function mapToOriginalFiles({ downloadsDir, tempFolderName }) {
       JSON.stringify(allFiles)
     )
   } catch (e) {
+    console.error(e)
     fs.writeFileSync(
       `${tempFolderName}/originalFileMapping.json`,
       JSON.stringify({})

@@ -67,7 +67,7 @@ const visualizeBundles = async ({
       `${tempFolder}/originalFileMapping.json`,
       `${distFolder}/originalFileMapping.json`
     )
-
+    fs.copySync(`${tempFolder}/originalFiles`, `${distFolder}/originalFiles`)
     fs.copySync(`${tempFolder}/screenshot.png`, `${distFolder}/screenshot.png`)
 
     const server = http.createServer((request, response) => {

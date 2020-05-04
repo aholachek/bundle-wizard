@@ -49,6 +49,7 @@
     "static-server": "^2.2.1",
     "styled-components": "^5.1.0",
     "tracium": "^0.2.1",
+    "uuid": "^8.0.0",
     "yargs": "^15.3.1"
   },
   "devDependencies": {

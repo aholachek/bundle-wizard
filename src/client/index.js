@@ -47,22 +47,33 @@ const Dashboard = () => {
   )
 
   useEffect(() => {
-    fetch('./originalFileMapping.json').then(response => {
-      response
-        .json()
-        .then(data => {
-          setOriginalFileMapping(data)
-        })
-        .catch(e => {
-          console.error('couldnt load originalFileMapping.json!')
-        })
-    })
-    fetch('./treeData.json').then(response => {
+    fetch('./treeData.json', {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(response => {
       response.json().then(data => {
+        debugger
         // order is important here for setGraphRoot
         setTopLevelData(data)
         setData(data)
       })
+    })
+    fetch('./originalFileMapping.json', {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(response => {
+      response
+        .json()
+        .then(data => {
+          debugger
+          setOriginalFileMapping(data)
+        })
+        .catch(e => {
+          debugger
+          console.error('couldnt load originalFileMapping.json!')
+        })
     })
   }, [])
 
@@ -79,13 +90,21 @@ const Dashboard = () => {
             key => key.indexOf(simplifiedName) !== -1
           )
           const mostLikelyPath = findMostLikelyPath(matchingKeys, data.id)
+          const id = originalFileMapping[mostLikelyPath]
 
-          const text = originalFileMapping[mostLikelyPath]
-          if (!text) {
-            setData(data)
-            return setCode(null)
-          }
-          setCode({ text, name: mostLikelyPath })
+          fetch(`./originalFiles/${id}.json`)
+            .then(response => response.json())
+            .then(text => {
+              debugger
+              setCode({ text, name: mostLikelyPath })
+            })
+            .catch(e => {
+              console.log(e)
+              console.log(originalFileMapping)
+              debugger
+              setData(data)
+              return setCode(null)
+            })
         }
       } else {
         if (code) {

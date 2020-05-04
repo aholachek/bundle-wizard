@@ -5,3 +5,6 @@ TODO
 temp
 .cache
 yarn-error.log
+dist/originalFiles
+dist/originalFileMapping.json
+src/client/originalFiles
