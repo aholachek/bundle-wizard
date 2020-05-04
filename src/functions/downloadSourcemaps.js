@@ -5,7 +5,7 @@ const fetch = require('node-fetch')
 const downloadSourcemaps = async ({
   urlToFileDict,
   url: baseUrl,
-  ignoreHTTPSErrors,
+  ignoreHTTPSErrors
 }) => {
   const urls = Object.keys(urlToFileDict)
 
@@ -16,12 +16,13 @@ const downloadSourcemaps = async ({
   const scriptsWithoutSourcemaps = {}
 
   const ignoreHTTPSErrorsAgent = new https.Agent({
-    rejectUnauthorized: false,
+    rejectUnauthorized: false
   })
 
   const promises = urls.map(url => {
     return fetch(`${url}.map`, {
       agent: ignoreHTTPSErrors ? ignoreHTTPSErrorsAgent : undefined,
+      timeout: 5000
     })
       .then(response => response.json())
       .then(json => {
