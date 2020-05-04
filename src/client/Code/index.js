@@ -29,7 +29,7 @@ const Container = styled.div`
   animation: ${props =>
     props.animatingOut
       ? css`
-          ${fadeOut} .5s forwards;
+          ${fadeOut} .25s forwards;
         `
       : css`
           ${fadeIn} 2s forwards;

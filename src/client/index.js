@@ -9,6 +9,12 @@ import Tooltip from './Tooltip'
 import Code from './Code'
 import { findMostLikelyPath } from './utils'
 
+const jsonOptions = {
+  headers: {
+    'Content-Type': 'application/json'
+  }
+}
+
 const findBranch = (id, data) => {
   let cachedBranch
   const inner = branch => {
@@ -47,31 +53,20 @@ const Dashboard = () => {
   )
 
   useEffect(() => {
-    fetch('./treeData.json', {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then(response => {
+    fetch('./treeData.json', jsonOptions).then(response => {
       response.json().then(data => {
-        debugger
         // order is important here for setGraphRoot
         setTopLevelData(data)
         setData(data)
       })
     })
-    fetch('./originalFileMapping.json', {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then(response => {
+    fetch('./originalFileMapping.json', jsonOptions).then(response => {
       response
         .json()
         .then(data => {
-          debugger
           setOriginalFileMapping(data)
         })
         .catch(e => {
-          debugger
           console.error('couldnt load originalFileMapping.json!')
         })
     })
@@ -95,23 +90,20 @@ const Dashboard = () => {
           fetch(`./originalFiles/${id}.json`)
             .then(response => response.json())
             .then(text => {
-              debugger
               setCode({ text, name: mostLikelyPath })
             })
             .catch(e => {
               console.log(e)
-              console.log(originalFileMapping)
-              debugger
               setData(data)
               return setCode(null)
             })
         }
       } else {
-        if (code) {
+        if (code && !code.animatingOut) {
           setCode({ ...code, animatingOut: true })
           setTimeout(() => {
             setCode(null)
-          }, 500)
+          }, 250)
         }
       }
       setData(data)
