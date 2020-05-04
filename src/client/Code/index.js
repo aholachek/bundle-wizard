@@ -61,6 +61,7 @@ export default function Code({ text, setHovered, animatingOut }) {
       setHovered(null)
     }, 10)
   }, [text])
+  if (!text) return null
   if (text.length > threshold) {
     return (
       <Container animatingOut={animatingOut}>

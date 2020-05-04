@@ -90,12 +90,11 @@ const Dashboard = () => {
           fetch(`./originalFiles/${id}.json`)
             .then(response => response.json())
             .then(text => {
-              setCode({ text, name: mostLikelyPath })
+              if (text) setCode({ text, name: mostLikelyPath })
             })
             .catch(e => {
               console.log(e)
-              setData(data)
-              return setCode(null)
+              setCode(null)
             })
         }
       } else {
