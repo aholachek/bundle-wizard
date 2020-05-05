@@ -98,12 +98,7 @@ const Dashboard = () => {
             })
         }
       } else {
-        if (code && !code.animatingOut) {
-          setCode({ ...code, animatingOut: true })
-          setTimeout(() => {
-            setCode(null)
-          }, 250)
-        }
+        if (code) setCode(null)
       }
       setData(data)
     },
