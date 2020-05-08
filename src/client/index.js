@@ -39,7 +39,7 @@ const Dashboard = () => {
     setShowScriptsWithoutSourcemaps
   ] = React.useState(true)
   const [code, setCode] = React.useState(false)
-  const [originalFileMapping, setOriginalFileMapping] = React.useState(null)
+  const [originalFileMapping, setOriginalFileMapping] = React.useState({})
 
   const isTopLevel = data && data.name === 'topLevel'
 
