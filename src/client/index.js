@@ -70,7 +70,7 @@ const Dashboard = () => {
           console.log('setting mapping')
           setOriginalFileMapping(data)
         })
-        .catch(e => {
+        .catch(() => {
           console.error('couldnt load originalFileMapping.json!')
         })
     })
@@ -85,7 +85,7 @@ const Dashboard = () => {
 
         const fileKeys = Object.keys(originalFileMapping)
         if (!fileKeys) {
-          console.error('unable to access original file data')
+          return console.error('unable to access original file data')
         } else {
           const matchingKeys = fileKeys.filter(
             key => key.indexOf(simplifiedName) !== -1

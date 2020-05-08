@@ -84,7 +84,7 @@ const main = async () => {
     fs.removeSync(localFile)
   })
 
-  await new Promise((resolve, reject) => {
+  await new Promise(resolve => {
     // get rid of file hashes
     fs.readdir(downloadsDir, (err, files) => {
       files.forEach(file => {

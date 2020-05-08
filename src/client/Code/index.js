@@ -59,7 +59,7 @@ export default function Code({ text, setHovered }) {
     setTimeout(() => {
       setHovered(null)
     }, 10)
-  }, [text])
+  }, [text, setHovered])
   if (!text) return null
   if (text.length > threshold) {
     return (
@@ -75,9 +75,9 @@ export default function Code({ text, setHovered }) {
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
           <pre className={className} style={style}>
             {tokens.map((line, i) => (
-              <div {...getLineProps({ line, key: i })}>
+              <div {...getLineProps({ line, key: i })} key={i}>
                 {line.map((token, key) => (
-                  <span {...getTokenProps({ token, key })} />
+                  <span {...getTokenProps({ token, key })} key={key} />
                 ))}
               </div>
             ))}

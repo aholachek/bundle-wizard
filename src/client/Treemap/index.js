@@ -351,7 +351,14 @@ const Treemap = ({
     return () => {
       window.removeEventListener('resize', throttledResize)
     }
-  }, [showingCode, data, setGraphRoot])
+  }, [
+    showingCode,
+    data,
+    setGraphRoot,
+    setHovered,
+    showScriptsWithoutSourcemaps,
+    showAllChildren
+  ])
 
   useEffect(() => {
     cacheWindowSize()
@@ -364,7 +371,14 @@ const Treemap = ({
       showScriptsWithoutSourcemaps,
       showAllChildren
     })
-  }, [data.id, showScriptsWithoutSourcemaps, showAllChildren, setGraphRoot])
+  }, [
+    data.id,
+    showScriptsWithoutSourcemaps,
+    showAllChildren,
+    setGraphRoot,
+    data,
+    setHovered
+  ])
 
   return <div ref={graphContainerRef} className="treemap"></div>
 }

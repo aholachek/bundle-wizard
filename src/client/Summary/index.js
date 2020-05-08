@@ -83,8 +83,6 @@ const Summary = ({ data, setGraphRoot }) => {
       .map(c => c.averageCoverage)
       .reduce((acc, curr) => acc + curr, 0) / hasCoverage.length
 
-  debugger
-
   const highPriorityBundles = data.children
     .sort((a, b) => b.realSize - a.realSize)
     .filter(node => isHighPriority(node))
@@ -129,11 +127,11 @@ const Summary = ({ data, setGraphRoot }) => {
         {hasLongTasks && (
           <div>
             <p>
-              When JavaScript code is executed on app startup, it
-              can generate long tasks that delay page interactivity. Bundles
-              that kicked off long tasks > 150ms are marked here with a 🚨 icon.{' '}
-              However, just because a bundle initiated a long task, doesn't mean
-              the majority of the task's time was spent executing code from that
+              When JavaScript code is executed on app startup, it can generate
+              long tasks that delay page interactivity. Bundles that kicked off
+              long tasks &gt; 150ms are marked here with a 🚨 icon. However,
+              just because a bundle initiated a long task, doesn't mean the
+              majority of the task's time was spent executing code from that
               particular bundle.{' '}
               <a href="https://web.dev/long-tasks-devtools/">
                 For instructions on how to hunt down the causes of long tasks,

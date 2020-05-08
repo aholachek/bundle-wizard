@@ -59809,7 +59809,7 @@ var Treemap = function Treemap(_ref2) {
     return function () {
       window.removeEventListener('resize', throttledResize);
     };
-  }, [showingCode, data, setGraphRoot]);
+  }, [showingCode, data, setGraphRoot, setHovered, showScriptsWithoutSourcemaps, showAllChildren]);
   (0, _react.useEffect)(function () {
     cacheWindowSize();
     renderGraph(_objectSpread({
@@ -59821,7 +59821,7 @@ var Treemap = function Treemap(_ref2) {
       showScriptsWithoutSourcemaps: showScriptsWithoutSourcemaps,
       showAllChildren: showAllChildren
     }));
-  }, [data.id, showScriptsWithoutSourcemaps, showAllChildren, setGraphRoot]);
+  }, [data.id, showScriptsWithoutSourcemaps, showAllChildren, setGraphRoot, data, setHovered]);
   return _react.default.createElement("div", {
     ref: graphContainerRef,
     className: "treemap"
@@ -59917,7 +59917,6 @@ var Summary = function Summary(_ref2) {
   }).reduce(function (acc, curr) {
     return acc + curr;
   }, 0) / hasCoverage.length;
-  debugger;
   var highPriorityBundles = data.children.sort(function (a, b) {
     return b.realSize - a.realSize;
   }).filter(function (node) {
@@ -59958,7 +59957,7 @@ var Summary = function Summary(_ref2) {
     }
   }, _react.default.createElement("a", {
     href: "https://v8.dev/blog/cost-of-javascript-2019"
-  }, "JS bundles should generally be smaller than 100kb for best performance."), ' ', "Bundles larger than 100kb are marked with a \u26A0\uFE0F icon.")), hasLongTasks && _react.default.createElement("div", null, _react.default.createElement("p", null, "When JavaScript code is executed on app startup, it can generate long tasks that delay page interactivity. Bundles that kicked off long tasks > 150ms are marked here with a \uD83D\uDEA8 icon.", ' ', "However, just because a bundle initiated a long task, doesn't mean the majority of the task's time was spent executing code from that particular bundle.", ' ', _react.default.createElement("a", {
+  }, "JS bundles should generally be smaller than 100kb for best performance."), ' ', "Bundles larger than 100kb are marked with a \u26A0\uFE0F icon.")), hasLongTasks && _react.default.createElement("div", null, _react.default.createElement("p", null, "When JavaScript code is executed on app startup, it can generate long tasks that delay page interactivity. Bundles that kicked off long tasks > 150ms are marked here with a \uD83D\uDEA8 icon. However, just because a bundle initiated a long task, doesn't mean the majority of the task's time was spent executing code from that particular bundle.", ' ', _react.default.createElement("a", {
     href: "https://web.dev/long-tasks-devtools/"
   }, "For instructions on how to hunt down the causes of long tasks, check out this article."))), Boolean(highPriorityBundles.length) && _react.default.createElement(Table, {
     onBundleNameClick: onBundleNameClick,
@@ -66454,7 +66453,7 @@ function Code(_ref) {
     setTimeout(function () {
       setHovered(null);
     }, 10);
-  }, [text]);
+  }, [text, setHovered]);
 
   if (!text) return null;
 
@@ -66476,12 +66475,16 @@ function Code(_ref) {
       className: className,
       style: style
     }, tokens.map(function (line, i) {
-      return _react.default.createElement("div", getLineProps({
+      return _react.default.createElement("div", _extends({}, getLineProps({
         line: line,
         key: i
+      }), {
+        key: i
       }), line.map(function (token, key) {
-        return _react.default.createElement("span", getTokenProps({
+        return _react.default.createElement("span", _extends({}, getTokenProps({
           token: token,
+          key: key
+        }), {
           key: key
         }));
       }));
@@ -66720,7 +66723,7 @@ var Dashboard = function Dashboard() {
       response.json().then(function (data) {
         console.log('setting mapping');
         setOriginalFileMapping(data);
-      }).catch(function (e) {
+      }).catch(function () {
         console.error('couldnt load originalFileMapping.json!');
       });
     });
@@ -66734,7 +66737,7 @@ var Dashboard = function Dashboard() {
       var fileKeys = Object.keys(originalFileMapping);
 
       if (!fileKeys) {
-        console.error('unable to access original file data');
+        return console.error('unable to access original file data');
       } else {
         var matchingKeys = fileKeys.filter(function (key) {
           return key.indexOf(simplifiedName) !== -1;
@@ -66862,7 +66865,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61788" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58768" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
