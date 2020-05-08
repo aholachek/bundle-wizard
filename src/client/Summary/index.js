@@ -83,6 +83,8 @@ const Summary = ({ data, setGraphRoot }) => {
       .map(c => c.averageCoverage)
       .reduce((acc, curr) => acc + curr, 0) / hasCoverage.length
 
+  debugger
+
   const highPriorityBundles = data.children
     .sort((a, b) => b.realSize - a.realSize)
     .filter(node => isHighPriority(node))
@@ -187,7 +189,5 @@ const Summary = ({ data, setGraphRoot }) => {
     </div>
   )
 }
-
-Summary.propTypes = {}
 
 export default Summary

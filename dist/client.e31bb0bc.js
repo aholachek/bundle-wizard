@@ -59917,6 +59917,7 @@ var Summary = function Summary(_ref2) {
   }).reduce(function (acc, curr) {
     return acc + curr;
   }, 0) / hasCoverage.length;
+  debugger;
   var highPriorityBundles = data.children.sort(function (a, b) {
     return b.realSize - a.realSize;
   }).filter(function (node) {
@@ -59980,7 +59981,6 @@ var Summary = function Summary(_ref2) {
   }));
 };
 
-Summary.propTypes = {};
 var _default = Summary;
 exports.default = _default;
 },{"react":"../../node_modules/react/index.js"}],"Tooltip/index.js":[function(require,module,exports) {

@@ -13,7 +13,9 @@ const processTracing = async tracing => {
     longTasks = tasks
       .filter(t => t.kind === 'scriptEvaluation')
       .filter(t => t.duration > longTaskThreshold)
-      .forEach(task => (task.children = []))
+
+    //prevent circular json error
+    longTasks.forEach(task => (task.children = []))
   } catch (e) {
     console.error('\nWarning: could not parse long task report, skipping')
   }
