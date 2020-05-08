@@ -33,33 +33,7 @@ const visualizeBundles = async ({
     )
     const fileName = `${tempFolder}/treeData.json`
 
-    const getFileName = url => (url ? url.split(/\//g).slice(-1)[0] : '')
-    processedData.children.forEach(bundle => {
-      bundle.request = priorities.find(priority => {
-        if (!priority.url) return
-        return (
-          priority.url === bundle.name ||
-          getFileName(priority.url) === bundle.name
-        )
-      })
-      const bundleLongTasks = longTasks.filter(task => {
-        return (
-          task.attributableURLs.find(n => n === bundle.name) ||
-          task.attributableURLs.map(getFileName).find(n => n === bundle.name)
-        )
-      })
-      if (bundleLongTasks.length) {
-        // just take  the longest
-        bundle.longTask = bundleLongTasks
-          .map(task => task.duration)
-          .reduce((acc, curr) => {
-            if (curr > acc) return curr
-            return acc
-          }, 0)
-      }
-    })
-
-    Object.assign(processedData, { url, priorities })
+    Object.assign(processedData, { url, priorities, longTasks })
 
     fs.writeFileSync(fileName, JSON.stringify(processedData))
     fs.copySync(fileName, `${distFolder}/treeData.json`)

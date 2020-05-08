@@ -35,7 +35,6 @@ async function mapToOriginalFiles({ downloadsDir, tempFolderName }) {
         })
         consumer.destroy()
       } catch (e) {
-        console.error(e)
       }
     })
 

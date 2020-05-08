@@ -27,7 +27,7 @@ const editTopLevelData = (filteredData, childArray) => {
     realSize,
     originalChildCount,
     averageCoverage,
-    children: childArray,
+    children: childArray
   }
 }
 
@@ -95,6 +95,7 @@ const renderGraph = ({
   height,
   setHovered,
   showScriptsWithoutSourcemaps,
+  showAllChildren
 }) => {
   const container = d3.select(el)
 
@@ -124,6 +125,7 @@ const renderGraph = ({
   const testRoot = treemap(dataCopy, true)
 
   const filterData = node => {
+    if (showAllChildren) return node
     if (!node.children) return
     const parentArea = (node.y1 - node.y0) * (node.x1 - node.x0)
 
@@ -170,14 +172,27 @@ const renderGraph = ({
     return `0 0 0 1px ${borderColor}`
   }
 
-  const createSizeLabel = d => `${Math.ceil(d.data.realSize / 1000)}kb`
+  const createSizeLabel = d => {
+    if (d.data.isRuntime && d.data.size) {
+      return `${Math.ceil(d.data.size)}ms`
+    } else if (d.data.isRuntime) {
+      return ''
+    }
+    return `${Math.ceil(d.data.realSize / 1000)}kb`
+  }
+
+  const shouldShow = (width, height) => {
+   return showAllChildren
+      ? width > 0 || height > 0
+      : width > 3 && height > 3 && width * height > 50
+  }
 
   const createEnteredElements = enter => {
     const entered = enter
       .filter(function (d) {
         const width = d.x1 - d.x0
         const height = d.y1 - d.y0
-        return width > 3 && height > 3 && width * height > 50
+        return shouldShow(width, height)
       })
       .append('div')
       .style('background-color', d => {
@@ -273,6 +288,11 @@ const renderGraph = ({
           const height = d.y1 - d.y0
           return `${height}px`
         })
+        .classed('hide-box', d => {
+          const width = d.x1 - d.x0
+          const height = d.y1 - d.y0
+          return !shouldShow(width, height)
+        })
         .style('top', d => `${d.y0}px`)
         .style('left', d => `${d.x0}px`)
         .style('box-shadow', renderBoxShadowBorder)
@@ -292,6 +312,7 @@ const renderGraph = ({
     .join(createEnteredElements, animateUpdate, exit => {
       exit.classed('animate-out-box', true)
       setTimeout(() => {
+        // must wrap this func
         exit.remove()
       }, 300)
     })
@@ -303,6 +324,7 @@ const Treemap = ({
   setHovered,
   showScriptsWithoutSourcemaps,
   showingCode,
+  showAllChildren
 }) => {
   const graphContainerRef = React.useRef(null)
   const dimensionsRef = useRef({})
@@ -322,6 +344,7 @@ const Treemap = ({
         setHovered,
         showScriptsWithoutSourcemaps,
         ...dimensionsRef.current,
+        showAllChildren
       })
     }, 300)
     window.addEventListener('resize', throttledResize)
@@ -339,8 +362,9 @@ const Treemap = ({
       setHovered,
       ...dimensionsRef.current,
       showScriptsWithoutSourcemaps,
+      showAllChildren
     })
-  }, [data.id, showScriptsWithoutSourcemaps])
+  }, [data.id, showScriptsWithoutSourcemaps, showAllChildren])
 
   return <div ref={graphContainerRef} className="treemap"></div>
 }

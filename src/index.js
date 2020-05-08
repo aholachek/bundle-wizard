@@ -8,10 +8,11 @@ const downloadSourcemaps = require('./functions/downloadSourcemaps')
 const visualizeBundles = require('./functions/visualizeBundles')
 const findCoveragePercent = require('./functions/calculateCoverage')
 const mapToOriginalFiles = require('./functions/mapToOriginalFiles')
+const { splitString } = require('./functions/utils')
+
 const tempFolderName = path.join(__dirname, '..', 'temp')
 const coverageFilePath = `${tempFolderName}/coverage.json`
 const downloadsDir = `${tempFolderName}/downloads`
-
 fs.removeSync(downloadsDir)
 fs.mkdirp(downloadsDir)
 
@@ -32,7 +33,7 @@ const main = async () => {
       interact: argv.interact,
       downloadsDir,
       coverageFilePath,
-      tempFolderName,
+      tempFolderName
     })
     urlToFileDict = downloadedData.urlToFileDict
     ;(url = downloadedData.url), (tracing = downloadedData.tracing)
@@ -56,7 +57,7 @@ const main = async () => {
     downloadsDir,
     urlToFileDict,
     url,
-    ignoreHTTPSErrors,
+    ignoreHTTPSErrors
   })
 
   const coverageArr = require(coverageFilePath)
@@ -71,12 +72,12 @@ const main = async () => {
     if (!coverageEntry) {
       scriptsWithoutSourcemapsDict[url] = {
         size,
-        coveragePercent: 'N/A',
+        coveragePercent: 'N/A'
       }
     } else {
       scriptsWithoutSourcemapsDict[url] = {
         size,
-        coveragePercent: findCoveragePercent(size, coverageEntry.ranges),
+        coveragePercent: findCoveragePercent(size, coverageEntry.ranges)
       }
     }
     // we don't need the file going forward
@@ -89,7 +90,7 @@ const main = async () => {
       files.forEach(file => {
         fs.renameSync(
           `${downloadsDir}/${file}`,
-          `${downloadsDir}/${file.split('--')[1]}`
+          `${downloadsDir}/${file.split(splitString)[1]}`
         )
       })
       resolve()
@@ -117,7 +118,7 @@ const main = async () => {
     url,
     scriptsWithoutSourcemapsDict,
     priorities,
-    longTasks,
+    longTasks
   })
 }
 

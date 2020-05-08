@@ -7,7 +7,8 @@ import Breadcrumbs from './Breadcrumbs'
 import Summary from './Summary'
 import Tooltip from './Tooltip'
 import Code from './Code'
-import { findMostLikelyPath } from './utils'
+import { findMostLikelyPath, convertToTree } from './utils'
+import ControlPanel from './ControlPanel'
 
 const jsonOptions = {
   headers: {
@@ -30,6 +31,10 @@ const Dashboard = () => {
   const [data, _setData] = React.useState(null)
   const [hovered, setHovered] = React.useState(null)
   const [showSummary, setShowSummary] = React.useState(false)
+  const [showAllChildren, setShowAllChildren] = React.useState(false)
+  const [showRuntimeData, setShowRuntimeData] = React.useState(false)
+
+  const [showCoverage, setShowCoverage] = React.useState(true)
   const [topLevelData, setTopLevelData] = React.useState({})
   const [
     showScriptsWithoutSourcemaps,
@@ -52,6 +57,10 @@ const Dashboard = () => {
     [_setData, setHovered]
   )
 
+  const runtimeTree = React.useMemo(() => convertToTree(topLevelData), [
+    topLevelData
+  ])
+
   useEffect(() => {
     fetch('./treeData.json', jsonOptions).then(response => {
       response.json().then(data => {
@@ -72,10 +81,15 @@ const Dashboard = () => {
     })
   }, [])
 
+  console.log(runtimeTree)
+
   const setGraphRoot = React.useCallback(
     id => {
-      const data = findBranch(id, topLevelData)
-      if (!data.children) {
+      const data = showRuntimeData
+        ? findBranch(id, runtimeTree)
+        : findBranch(id, topLevelData)
+
+      if (data && (!data.children || data.children.length === 0)) {
         const simplifiedName = data.name.replace('.js', '')
         const fileKeys = Object.keys(originalFileMapping)
         if (!fileKeys) {
@@ -90,7 +104,7 @@ const Dashboard = () => {
           fetch(`./originalFiles/${id}.json`)
             .then(response => response.json())
             .then(text => {
-              if (text) setCode({ text, name: mostLikelyPath })
+              if (text) setCode({ text, name: mostLikelyPath, data })
             })
             .catch(e => {
               console.log(e)
@@ -102,7 +116,7 @@ const Dashboard = () => {
       }
       setData(data)
     },
-    [setData, topLevelData, code, originalFileMapping]
+    [setData, topLevelData, code, originalFileMapping, showRuntimeData]
   )
 
   if (!data) return <div className="loading">loading...</div>
@@ -110,14 +124,13 @@ const Dashboard = () => {
   const showingCode = Boolean(code)
 
   return (
-    <div>
+    <div className={!showCoverage && 'hide-coverage'}>
       <Tooltip hovered={hovered} />
       <nav className="nav">
         <div className="logo">
           Analysis of <b>{(topLevelData || {}).url}</b>
         </div>
         <ul>
-          <li></li>
           <li className={!showSummary && 'active'}>
             <a
               href="#"
@@ -143,6 +156,9 @@ const Dashboard = () => {
             </a>
           </li>
         </ul>
+        <div style={{ marginLeft: 'auto' }}>
+          👇 scroll down to view more options
+        </div>
       </nav>
       {showSummary ? (
         <Summary
@@ -157,19 +173,41 @@ const Dashboard = () => {
           <Breadcrumbs
             data={data}
             isTopLevel={isTopLevel}
-            setGraphRoot={setGraphRoot}
+            setGraphRoot={(...args) => {
+              setCode(null)
+              setGraphRoot(...args)
+            }}
             hovered={hovered}
             toggleScriptsWithoutSourcemaps={toggleScriptsWithoutSourcemaps}
             showScriptsWithoutSourcemaps={showScriptsWithoutSourcemaps}
           />
-          <Treemap
-            data={data}
-            setGraphRoot={setGraphRoot}
-            setHovered={setHovered}
-            showScriptsWithoutSourcemaps={showScriptsWithoutSourcemaps}
-            showingCode={showingCode}
-          />
+          {!showingCode && (
+            <Treemap
+              data={showRuntimeData ? runtimeTree : data}
+              setGraphRoot={setGraphRoot}
+              setHovered={setHovered}
+              showScriptsWithoutSourcemaps={showScriptsWithoutSourcemaps}
+              showingCode={showingCode}
+              showAllChildren={showAllChildren}
+            />
+          )}
           {showingCode && <Code {...code} setHovered={setHovered} />}
+
+          {!showingCode && (
+            <ControlPanel
+              toggleScriptsWithoutSourcemaps={toggleScriptsWithoutSourcemaps}
+              showScriptsWithoutSourcemaps={showScriptsWithoutSourcemaps}
+              setShowCoverage={setShowCoverage}
+              showCoverage={showCoverage}
+              isTopLevel={isTopLevel}
+              showRuntimeData={showRuntimeData}
+              showAllChildren={showAllChildren}
+              setShowAllChildren={setShowAllChildren}
+              wrappedSetShowRuntimeData={() => {
+                setShowRuntimeData(!showRuntimeData)
+              }}
+            />
+          )}
         </>
       )}
     </div>

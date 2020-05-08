@@ -19,6 +19,7 @@ const downloadSourcemaps = async ({
     rejectUnauthorized: false
   })
 
+
   const promises = urls.map(url => {
     return fetch(`${url}.map`, {
       agent: ignoreHTTPSErrors ? ignoreHTTPSErrorsAgent : undefined,

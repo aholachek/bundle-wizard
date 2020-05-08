@@ -37,7 +37,7 @@
     "open": "^7.0.3",
     "parcel": "^1.12.4",
     "prism-react-renderer": "^1.1.0",
-    "puppeteer-core": "^3.0.2",
+    "puppeteer-core": "^3.0.4",
     "react": ">= 16.8.0",
     "react-dom": ">= 16.8.0",
     "react-is": ">= 16.8.0",
@@ -48,9 +48,9 @@
     "source-map-explorer": "^2.4.2",
     "static-server": "^2.2.1",
     "styled-components": "^5.1.0",
-    "tracium": "^0.2.1",
     "uuid": "^8.0.0",
-    "yargs": "^15.3.1"
+    "yargs": "^15.3.1",
+    "@sethfowler/chromium-trace-analyzer": "^1.6.0"
   },
   "devDependencies": {
     "sass": "^1.26.3"

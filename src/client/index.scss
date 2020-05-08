@@ -33,6 +33,11 @@ a {
   cursor: pointer;
 }
 
+.hide-box {
+  opacity: 1;
+  box-shadow: none !important;
+}
+
 .no-interact {
   cursor: default;
 }
@@ -41,7 +46,7 @@ $anim-duration: 400ms;
 .box-transition-position {
   .box {
     transition: top $anim-duration, left $anim-duration, width $anim-duration,
-      height $anim-duration;
+      height $anim-duration, background-color 250ms;
   }
 }
 
@@ -95,13 +100,10 @@ $anim-duration: 400ms;
 }
 
 .legend {
-  margin-left: auto;
-  margin-right: 0;
-  position: relative;
+  display: inline-block;
   text-align: center;
   font-size: 0.8rem;
-  position: relative;
-  left: 0.7rem;
+  width: 14rem;
   > div:first-of-type {
     margin-bottom: 0.2rem;
     line-height: 1;
@@ -127,8 +129,6 @@ $anim-duration: 400ms;
   }
   .legend__label {
     width: 40px;
-    position: relative;
-    top: -4px;
   }
   > .legend__label:last-of-type {
     margin-left: 0.3rem;
@@ -327,10 +327,31 @@ figure {
   align-items: center;
 }
 
-.sourcemap-control {
+.control-panel {
   position: absolute;
-  top: 0.7rem;
-  right: 1rem;
+  bottom: 0;
+  background-color: hsla(0, 0%, 0%, 0.9);
+  color: white;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 8rem;
+  z-index: 100;
+  padding: 1rem;
+  bottom: -8rem;
+  transition: transform 2s;
+  animation: dipDown 2s 1s forwards;
+  cursor: pointer;
   display: flex;
-  align-items: center;
+  > div {
+    margin-right: 2rem;
+  }
+}
+
+.hide-coverage {
+  .box {
+    background-color: hsla(0, 0%, 0%, 0.02) !important;
+    box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.2) !important;
+  }
 }

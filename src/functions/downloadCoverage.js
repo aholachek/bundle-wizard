@@ -1,12 +1,13 @@
 const chromeLauncher = require('chrome-launcher')
 const puppeteer = require('puppeteer-core')
-const devices = require('puppeteer-core/DeviceDescriptors')
+const { devicesMap } = require('puppeteer-core/DeviceDescriptors')
 const fetch = require('node-fetch')
 const fs = require('fs')
 const { Input } = require('enquirer')
 const delay = require('./delay')
+const { splitString } = require('./utils')
 
-const launchBrowser = async ({ interact, isMobile, ignoreHTTPSErrors }) => {
+const launchBrowser = async ({ interact, ignoreHTTPSErrors }) => {
   const opts = {
     chromeFlags: interact ? [] : ['--headless'],
     logLevel: global.debug ? 'info' : 'error',
@@ -20,7 +21,6 @@ const launchBrowser = async ({ interact, isMobile, ignoreHTTPSErrors }) => {
     const { webSocketDebuggerUrl } = await response.json()
     const browser = await puppeteer.connect({
       browserWSEndpoint: webSocketDebuggerUrl,
-      isMobile,
       ignoreHTTPSErrors
     })
     return [chrome, browser]
@@ -93,7 +93,7 @@ const downloadCoverage = async ({
   const page = await (await browser.pages())[0]
 
   if (isMobile) {
-    await page.emulate(devices['iPhone X'])
+    await page.emulate(devicesMap['iPhone X'])
   }
 
   const urlToFileDict = {}
@@ -108,7 +108,7 @@ const downloadCoverage = async ({
     const isJSFile = fileName.match(/\.(m)?js$/)
     if (!isJSFile) return
     response.text().then(body => {
-      const localFileName = `${downloadsDir}/${Math.random()}--${fileName}`
+      const localFileName = `${downloadsDir}/${Math.random()}${splitString}${fileName}`
       urlToFileDict[url.toString()] = localFileName
       fs.writeFileSync(localFileName, body)
     })
