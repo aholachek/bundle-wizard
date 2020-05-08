@@ -63,53 +63,56 @@ const Dashboard = () => {
         setData(data)
       })
     })
+  }, [])
+
+  useEffect(() => {
     fetch('./originalFileMapping.json', jsonOptions).then(response => {
       response
         .json()
         .then(data => {
-          console.log('setting mapping')
           setOriginalFileMapping(data)
         })
         .catch(() => {
           console.error('couldnt load originalFileMapping.json!')
         })
     })
-  }, [])
+  })
 
   const setGraphRoot = React.useCallback(
     id => {
-      const data = findBranch(id, topLevelData)
-
-      if (data && (!data.children || data.children.length === 0)) {
-        const simplifiedName = data.name.replace('.js', '')
-
-        const fileKeys = Object.keys(originalFileMapping)
-        if (!fileKeys) {
-          return console.error('unable to access original file data')
-        } else {
-          const matchingKeys = fileKeys.filter(
-            key => key.indexOf(simplifiedName) !== -1
-          )
-          const mostLikelyPath = findMostLikelyPath(matchingKeys, data.id)
-          const id = originalFileMapping[mostLikelyPath]
-
-          fetch(`./originalFiles/${id}.json`)
-            .then(response => response.json())
-            .then(text => {
-              if (text) setCode({ text, name: mostLikelyPath, data })
-            })
-            .catch(e => {
-              console.log(e)
-              setCode(null)
-            })
-        }
-      } else {
-        if (code) setCode(null)
-      }
-      setData(data)
+      setData(findBranch(id, topLevelData))
     },
-    [setData, topLevelData, code, originalFileMapping]
+    [setData, topLevelData]
   )
+
+  useEffect(() => {
+    if (data && (!data.children || data.children.length === 0)) {
+      const simplifiedName = data.name.replace('.js', '')
+
+      const fileKeys = Object.keys(originalFileMapping)
+      if (!fileKeys) {
+        return console.error('unable to access original file data')
+      } else {
+        const matchingKeys = fileKeys.filter(
+          key => key.indexOf(simplifiedName) !== -1
+        )
+        const mostLikelyPath = findMostLikelyPath(matchingKeys, data.id)
+        const id = originalFileMapping[mostLikelyPath]
+
+        fetch(`./originalFiles/${id}.json`)
+          .then(response => response.json())
+          .then(text => {
+            if (text) setCode({ text, name: mostLikelyPath, data })
+          })
+          .catch(e => {
+            console.log(e)
+            setCode(null)
+          })
+      }
+    } else {
+      if (code) setCode(null)
+    }
+  }, [data, code, originalFileMapping])
 
   if (!data) return <div className="loading">loading...</div>
 

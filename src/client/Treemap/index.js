@@ -183,7 +183,7 @@ const renderGraph = ({
 
   const shouldShow = (width, height) => {
     return showAllChildren
-      ? width > 0 || height > 0
+      ? width >= 0 && height >= 0
       : width > 3 && height > 3 && width * height > 50
   }
 
@@ -234,6 +234,11 @@ const renderGraph = ({
         this.style.boxShadow = renderBoxShadowBorder(d)
       })
       .classed(`box ${isFirstRender ? 'animate-in-box' : ''} `, true)
+      .classed('hide-box', d => {
+        const width = d.x1 - d.x0
+        const height = d.y1 - d.y0
+        return !shouldShow(width, height)
+      })
       .each(function (d) {
         if (d.data.longTask) {
           this.classList.add('long-task-warning')
