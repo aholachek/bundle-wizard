@@ -51,43 +51,9 @@ const Container = styled.div`
     ${fontFamily}
   }
 `
-
 const threshold = 70000
 
-const TimeBreakdown = ({ data }) => {
-  return (
-    <div className="breakdown">
-      <b>Breakdown</b>
-      {Object.keys(data)
-        .filter(d => Math.floor(data[d]) && d !== 'total')
-        .map(d => {
-          return (
-            <div>
-              {d}: {Math.floor(data[d])}ms
-            </div>
-          )
-        })}
-    </div>
-  )
-}
-
-export default function Code({ text, setHovered, data }) {
-  const linesToHighlight =
-    data &&
-    data.details &&
-    data.details.map(detail => detail[0].parsedSourcemap.line)
-
-  const timeBreakdown =
-    data &&
-    data.details
-      .map(data => data[1])
-      .reduce((acc, curr) => {
-        Object.keys(curr).forEach(key => {
-          acc[key] = acc[key] || 0 + curr[key]
-        })
-        return acc
-      })
-
+export default function Code({ text, setHovered }) {
   React.useEffect(() => {
     setHovered(null)
     setTimeout(() => {
@@ -105,21 +71,11 @@ export default function Code({ text, setHovered, data }) {
 
   return (
     <Container>
-      {timeBreakdown && <TimeBreakdown data={timeBreakdown} />}
       <Highlight {...defaultProps} code={text} language="jsx" theme={theme}>
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
           <pre className={className} style={style}>
             {tokens.map((line, i) => (
-              <div
-                {...getLineProps({ line, key: i })}
-                style={{
-                  opacity: linesToHighlight
-                    ? linesToHighlight.indexOf(i + 1) > -1
-                      ? 1
-                      : 0.3
-                    : 1
-                }}
-              >
+              <div {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
                   <span {...getTokenProps({ token, key })} />
                 ))}

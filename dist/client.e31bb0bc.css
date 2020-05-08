@@ -885,17 +885,22 @@ figure {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 8rem;
+  height: 4rem;
   z-index: 100;
   padding: 1rem;
-  bottom: -8rem;
+  bottom: -3rem;
   transition: transform 2s;
   animation: dipDown 2s 1s forwards;
   cursor: pointer;
   display: flex;
 }
+.control-panel label {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  cursor: pointer;
+}
 .control-panel > div {
-  margin-right: 2rem;
+  margin-right: 4rem;
 }
 
 .hide-coverage .box {

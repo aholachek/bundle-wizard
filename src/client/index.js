@@ -7,7 +7,7 @@ import Breadcrumbs from './Breadcrumbs'
 import Summary from './Summary'
 import Tooltip from './Tooltip'
 import Code from './Code'
-import { findMostLikelyPath, convertToTree } from './utils'
+import { findMostLikelyPath } from './utils'
 import ControlPanel from './ControlPanel'
 
 const jsonOptions = {
@@ -32,14 +32,12 @@ const Dashboard = () => {
   const [hovered, setHovered] = React.useState(null)
   const [showSummary, setShowSummary] = React.useState(false)
   const [showAllChildren, setShowAllChildren] = React.useState(false)
-  const [showRuntimeData, setShowRuntimeData] = React.useState(false)
-
   const [showCoverage, setShowCoverage] = React.useState(true)
   const [topLevelData, setTopLevelData] = React.useState({})
   const [
     showScriptsWithoutSourcemaps,
     setShowScriptsWithoutSourcemaps
-  ] = React.useState(false)
+  ] = React.useState(true)
   const [code, setCode] = React.useState(false)
   const [originalFileMapping, setOriginalFileMapping] = React.useState({})
 
@@ -56,10 +54,6 @@ const Dashboard = () => {
     },
     [_setData, setHovered]
   )
-
-  const runtimeTree = React.useMemo(() => convertToTree(topLevelData), [
-    topLevelData
-  ])
 
   useEffect(() => {
     fetch('./treeData.json', jsonOptions).then(response => {
@@ -81,13 +75,10 @@ const Dashboard = () => {
     })
   }, [])
 
-  console.log(runtimeTree)
 
   const setGraphRoot = React.useCallback(
     id => {
-      const data = showRuntimeData
-        ? findBranch(id, runtimeTree)
-        : findBranch(id, topLevelData)
+      const data = findBranch(id, topLevelData)
 
       if (data && (!data.children || data.children.length === 0)) {
         const simplifiedName = data.name.replace('.js', '')
@@ -116,7 +107,7 @@ const Dashboard = () => {
       }
       setData(data)
     },
-    [setData, topLevelData, code, originalFileMapping, showRuntimeData]
+    [setData, topLevelData, code, originalFileMapping]
   )
 
   if (!data) return <div className="loading">loading...</div>
@@ -183,7 +174,7 @@ const Dashboard = () => {
           />
           {!showingCode && (
             <Treemap
-              data={showRuntimeData ? runtimeTree : data}
+              data={data}
               setGraphRoot={setGraphRoot}
               setHovered={setHovered}
               showScriptsWithoutSourcemaps={showScriptsWithoutSourcemaps}
@@ -200,12 +191,8 @@ const Dashboard = () => {
               setShowCoverage={setShowCoverage}
               showCoverage={showCoverage}
               isTopLevel={isTopLevel}
-              showRuntimeData={showRuntimeData}
               showAllChildren={showAllChildren}
               setShowAllChildren={setShowAllChildren}
-              wrappedSetShowRuntimeData={() => {
-                setShowRuntimeData(!showRuntimeData)
-              }}
             />
           )}
         </>

@@ -59430,7 +59430,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.usePrevious = usePrevious;
 exports.findMostLikelyPath = findMostLikelyPath;
-exports.convertToTree = convertToTree;
 exports.collapse = void 0;
 
 var _react = _interopRequireDefault(require("react"));
@@ -59438,14 +59437,6 @@ var _react = _interopRequireDefault(require("react"));
 var _jsLevenshtein = _interopRequireDefault(require("js-levenshtein"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
-
-function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 function usePrevious(value) {
   var ref = _react.default.useRef();
@@ -59497,69 +59488,6 @@ var collapse = function collapse(d) {
 };
 
 exports.collapse = collapse;
-
-function convertToTree(topLevelData) {
-  if (!topLevelData || Object.keys(topLevelData).length === 0) return undefined;
-  var runtimeData = topLevelData.longTasks.filter(function (t) {
-    return t[0].kind === 'sourceLocation' && t[0].url;
-  });
-  var timings = runtimeData.reduce(function (acc, _ref) {
-    var _ref2 = _slicedToArray(_ref, 2),
-        data = _ref2[0],
-        profile = _ref2[1];
-
-    var source = data.parsedSourcemap ? data.parsedSourcemap.source : data.url;
-    acc[source] = acc[source] || [];
-    acc[source].push([data, profile]);
-    return acc;
-  }, {});
-  var tree = {
-    name: 'topLevel',
-    children: [],
-    isRuntime: true
-  };
-  Object.keys(timings).forEach(function (timing) {
-    // its from a url with no sourcemap
-    if (!timings[timing][0][0].parsedSourcemap) {
-      return tree.children.push({
-        name: timing,
-        isRuntime: true,
-        details: timings[timing],
-        size: timings[timing].map(function (t) {
-          return t[1].total;
-        }).reduce(function (acc, curr) {
-          return acc + curr;
-        }, 0)
-      });
-    }
-
-    var pathParts = timing.split('/').filter(function (pathPart) {
-      return pathPart && pathPart !== 'webpack' && pathPart !== 'webpack:';
-    });
-    var treeReference = tree;
-    pathParts.forEach(function (part) {
-      if (!treeReference.children.find(function (c) {
-        return c.name === part;
-      })) treeReference.children.push({
-        name: part,
-        children: []
-      });
-      treeReference = treeReference.children.find(function (c) {
-        return c.name === part;
-      });
-    });
-    var dataEntries = timings[timing];
-    treeReference.isRuntime = true;
-    treeReference.id = pathParts.join('/');
-    dataEntries.forEach(function (entry) {
-      treeReference.details = treeReference.details || [];
-      treeReference.details.push(entry);
-      treeReference.size = treeReference.size ? treeReference.size + entry[1].total : entry[1].total;
-    });
-  });
-  console.log(tree);
-  return tree;
-}
 },{"react":"../../node_modules/react/index.js","js-levenshtein":"../../node_modules/js-levenshtein/index.js"}],"Treemap/index.js":[function(require,module,exports) {
 "use strict";
 
@@ -66517,32 +66445,9 @@ var Container = _styledComponents.default.div(_templateObject3(), function (prop
 
 var threshold = 70000;
 
-var TimeBreakdown = function TimeBreakdown(_ref) {
-  var data = _ref.data;
-  return _react.default.createElement("div", {
-    className: "breakdown"
-  }, _react.default.createElement("b", null, "Breakdown"), Object.keys(data).filter(function (d) {
-    return Math.floor(data[d]) && d !== 'total';
-  }).map(function (d) {
-    return _react.default.createElement("div", null, d, ": ", Math.floor(data[d]), "ms");
-  }));
-};
-
-function Code(_ref2) {
-  var text = _ref2.text,
-      setHovered = _ref2.setHovered,
-      data = _ref2.data;
-  var linesToHighlight = data && data.details && data.details.map(function (detail) {
-    return detail[0].parsedSourcemap.line;
-  });
-  var timeBreakdown = data && data.details.map(function (data) {
-    return data[1];
-  }).reduce(function (acc, curr) {
-    Object.keys(curr).forEach(function (key) {
-      acc[key] = acc[key] || 0 + curr[key];
-    });
-    return acc;
-  });
+function Code(_ref) {
+  var text = _ref.text,
+      setHovered = _ref.setHovered;
 
   _react.default.useEffect(function () {
     setHovered(null);
@@ -66557,29 +66462,23 @@ function Code(_ref2) {
     return _react.default.createElement(Container, null, _react.default.createElement("div", null, text));
   }
 
-  return _react.default.createElement(Container, null, timeBreakdown && _react.default.createElement(TimeBreakdown, {
-    data: timeBreakdown
-  }), _react.default.createElement(_prismReactRenderer.default, _extends({}, _prismReactRenderer.defaultProps, {
+  return _react.default.createElement(Container, null, _react.default.createElement(_prismReactRenderer.default, _extends({}, _prismReactRenderer.defaultProps, {
     code: text,
     language: "jsx",
     theme: _palenight.default
-  }), function (_ref3) {
-    var className = _ref3.className,
-        style = _ref3.style,
-        tokens = _ref3.tokens,
-        getLineProps = _ref3.getLineProps,
-        getTokenProps = _ref3.getTokenProps;
+  }), function (_ref2) {
+    var className = _ref2.className,
+        style = _ref2.style,
+        tokens = _ref2.tokens,
+        getLineProps = _ref2.getLineProps,
+        getTokenProps = _ref2.getTokenProps;
     return _react.default.createElement("pre", {
       className: className,
       style: style
     }, tokens.map(function (line, i) {
-      return _react.default.createElement("div", _extends({}, getLineProps({
+      return _react.default.createElement("div", getLineProps({
         line: line,
         key: i
-      }), {
-        style: {
-          opacity: linesToHighlight ? linesToHighlight.indexOf(i + 1) > -1 ? 1 : 0.3 : 1
-        }
       }), line.map(function (token, key) {
         return _react.default.createElement("span", getTokenProps({
           token: token,
@@ -66641,8 +66540,6 @@ var ControlPanel = function ControlPanel(_ref) {
       setShowCoverage = _ref.setShowCoverage,
       showCoverage = _ref.showCoverage,
       isTopLevel = _ref.isTopLevel,
-      wrappedSetShowRuntimeData = _ref.wrappedSetShowRuntimeData,
-      showRuntimeData = _ref.showRuntimeData,
       showAllChildren = _ref.showAllChildren,
       setShowAllChildren = _ref.setShowAllChildren;
   return _react.default.createElement("div", {
@@ -66666,7 +66563,19 @@ var ControlPanel = function ControlPanel(_ref) {
     checked: showScriptsWithoutSourcemaps
   }), "\xA0\xA0", _react.default.createElement("label", {
     htmlFor: "swsc"
-  }, "show all JavaScript (including 3rd party scripts)")), _react.default.createElement("div", null, _react.default.createElement("div", {
+  }, "show all JS (including 3rd party/ without sourcemaps)")), _react.default.createElement("div", {
+    className: "sourcemap-control"
+  }, _react.default.createElement("input", {
+    type: "checkbox",
+    name: "",
+    id: "show-all-children",
+    onChange: function onChange() {
+      setShowAllChildren(!showAllChildren);
+    },
+    checked: !showAllChildren
+  }), "\xA0\xA0", _react.default.createElement("label", {
+    htmlFor: "show-all-children"
+  }, "simplify graph (better for performance)")), _react.default.createElement("div", null, _react.default.createElement("div", {
     className: "sourcemap-control"
   }, _react.default.createElement("input", {
     type: "checkbox",
@@ -66678,29 +66587,7 @@ var ControlPanel = function ControlPanel(_ref) {
     checked: showCoverage
   }), "\xA0\xA0", _react.default.createElement("label", {
     htmlFor: "show-coverage"
-  }, "show coverage ", showCoverage && _react.default.createElement(Legend, null)))), _react.default.createElement("div", null, _react.default.createElement("div", {
-    className: "sourcemap-control"
-  }, _react.default.createElement("input", {
-    type: "checkbox",
-    name: "",
-    id: "show-runtime",
-    onChange: wrappedSetShowRuntimeData,
-    checked: showRuntimeData
-  }), "\xA0\xA0", _react.default.createElement("label", {
-    htmlFor: "show-runtime"
-  }, "highlight expensive code (functions involved in long tasks)"))), _react.default.createElement("div", null, _react.default.createElement("div", {
-    className: "sourcemap-control"
-  }, _react.default.createElement("input", {
-    type: "checkbox",
-    name: "",
-    id: "show-all-children",
-    onChange: function onChange() {
-      setShowAllChildren(!showAllChildren);
-    },
-    checked: showAllChildren
-  }), "\xA0\xA0", _react.default.createElement("label", {
-    htmlFor: "show-all-children"
-  }, "childrne"))));
+  }, "show coverage ", showCoverage && _react.default.createElement(Legend, null)))));
 };
 
 var _default = ControlPanel;
@@ -66786,35 +66673,30 @@ var Dashboard = function Dashboard() {
       showAllChildren = _React$useState8[0],
       setShowAllChildren = _React$useState8[1];
 
-  var _React$useState9 = _react.default.useState(false),
+  var _React$useState9 = _react.default.useState(true),
       _React$useState10 = _slicedToArray(_React$useState9, 2),
-      showRuntimeData = _React$useState10[0],
-      setShowRuntimeData = _React$useState10[1];
+      showCoverage = _React$useState10[0],
+      setShowCoverage = _React$useState10[1];
 
-  var _React$useState11 = _react.default.useState(true),
+  var _React$useState11 = _react.default.useState({}),
       _React$useState12 = _slicedToArray(_React$useState11, 2),
-      showCoverage = _React$useState12[0],
-      setShowCoverage = _React$useState12[1];
+      topLevelData = _React$useState12[0],
+      setTopLevelData = _React$useState12[1];
 
-  var _React$useState13 = _react.default.useState({}),
+  var _React$useState13 = _react.default.useState(true),
       _React$useState14 = _slicedToArray(_React$useState13, 2),
-      topLevelData = _React$useState14[0],
-      setTopLevelData = _React$useState14[1];
+      showScriptsWithoutSourcemaps = _React$useState14[0],
+      setShowScriptsWithoutSourcemaps = _React$useState14[1];
 
   var _React$useState15 = _react.default.useState(false),
       _React$useState16 = _slicedToArray(_React$useState15, 2),
-      showScriptsWithoutSourcemaps = _React$useState16[0],
-      setShowScriptsWithoutSourcemaps = _React$useState16[1];
+      code = _React$useState16[0],
+      setCode = _React$useState16[1];
 
-  var _React$useState17 = _react.default.useState(false),
+  var _React$useState17 = _react.default.useState({}),
       _React$useState18 = _slicedToArray(_React$useState17, 2),
-      code = _React$useState18[0],
-      setCode = _React$useState18[1];
-
-  var _React$useState19 = _react.default.useState({}),
-      _React$useState20 = _slicedToArray(_React$useState19, 2),
-      originalFileMapping = _React$useState20[0],
-      setOriginalFileMapping = _React$useState20[1];
+      originalFileMapping = _React$useState18[0],
+      setOriginalFileMapping = _React$useState18[1];
 
   var isTopLevel = data && data.name === 'topLevel';
 
@@ -66827,10 +66709,6 @@ var Dashboard = function Dashboard() {
 
     setHovered(null);
   }, [_setData, setHovered]);
-
-  var runtimeTree = _react.default.useMemo(function () {
-    return (0, _utils.convertToTree)(topLevelData);
-  }, [topLevelData]);
 
   (0, _react.useEffect)(function () {
     fetch('./treeData.json', jsonOptions).then(function (response) {
@@ -66848,10 +66726,9 @@ var Dashboard = function Dashboard() {
       });
     });
   }, []);
-  console.log(runtimeTree);
 
   var _setGraphRoot = _react.default.useCallback(function (id) {
-    var data = showRuntimeData ? findBranch(id, runtimeTree) : findBranch(id, topLevelData);
+    var data = findBranch(id, topLevelData);
 
     if (data && (!data.children || data.children.length === 0)) {
       var simplifiedName = data.name.replace('.js', '');
@@ -66883,7 +66760,7 @@ var Dashboard = function Dashboard() {
     }
 
     setData(data);
-  }, [setData, topLevelData, code, originalFileMapping, showRuntimeData]);
+  }, [setData, topLevelData, code, originalFileMapping]);
 
   if (!data) return _react.default.createElement("div", {
     className: "loading"
@@ -66938,7 +66815,7 @@ var Dashboard = function Dashboard() {
     toggleScriptsWithoutSourcemaps: toggleScriptsWithoutSourcemaps,
     showScriptsWithoutSourcemaps: showScriptsWithoutSourcemaps
   }), !showingCode && _react.default.createElement(_Treemap.default, {
-    data: showRuntimeData ? runtimeTree : data,
+    data: data,
     setGraphRoot: _setGraphRoot,
     setHovered: setHovered,
     showScriptsWithoutSourcemaps: showScriptsWithoutSourcemaps,
@@ -66952,12 +66829,8 @@ var Dashboard = function Dashboard() {
     setShowCoverage: setShowCoverage,
     showCoverage: showCoverage,
     isTopLevel: isTopLevel,
-    showRuntimeData: showRuntimeData,
     showAllChildren: showAllChildren,
-    setShowAllChildren: setShowAllChildren,
-    wrappedSetShowRuntimeData: function wrappedSetShowRuntimeData() {
-      setShowRuntimeData(!showRuntimeData);
-    }
+    setShowAllChildren: setShowAllChildren
   })));
 };
 
@@ -66990,7 +66863,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54588" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63481" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

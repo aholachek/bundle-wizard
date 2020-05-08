@@ -23,8 +23,6 @@ const ControlPanel = ({
   setShowCoverage,
   showCoverage,
   isTopLevel,
-  wrappedSetShowRuntimeData,
-  showRuntimeData,
   showAllChildren,
   setShowAllChildren
 }) => {
@@ -52,10 +50,28 @@ const ControlPanel = ({
           />
           &nbsp;&nbsp;
           <label htmlFor="swsc">
-            show all JavaScript (including 3rd party scripts)
+            show all JS (including 3rd party/ without sourcemaps)
           </label>
         </div>
       )}
+
+      <div className="sourcemap-control">
+        <input
+          type="checkbox"
+          name=""
+          id="show-all-children"
+          onChange={() => {
+            setShowAllChildren(!showAllChildren)
+          }}
+          checked={!showAllChildren}
+        />
+        &nbsp;&nbsp;
+        <label htmlFor="show-all-children">
+          simplify graph (better for
+          performance)
+        </label>
+      </div>
+
       <div>
         <div className="sourcemap-control">
           <input
@@ -71,36 +87,6 @@ const ControlPanel = ({
           <label htmlFor="show-coverage">
             show coverage {showCoverage && <Legend />}
           </label>
-        </div>
-      </div>
-      <div>
-        <div className="sourcemap-control">
-          <input
-            type="checkbox"
-            name=""
-            id="show-runtime"
-            onChange={wrappedSetShowRuntimeData}
-            checked={showRuntimeData}
-          />
-          &nbsp;&nbsp;
-          <label htmlFor="show-runtime">
-            highlight expensive code (functions involved in long tasks)
-          </label>
-        </div>
-      </div>
-      <div>
-        <div className="sourcemap-control">
-          <input
-            type="checkbox"
-            name=""
-            id="show-all-children"
-            onChange={() => {
-              setShowAllChildren(!showAllChildren)
-            }}
-            checked={showAllChildren}
-          />
-          &nbsp;&nbsp;
-          <label htmlFor="show-all-children">childrne</label>
         </div>
       </div>
     </div>
