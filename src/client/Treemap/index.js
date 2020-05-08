@@ -351,7 +351,7 @@ const Treemap = ({
     return () => {
       window.removeEventListener('resize', throttledResize)
     }
-  }, [showingCode, data])
+  }, [showingCode, data, setGraphRoot])
 
   useEffect(() => {
     cacheWindowSize()

@@ -39,7 +39,7 @@ const Dashboard = () => {
     setShowScriptsWithoutSourcemaps
   ] = React.useState(true)
   const [code, setCode] = React.useState(false)
-  const [originalFileMapping, setOriginalFileMapping] = React.useState({})
+  const [originalFileMapping, setOriginalFileMapping] = React.useState(null)
 
   const isTopLevel = data && data.name === 'topLevel'
 
@@ -67,6 +67,7 @@ const Dashboard = () => {
       response
         .json()
         .then(data => {
+          console.log('setting mapping')
           setOriginalFileMapping(data)
         })
         .catch(e => {
@@ -75,13 +76,13 @@ const Dashboard = () => {
     })
   }, [])
 
-
   const setGraphRoot = React.useCallback(
     id => {
       const data = findBranch(id, topLevelData)
 
       if (data && (!data.children || data.children.length === 0)) {
         const simplifiedName = data.name.replace('.js', '')
+
         const fileKeys = Object.keys(originalFileMapping)
         if (!fileKeys) {
           console.error('unable to access original file data')
