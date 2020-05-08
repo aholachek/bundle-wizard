@@ -7,7 +7,7 @@ import Breadcrumbs from './Breadcrumbs'
 import Summary from './Summary'
 import Tooltip from './Tooltip'
 import Code from './Code'
-import { findMostLikelyPath } from './utils'
+import { findMostLikelyPath, usePrevious } from './utils'
 import ControlPanel from './ControlPanel'
 
 const jsonOptions = {
@@ -15,6 +15,9 @@ const jsonOptions = {
     'Content-Type': 'application/json'
   }
 }
+
+// TODO: figure out why this isn't working with use effect hooks + state
+let originalFileMapping = {}
 
 const findBranch = (id, data) => {
   let cachedBranch
@@ -39,7 +42,6 @@ const Dashboard = () => {
     setShowScriptsWithoutSourcemaps
   ] = React.useState(true)
   const [code, setCode] = React.useState(false)
-  const [originalFileMapping, setOriginalFileMapping] = React.useState({})
 
   const isTopLevel = data && data.name === 'topLevel'
 
@@ -70,7 +72,8 @@ const Dashboard = () => {
       response
         .json()
         .then(data => {
-          setOriginalFileMapping(data)
+          // TODO: figure out why setCodeIfNecessary func doesnt work properly
+          originalFileMapping = data
         })
         .catch(() => {
           console.error('couldnt load originalFileMapping.json!')
@@ -85,38 +88,48 @@ const Dashboard = () => {
     [setData, topLevelData]
   )
 
-  useEffect(() => {
-    if (data && (!data.children || data.children.length === 0)) {
-      const simplifiedName = data.name.replace('.js', '')
+  const previousData = usePrevious(data)
 
-      const fileKeys = Object.keys(originalFileMapping)
-      if (!fileKeys) {
-        return console.error('unable to access original file data')
-      } else {
-        const matchingKeys = fileKeys.filter(
-          key => key.indexOf(simplifiedName) !== -1
-        )
-        const mostLikelyPath = findMostLikelyPath(matchingKeys, data.id)
-        const id = originalFileMapping[mostLikelyPath]
+  useEffect(
+    function setCodeIfNecessary() {
+      if (
+        data &&
+        data !== previousData &&
+        (!data.children || data.children.length === 0)
+      ) {
+        debugger // eslint-disable-line
+        const simplifiedName = data.name.replace('.js', '')
 
-        fetch(`./originalFiles/${id}.json`)
-          .then(response => response.json())
-          .then(text => {
-            if (text) setCode({ text, name: mostLikelyPath, data })
-          })
-          .catch(e => {
-            console.log(e)
-            setCode(null)
-          })
+        const fileKeys = Object.keys(originalFileMapping)
+        if (!fileKeys) {
+          return console.error('unable to access original file data')
+        } else {
+          const matchingKeys = fileKeys.filter(
+            key => key.indexOf(simplifiedName) !== -1
+          )
+          const mostLikelyPath = findMostLikelyPath(matchingKeys, data.id)
+          const id = originalFileMapping[mostLikelyPath]
+
+          fetch(`./originalFiles/${id}.json`)
+            .then(response => response.json())
+            .then(text => {
+              if (text) setCode({ text, name: mostLikelyPath, data })
+            })
+            .catch(e => {
+              console.log(e)
+              setCode(null)
+            })
+        }
       }
-    } else {
-      if (code) setCode(null)
-    }
-  }, [data, code, originalFileMapping])
+    },
+    [data, code, previousData]
+  )
 
   if (!data) return <div className="loading">loading...</div>
 
   const showingCode = Boolean(code)
+
+  console.log({ showingCode })
 
   return (
     <div className={!showCoverage && 'hide-coverage'}>
