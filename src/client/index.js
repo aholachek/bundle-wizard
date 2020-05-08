@@ -76,7 +76,7 @@ const Dashboard = () => {
           console.error('couldnt load originalFileMapping.json!')
         })
     })
-  })
+  }, [])
 
   const setGraphRoot = React.useCallback(
     id => {
