@@ -182,7 +182,7 @@ const renderGraph = ({
   }
 
   const shouldShow = (width, height) => {
-   return showAllChildren
+    return showAllChildren
       ? width > 0 || height > 0
       : width > 3 && height > 3 && width * height > 50
   }
@@ -364,7 +364,7 @@ const Treemap = ({
       showScriptsWithoutSourcemaps,
       showAllChildren
     })
-  }, [data.id, showScriptsWithoutSourcemaps, showAllChildren])
+  }, [data.id, showScriptsWithoutSourcemaps, showAllChildren, setGraphRoot])
 
   return <div ref={graphContainerRef} className="treemap"></div>
 }

@@ -40,7 +40,7 @@ const ControlPanel = ({
       }}
     >
       {isTopLevel && (
-        <div title="By default, scripts without sourcemaps are not shown. Toggle this setting to view all scripts.">
+        <div>
           <input
             type="checkbox"
             name=""
@@ -67,8 +67,7 @@ const ControlPanel = ({
         />
         &nbsp;&nbsp;
         <label htmlFor="show-all-children">
-          simplify graph (better for
-          performance)
+          simplify graph (better for performance)
         </label>
       </div>
 

@@ -59821,7 +59821,7 @@ var Treemap = function Treemap(_ref2) {
       showScriptsWithoutSourcemaps: showScriptsWithoutSourcemaps,
       showAllChildren: showAllChildren
     }));
-  }, [data.id, showScriptsWithoutSourcemaps, showAllChildren]);
+  }, [data.id, showScriptsWithoutSourcemaps, showAllChildren, setGraphRoot]);
   return _react.default.createElement("div", {
     ref: graphContainerRef,
     className: "treemap"
@@ -66553,9 +66553,7 @@ var ControlPanel = function ControlPanel(_ref) {
         });
       }
     }
-  }, isTopLevel && _react.default.createElement("div", {
-    title: "By default, scripts without sourcemaps are not shown. Toggle this setting to view all scripts."
-  }, _react.default.createElement("input", {
+  }, isTopLevel && _react.default.createElement("div", null, _react.default.createElement("input", {
     type: "checkbox",
     name: "",
     id: "swsc",
