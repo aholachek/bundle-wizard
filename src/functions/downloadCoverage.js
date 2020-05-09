@@ -105,7 +105,7 @@ const downloadCoverage = async ({
     }
     const url = new URL(response.url())
     const fileName = url.pathname.split('/').slice(-1)[0]
-    const isJSFile = fileName.match(/\.(m)?js$/)
+    const isJSFile = fileName.match(/\.(m)?js(on)?$/)
     if (!isJSFile) return
     response.text().then(body => {
       const localFileName = `${downloadsDir}/${Math.random()}${splitString}${fileName}`

@@ -97,7 +97,21 @@ const Dashboard = () => {
         data !== previousData &&
         (!data.children || data.children.length === 0)
       ) {
-        debugger // eslint-disable-line
+        // const isJSON = data.id.match(/json$/)
+
+        // if (isJSON) {
+        //   fetch(`./originalFiles/${data.name.split('/').slice(-1)[0]}`)
+        //     .then(response => response.text())
+        //     .then(text => {
+        //       if (text) setCode({ text, name: data.name, data })
+        //     })
+        //     .catch(e => {
+        //       console.log(e)
+        //       setCode(null)
+        //     })
+        //   return
+        // }
+
         const simplifiedName = data.name.replace('.js', '')
 
         const fileKeys = Object.keys(originalFileMapping)
@@ -128,8 +142,6 @@ const Dashboard = () => {
   if (!data) return <div className="loading">loading...</div>
 
   const showingCode = Boolean(code)
-
-  console.log({ showingCode })
 
   return (
     <div className={!showCoverage && 'hide-coverage'}>

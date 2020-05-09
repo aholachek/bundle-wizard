@@ -4,10 +4,9 @@ const { v4: uuidv4 } = require('uuid')
 
 async function mapToOriginalFiles({ downloadsDir, tempFolderName }) {
   const originalFilesDir = `${tempFolderName}/originalFiles`
+  const files = fs.readdirSync(downloadsDir)
 
   try {
-    const files = fs.readdirSync(downloadsDir)
-
     fs.mkdirpSync(originalFilesDir)
 
     const sourcemapFiles = files.filter(file => file.match(/.map$/))
@@ -34,11 +33,19 @@ async function mapToOriginalFiles({ downloadsDir, tempFolderName }) {
           )
         })
         consumer.destroy()
-      } catch (e) {
-      }
+      } catch (e) {}
     })
 
     await Promise.all(promises)
+
+    // TODO: finish allowing json to be rendered on the front end
+    // try {
+    //   const jsonFiles = files.filter(file => file.match(/.json$/))
+
+    //   jsonFiles.forEach(file => {
+    //     fs.copySync(`${downloadsDir}/${file}`, `${originalFilesDir}/${file}`)
+    //   })
+    // } catch (e) {}
 
     fs.writeFileSync(
       `${tempFolderName}/originalFileMapping.json`,
