@@ -68819,7 +68819,7 @@ var ControlPanel = function ControlPanel(_ref) {
     checked: showScriptsWithoutSourcemaps
   }), "\xA0\xA0", _react.default.createElement("label", {
     htmlFor: "swsc"
-  }, "show all JS (including JSON & 3rd party code without sourcemaps)")), _react.default.createElement("div", {
+  }, "show all JS (including JSON & 3rd party code)")), _react.default.createElement("div", {
     className: "sourcemap-control"
   }, _react.default.createElement("input", {
     type: "checkbox",
@@ -68831,7 +68831,7 @@ var ControlPanel = function ControlPanel(_ref) {
     checked: !showAllChildren
   }), "\xA0\xA0", _react.default.createElement("label", {
     htmlFor: "show-all-children"
-  }, "simplify graph (better for performance)")), _react.default.createElement("div", null, _react.default.createElement("div", {
+  }, "simplify graph")), _react.default.createElement("div", null, _react.default.createElement("div", {
     className: "sourcemap-control"
   }, _react.default.createElement("input", {
     type: "checkbox",

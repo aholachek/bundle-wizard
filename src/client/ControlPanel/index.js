@@ -50,7 +50,7 @@ const ControlPanel = ({
           />
           &nbsp;&nbsp;
           <label htmlFor="swsc">
-            show all JS (including JSON & 3rd party code without sourcemaps)
+            show all JS (including JSON & 3rd party code)
           </label>
         </div>
       )}
@@ -66,9 +66,7 @@ const ControlPanel = ({
           checked={!showAllChildren}
         />
         &nbsp;&nbsp;
-        <label htmlFor="show-all-children">
-          simplify graph (better for performance)
-        </label>
+        <label htmlFor="show-all-children">simplify graph</label>
       </div>
 
       <div>
