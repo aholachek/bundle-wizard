@@ -2,6 +2,7 @@ import 'sanitize.css'
 import './index.scss'
 import React, { useEffect } from 'react'
 import ReactDOM from 'react-dom'
+import { Flipper } from 'react-flip-toolkit'
 import Treemap from './Treemap'
 import Breadcrumbs from './Breadcrumbs'
 import Summary from './Summary'
@@ -144,64 +145,67 @@ const Dashboard = () => {
   const showingCode = Boolean(code)
 
   return (
-    <div className={!showCoverage && 'hide-coverage'}>
-      <Tooltip hovered={hovered} />
-      <nav className="nav">
-        <div className="logo">
-          Analysis of <b>{(topLevelData || {}).url}</b>
-        </div>
-        <ul>
-          <li className={!showSummary && 'active'}>
-            <a
-              href="#"
-              onClick={e => {
-                e.preventDefault()
-                e.stopPropagation()
-                setShowSummary(false)
-              }}
-            >
-              🌲&nbsp;Treemap
-            </a>
-          </li>
-          <li className={showSummary && 'active'}>
-            <a
-              href="#"
-              onClick={e => {
-                e.preventDefault()
-                e.stopPropagation()
-                setShowSummary(true)
-              }}
-            >
-              ℹ️&nbsp;Summary
-            </a>
-          </li>
-        </ul>
-        <div style={{ marginLeft: 'auto' }}>
-          👇 scroll down to view more options
-        </div>
-      </nav>
-      {showSummary ? (
-        <Summary
-          data={topLevelData}
-          setGraphRoot={(...args) => {
-            setShowSummary(false)
-            setGraphRoot(...args)
-          }}
-        />
-      ) : (
-        <>
-          <Breadcrumbs
-            data={data}
-            isTopLevel={isTopLevel}
+    <Flipper flipKey={showingCode}>
+      <div className={!showCoverage && 'hide-coverage'}>
+        <Tooltip hovered={hovered} />
+        <nav className="nav">
+          <div className="logo">
+            Analysis of <b>{(topLevelData || {}).url}</b>
+          </div>
+          <ul>
+            <li className={!showSummary && 'active'}>
+              <a
+                href="#"
+                onClick={e => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  setShowSummary(false)
+                }}
+              >
+                🌲&nbsp;Treemap
+              </a>
+            </li>
+            <li className={showSummary && 'active'}>
+              <a
+                href="#"
+                onClick={e => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  setShowSummary(true)
+                }}
+              >
+                ℹ️&nbsp;Summary
+              </a>
+            </li>
+          </ul>
+          {!showingCode && (
+            <div style={{ marginLeft: 'auto' }}>
+              👇 scroll down to view more options
+            </div>
+          )}
+        </nav>
+        {showSummary ? (
+          <Summary
+            data={topLevelData}
             setGraphRoot={(...args) => {
-              setCode(null)
+              setShowSummary(false)
               setGraphRoot(...args)
             }}
-            hovered={hovered}
-            toggleScriptsWithoutSourcemaps={toggleScriptsWithoutSourcemaps}
-            showScriptsWithoutSourcemaps={showScriptsWithoutSourcemaps}
           />
-          {!showingCode && (
+        ) : (
+          <>
+            <Breadcrumbs
+              data={data}
+              isTopLevel={isTopLevel}
+              setGraphRoot={(...args) => {
+                setCode(null)
+                setGraphRoot(...args)
+              }}
+              hovered={hovered}
+              toggleScriptsWithoutSourcemaps={toggleScriptsWithoutSourcemaps}
+              showScriptsWithoutSourcemaps={showScriptsWithoutSourcemaps}
+            />
+
             <Treemap
               data={data}
               setGraphRoot={setGraphRoot}
@@ -210,23 +214,25 @@ const Dashboard = () => {
               showingCode={showingCode}
               showAllChildren={showAllChildren}
             />
-          )}
-          {showingCode && <Code {...code} setHovered={setHovered} />}
 
-          {!showingCode && (
-            <ControlPanel
-              toggleScriptsWithoutSourcemaps={toggleScriptsWithoutSourcemaps}
-              showScriptsWithoutSourcemaps={showScriptsWithoutSourcemaps}
-              setShowCoverage={setShowCoverage}
-              showCoverage={showCoverage}
-              isTopLevel={isTopLevel}
-              showAllChildren={showAllChildren}
-              setShowAllChildren={setShowAllChildren}
-            />
-          )}
-        </>
-      )}
-    </div>
+            {showingCode && (
+              <Code {...code} setHovered={setHovered} id={data.id} />
+            )}
+            {!showingCode && (
+              <ControlPanel
+                toggleScriptsWithoutSourcemaps={toggleScriptsWithoutSourcemaps}
+                showScriptsWithoutSourcemaps={showScriptsWithoutSourcemaps}
+                setShowCoverage={setShowCoverage}
+                showCoverage={showCoverage}
+                isTopLevel={isTopLevel}
+                showAllChildren={showAllChildren}
+                setShowAllChildren={setShowAllChildren}
+              />
+            )}
+          </>
+        )}
+      </div>
+    </Flipper>
   )
 }
 

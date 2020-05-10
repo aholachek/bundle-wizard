@@ -50,7 +50,7 @@ const ControlPanel = ({
           />
           &nbsp;&nbsp;
           <label htmlFor="swsc">
-            show all JS (including 3rd party/ without sourcemaps)
+            show all JS (including JSON & 3rd party code without sourcemaps)
           </label>
         </div>
       )}

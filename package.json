@@ -40,6 +40,7 @@
     "puppeteer-core": "^3.0.4",
     "react": ">= 16.8.0",
     "react-dom": ">= 16.8.0",
+    "react-flip-toolkit": "^7.0.9",
     "react-is": ">= 16.8.0",
     "sanitize.css": "^11.0.0",
     "serve": "^11.3.0",

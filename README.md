@@ -6,8 +6,8 @@ This command line utility makes it simple to create visualizations of the JS bun
 
 `npx bundle-wizard spectrum.chat`
 
-<a href="https://bundle-wizard-spectrum.netlify.app/#">
-<img src="./example.gif" alt="bundle-wizard interaction showing code for spectrum.chat">
+<a href="https://bundle-wizard-spectrum.netlify.app/">
+<img src="./reddit-mobile-analysis.png" alt="bundle-wizard interaction showing code for reddit">
 </a>
 
 [Check out a live demo of this visualization](https://bundle-wizard-spectrum.netlify.app/)
@@ -18,10 +18,10 @@ Try any of the following commands to take a peek at the JavaScript code differen
 
 1. `npx bundle-wizard spectrum.chat`
 2. `npx bundle-wizard reddit.com`
-2. `npx bundle-wizard codesandbox.io`
-3. `npx bundle-wizard gatsbyjs.org`
-4. `npx bundle-wizard codecademy.com`
-5. `npx bundle-wizard id.atlassian.com`
+3. `npx bundle-wizard codesandbox.io`
+4. `npx bundle-wizard gatsbyjs.org`
+5. `npx bundle-wizard codecademy.com`
+6. `npx bundle-wizard id.atlassian.com`
 
 ## Try it out on an app running locally:
 
@@ -80,3 +80,9 @@ The core functionality of this library is provided by the awesome [`source-map-e
 2. A local Chrome installation
 
    The wizard uses `puppeteer-core` to load coverage information from the provided url. This requires you to have a fairly up-to-date version of Chrome installed on your machine.
+
+## Additional features
+
+If sourcemaps are properly configured (not true for reddit.com), you should be able to click on a square to see the code it represents: 
+
+![demonstration of code feature](./example.gif)

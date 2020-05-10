@@ -2,6 +2,7 @@ import React from 'react'
 import styled, { keyframes, css } from 'styled-components'
 import Highlight, { defaultProps } from 'prism-react-renderer'
 import theme from 'prism-react-renderer/themes/palenight'
+import { Flipped } from 'react-flip-toolkit'
 
 const fadeIn = keyframes`
   from {
@@ -12,28 +13,12 @@ const fadeIn = keyframes`
   }
 `
 
-const fadeOut = keyframes`
-  from {
-    opacity: 1
-  }
-  to {
-    opacity: 0;
-  }
-`
-
 const fontFamily = `font-family: 'Source Code Pro', 'SFMono-Regular', Consolas, 'Liberation Mono',
     Menlo, Courier, monospace;`
 
 const Container = styled.div`
   top: 5.75rem;
-  animation: ${props =>
-    props.animatingOut
-      ? css`
-          ${fadeOut} .25s forwards;
-        `
-      : css`
-          ${fadeIn} 2s forwards;
-        `}
+  animation: ${fadeIn} 1s forwards;
   position: absolute;
   left: 0;
   bottom: 0;
@@ -53,7 +38,7 @@ const Container = styled.div`
 `
 const threshold = 70000
 
-export default function Code({ text, setHovered }) {
+export default function Code({ text, setHovered, id }) {
   React.useEffect(() => {
     setHovered(null)
     setTimeout(() => {
@@ -70,20 +55,22 @@ export default function Code({ text, setHovered }) {
   }
 
   return (
-    <Container>
-      <Highlight {...defaultProps} code={text} language="jsx" theme={theme}>
-        {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className} style={style}>
-            {tokens.map((line, i) => (
-              <div {...getLineProps({ line, key: i })} key={i}>
-                {line.map((token, key) => (
-                  <span {...getTokenProps({ token, key })} key={key} />
-                ))}
-              </div>
-            ))}
-          </pre>
-        )}
-      </Highlight>
-    </Container>
+    <Flipped flipId={id}>
+      <Container>
+        <Highlight {...defaultProps} code={text} language="jsx" theme={theme}>
+          {({ className, style, tokens, getLineProps, getTokenProps }) => (
+            <pre className={className} style={style}>
+              {tokens.map((line, i) => (
+                <div {...getLineProps({ line, key: i })} key={i}>
+                  {line.map((token, key) => (
+                    <span {...getTokenProps({ token, key })} key={key} />
+                  ))}
+                </div>
+              ))}
+            </pre>
+          )}
+        </Highlight>
+      </Container>
+    </Flipped>
   )
 }

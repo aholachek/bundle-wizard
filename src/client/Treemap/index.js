@@ -178,7 +178,7 @@ const renderGraph = ({
     } else if (d.data.isRuntime) {
       return ''
     }
-    return `${Math.ceil(d.data.realSize / 1000)}kb`
+    return `${Math.ceil(d.data.realSize / 1000).toLocaleString()}kb`
   }
 
   const shouldShow = (width, height) => {
@@ -234,6 +234,11 @@ const renderGraph = ({
         this.style.boxShadow = renderBoxShadowBorder(d)
       })
       .classed(`box ${isFirstRender ? 'animate-in-box' : ''} `, true)
+      .attr('data-flip-id', d => d.data.id)
+      .attr(
+        'data-flip-config',
+        '{"translate":true,"scale":true,"opacity":true}'
+      )
       .classed('hide-box', d => {
         const width = d.x1 - d.x0
         const height = d.y1 - d.y0
