@@ -24,7 +24,7 @@ const Tooltip = ({ hovered }) => {
           <h3>{name}</h3>
 
           <div className="hovered-data-row">
-            <div>{Math.ceil(hovered.data.realSize / 1000)}kb minified</div>
+            <div>{Math.ceil(hovered.data.realSize / 1000).toLocaleString()}kb minified</div>
             <div>
               {typeof hovered.data.averageCoverage !== 'number'
                 ? 'no coverage data'

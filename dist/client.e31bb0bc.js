@@ -61890,7 +61890,7 @@ var renderGraph = function renderGraph(_ref) {
   }
 
   var treemap = function treemap(data, noPadding) {
-    return d3.treemap().size([width, height]).paddingOuter(noPadding ? 0 : 10).paddingTop(noPadding ? 0 : 24).paddingInner(noPadding ? 0 : 4).round(false)(d3.hierarchy(data).sum(function (d) {
+    return d3.treemap().size([width, height]).paddingOuter(noPadding ? 0 : 5).paddingTop(noPadding ? 0 : 24).paddingInner(noPadding ? 0 : 4).round(false)(d3.hierarchy(data).sum(function (d) {
       return d.size;
     }).sort(function (a, b) {
       return b.value - a.value;
@@ -62294,7 +62294,7 @@ var Tooltip = function Tooltip(_ref) {
     }
   }, "\uD83D\uDEA8 This bundle originated a ", Math.ceil(hovered.data.longTask), "ms \"long task\" in the browser") : '', _react.default.createElement("h3", null, name), _react.default.createElement("div", {
     className: "hovered-data-row"
-  }, _react.default.createElement("div", null, Math.ceil(hovered.data.realSize / 1000), "kb minified"), _react.default.createElement("div", null, typeof hovered.data.averageCoverage !== 'number' ? 'no coverage data' : "".concat(Math.floor(hovered.data.averageCoverage * 100), "% coverage")), hovered.data.originalChildCount ? _react.default.createElement("div", null, hovered.data.originalChildCount, " direct", ' ', hovered.data.originalChildCount === 1 ? 'child' : 'children', ' ') : null)) : null);
+  }, _react.default.createElement("div", null, Math.ceil(hovered.data.realSize / 1000).toLocaleString(), "kb minified"), _react.default.createElement("div", null, typeof hovered.data.averageCoverage !== 'number' ? 'no coverage data' : "".concat(Math.floor(hovered.data.averageCoverage * 100), "% coverage")), hovered.data.originalChildCount ? _react.default.createElement("div", null, hovered.data.originalChildCount, " direct", ' ', hovered.data.originalChildCount === 1 ? 'child' : 'children', ' ') : null)) : null);
 };
 
 Tooltip.defaultProps = {

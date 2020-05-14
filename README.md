@@ -16,12 +16,11 @@ This command line utility makes it simple to create visualizations of the JS bun
 
 Try any of the following commands to take a peek at the JavaScript code different sites are shipping:
 
-1. `npx bundle-wizard spectrum.chat`
-2. `npx bundle-wizard reddit.com`
-3. `npx bundle-wizard codesandbox.io`
-4. `npx bundle-wizard gatsbyjs.org`
-5. `npx bundle-wizard codecademy.com`
-6. `npx bundle-wizard id.atlassian.com`
+1. `npx bundle-wizard reddit.com`
+2. `npx bundle-wizard codesandbox.io`
+3. `npx bundle-wizard gatsbyjs.org`
+4. `npx bundle-wizard codecademy.com`
+5. `npx bundle-wizard id.atlassian.com`
 
 ## Try it out on an app running locally:
 
