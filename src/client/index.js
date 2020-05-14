@@ -178,11 +178,6 @@ const Dashboard = () => {
               </a>
             </li>
           </ul>
-          {!showingCode && (
-            <div style={{ marginLeft: 'auto' }}>
-              👇 scroll down to view more options
-            </div>
-          )}
         </nav>
         {showSummary ? (
           <Summary

@@ -61953,7 +61953,7 @@ var renderGraph = function renderGraph(_ref) {
   };
 
   var shouldShow = function shouldShow(width, height) {
-    return showAllChildren ? width >= 0 && height >= 0 : width > 3 && height > 3 && width * height > 50;
+    return showAllChildren ? width > 0 && height > 0 : width > 3 && height > 3 && width * height > 50;
   };
 
   var createEnteredElements = function createEnteredElements(enter) {
@@ -62071,7 +62071,7 @@ var Treemap = function Treemap(_ref2) {
 
   var cacheWindowSize = function cacheWindowSize() {
     dimensionsRef.current.width = window.innerWidth;
-    dimensionsRef.current.height = document.body.clientHeight - 100;
+    dimensionsRef.current.height = graphContainerRef.current.clientHeight;
   };
 
   (0, _react.useEffect)(function () {
@@ -62133,7 +62133,7 @@ var Breadcrumbs = function Breadcrumbs(_ref) {
   var sections = data.id.split('/');
   return _react.default.createElement("div", {
     className: "breadcrumb-container"
-  }, sections.length >= 2 ? _react.default.createElement("ul", null, sections.map(function (section, i, arr) {
+  }, sections.length >= 2 && _react.default.createElement("ul", null, sections.map(function (section, i, arr) {
     var text = section === 'topLevel' ? ' ⬅ all bundles' : section;
     return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement("li", null, _react.default.createElement("a", {
       onClick: function onClick() {
@@ -62141,7 +62141,7 @@ var Breadcrumbs = function Breadcrumbs(_ref) {
       },
       href: "#"
     }, text)), i !== arr.length - 1 && _react.default.createElement(_react.default.Fragment, null, "\xA0/\xA0"));
-  })) : null);
+  })));
 };
 
 var _default = Breadcrumbs;
@@ -68781,11 +68781,12 @@ var Legend = function Legend() {
     className: "legend__colors"
   }, _react.default.createElement("div", {
     className: "legend__label"
-  }, "0%"), _toConsumableArray(Array(11).keys()).map(function (i) {
+  }, "0%"), _toConsumableArray(Array(6).keys()).map(function (i) {
     return _react.default.createElement("div", {
       style: {
-        backgroundColor: color(i / 10)
-      }
+        backgroundColor: color(i / 5)
+      },
+      key: i
     });
   }), _react.default.createElement("div", {
     className: "legend__label"
@@ -68811,39 +68812,32 @@ var ControlPanel = function ControlPanel(_ref) {
         });
       }
     }
-  }, isTopLevel && _react.default.createElement("div", null, _react.default.createElement("input", {
+  }, isTopLevel && _react.default.createElement("div", {
+    className: "sourcemap-control"
+  }, _react.default.createElement("label", null, _react.default.createElement("input", {
     type: "checkbox",
     name: "",
-    id: "swsc",
     onChange: toggleScriptsWithoutSourcemaps,
     checked: showScriptsWithoutSourcemaps
-  }), "\xA0\xA0", _react.default.createElement("label", {
-    htmlFor: "swsc"
-  }, "show all JS (including JSON & 3rd party code)")), _react.default.createElement("div", {
+  }), "show JSON & 3rd party scripts")), _react.default.createElement("div", {
     className: "sourcemap-control"
-  }, _react.default.createElement("input", {
+  }, _react.default.createElement("label", null, _react.default.createElement("input", {
     type: "checkbox",
     name: "",
-    id: "show-all-children",
     onChange: function onChange() {
       setShowAllChildren(!showAllChildren);
     },
     checked: !showAllChildren
-  }), "\xA0\xA0", _react.default.createElement("label", {
-    htmlFor: "show-all-children"
-  }, "simplify graph")), _react.default.createElement("div", null, _react.default.createElement("div", {
+  }), "simplify graph")), _react.default.createElement("div", null, _react.default.createElement("div", {
     className: "sourcemap-control"
-  }, _react.default.createElement("input", {
+  }, _react.default.createElement("label", null, _react.default.createElement("input", {
     type: "checkbox",
     name: "",
-    id: "show-coverage",
     onChange: function onChange() {
       setShowCoverage(!showCoverage);
     },
     checked: showCoverage
-  }), "\xA0\xA0", _react.default.createElement("label", {
-    htmlFor: "show-coverage"
-  }, "show coverage ", showCoverage && _react.default.createElement(Legend, null)))));
+  }), "show coverage ", showCoverage && _react.default.createElement(Legend, null)))));
 };
 
 var _default = ControlPanel;
@@ -69063,11 +69057,7 @@ var Dashboard = function Dashboard() {
       e.stopPropagation();
       setShowSummary(true);
     }
-  }, "\u2139\uFE0F\xA0Summary"))), !showingCode && _react.default.createElement("div", {
-    style: {
-      marginLeft: 'auto'
-    }
-  }, "\uD83D\uDC47 scroll down to view more options")), showSummary ? _react.default.createElement(_Summary.default, {
+  }, "\u2139\uFE0F\xA0Summary")))), showSummary ? _react.default.createElement(_Summary.default, {
     data: topLevelData,
     setGraphRoot: function setGraphRoot() {
       setShowSummary(false);
@@ -69135,7 +69125,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53678" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65510" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

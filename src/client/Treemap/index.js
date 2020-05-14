@@ -183,7 +183,7 @@ const renderGraph = ({
 
   const shouldShow = (width, height) => {
     return showAllChildren
-      ? width >= 0 && height >= 0
+      ? width > 0 && height > 0
       : width > 3 && height > 3 && width * height > 50
   }
 
@@ -340,7 +340,7 @@ const Treemap = ({
   const dimensionsRef = useRef({})
   const cacheWindowSize = () => {
     dimensionsRef.current.width = window.innerWidth
-    dimensionsRef.current.height = document.body.clientHeight - 100
+    dimensionsRef.current.height = graphContainerRef.current.clientHeight
   }
   useEffect(() => {
     if (showingCode) return

@@ -6,7 +6,7 @@ const Breadcrumbs = ({ data, setGraphRoot }) => {
 
   return (
     <div className="breadcrumb-container">
-      {sections.length >= 2 ? (
+      {sections.length >= 2 && (
         <ul>
           {sections.map((section, i, arr) => {
             const text = section === 'topLevel' ? ' ⬅ all bundles' : section
@@ -27,7 +27,7 @@ const Breadcrumbs = ({ data, setGraphRoot }) => {
             )
           })}
         </ul>
-      ) : null}
+      )}
     </div>
   )
 }

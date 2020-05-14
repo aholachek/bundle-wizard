@@ -8,8 +8,8 @@ const Legend = () => {
     <div className="legend">
       <div className="legend__colors">
         <div className="legend__label">0%</div>
-        {[...Array(11).keys()].map(i => (
-          <div style={{ backgroundColor: color(i / 10) }}></div>
+        {[...Array(6).keys()].map(i => (
+          <div style={{ backgroundColor: color(i / 5) }} key={i}></div>
         ))}
         <div className="legend__label">100%</div>
       </div>
@@ -40,48 +40,44 @@ const ControlPanel = ({
       }}
     >
       {isTopLevel && (
-        <div>
-          <input
-            type="checkbox"
-            name=""
-            id="swsc"
-            onChange={toggleScriptsWithoutSourcemaps}
-            checked={showScriptsWithoutSourcemaps}
-          />
-          &nbsp;&nbsp;
-          <label htmlFor="swsc">
-            show all JS (including JSON & 3rd party code)
+        <div className="sourcemap-control">
+          <label>
+            <input
+              type="checkbox"
+              name=""
+              onChange={toggleScriptsWithoutSourcemaps}
+              checked={showScriptsWithoutSourcemaps}
+            />
+            show JSON & 3rd party scripts
           </label>
         </div>
       )}
 
       <div className="sourcemap-control">
-        <input
-          type="checkbox"
-          name=""
-          id="show-all-children"
-          onChange={() => {
-            setShowAllChildren(!showAllChildren)
-          }}
-          checked={!showAllChildren}
-        />
-        &nbsp;&nbsp;
-        <label htmlFor="show-all-children">simplify graph</label>
+        <label>
+          <input
+            type="checkbox"
+            name=""
+            onChange={() => {
+              setShowAllChildren(!showAllChildren)
+            }}
+            checked={!showAllChildren}
+          />
+          simplify graph
+        </label>
       </div>
 
       <div>
         <div className="sourcemap-control">
-          <input
-            type="checkbox"
-            name=""
-            id="show-coverage"
-            onChange={() => {
-              setShowCoverage(!showCoverage)
-            }}
-            checked={showCoverage}
-          />
-          &nbsp;&nbsp;
-          <label htmlFor="show-coverage">
+          <label>
+            <input
+              type="checkbox"
+              name=""
+              onChange={() => {
+                setShowCoverage(!showCoverage)
+              }}
+              checked={showCoverage}
+            />
             show coverage {showCoverage && <Legend />}
           </label>
         </div>

@@ -590,7 +590,7 @@ a:hover {
 .treemap {
   position: relative;
   width: 100vw;
-  height: calc(100vh - 100px);
+  height: calc(100vh - 150px);
 }
 
 .box {
@@ -600,7 +600,7 @@ a:hover {
 }
 
 .hide-box {
-  opacity: 1;
+  opacity: 0 !important;
   box-shadow: none !important;
 }
 
@@ -877,22 +877,23 @@ figure {
 }
 
 .control-panel {
-  position: absolute;
-  bottom: 0;
   background-color: rgba(0, 0, 0, 0.9);
+  padding: 0.5rem;
   color: white;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 4rem;
   z-index: 100;
-  padding: 1rem;
-  bottom: -3rem;
   transition: transform 2s;
-  animation: dipDown 2s 1s forwards;
   cursor: pointer;
   display: flex;
+  flex-wrap: wrap;
+}
+@media (min-width: 990px) {
+  .control-panel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+  }
 }
 .control-panel label {
   padding-top: 1rem;
@@ -905,7 +906,11 @@ figure {
 
 .hide-coverage .box {
   background-color: rgba(0, 0, 0, 0.02) !important;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2) !important;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3) !important;
+}
+
+.sourcemap-control input {
+  margin-right: 0.5rem;
 }
 
 /*# sourceMappingURL=/client.e31bb0bc.css.map */
