@@ -4,7 +4,7 @@ This command line utility makes it simple to create visualizations of the JS bun
 
 ## Example
 
-`npx bundle-wizard spectrum.chat`
+`npx bundle-wizard reddit.com`
 
 <a href="https://bundle-wizard-spectrum.netlify.app/">
 <img src="./reddit-mobile-analysis.png" alt="bundle-wizard interaction showing code for reddit">
