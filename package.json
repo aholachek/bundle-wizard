@@ -1,7 +1,7 @@
 {
   "name": "bundle-wizard",
   "description": "Analyze the JavaScript loaded by a website",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "main": "src/index.js",
   "engines": {
     "node": ">=10.0.0"
