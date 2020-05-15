@@ -109,7 +109,7 @@ const renderGraph = ({
     return d3
       .treemap()
       .size([width, height])
-      .paddingOuter(noPadding ? 0 : 5)
+      .paddingOuter(noPadding ? 0 : 7)
       .paddingTop(noPadding ? 0 : 24)
       .paddingInner(noPadding ? 0 : 4)
       .round(false)(
