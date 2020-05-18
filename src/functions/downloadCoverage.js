@@ -131,7 +131,7 @@ const downloadCoverage = async ({
       await browser.close()
       await chrome.kill()
     } catch (error) {
-      
+      // merged as a fix by https://github.com/aholachek/bundle-wizard/pull/6
     }
     return { urlToFileDict, url, tracing }
   }
