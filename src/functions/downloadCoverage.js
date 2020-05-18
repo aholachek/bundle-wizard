@@ -127,8 +127,12 @@ const downloadCoverage = async ({
     const jsCoverage = await page.coverage.stopJSCoverage()
     fs.writeFileSync(coverageFilePath, JSON.stringify(jsCoverage))
 
-    await browser.close()
-    await chrome.kill()
+    try {
+      await browser.close()
+      await chrome.kill()
+    } catch (error) {
+      
+    }
     return { urlToFileDict, url, tracing }
   }
 
