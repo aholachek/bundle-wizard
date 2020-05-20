@@ -48,7 +48,7 @@ To skip the initial prompt, provide a url as a first argument:
 
 ### `interact` flag
 
-If you need to do some work in the browser getting the page ready for analysis (perhaps by signing in and then visiting a certain page), use this flag. You will see a browser window that will pop up that you can interact with. When you are ready to proceed, type `y` into the console to reload the page and start measuring performance.
+If you need to do some work in the browser getting the page ready for analysis (perhaps by signing in and then visiting a certain page), use this flag. You will see a browser window that will pop up that you can interact with. When you are ready to proceed, type `y` into the console in respond to the waiting prompt to reload the page and start measuring performance.
 
 `npx bundle-wizard --interact`
 
