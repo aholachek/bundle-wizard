@@ -58,7 +58,10 @@ const downloadCoverage = async ({
 
   const isMobile = type === 'mobile'
 
-  const browser = await puppeteer.launch({ headless: !interact, ignoreHTTPSErrors })
+  const browser = await puppeteer.launch({
+    headless: !interact,
+    ignoreHTTPSErrors
+  })
   const page = (await browser.pages())[0]
 
   if (isMobile) {
@@ -108,12 +111,13 @@ const downloadCoverage = async ({
     await startTrace()
     interactionUrl = page.url()
     await page.reload()
+    console.log('\n🐢  Finishing up loading...')
   } else {
     await startTrace()
     await page.goto(url)
+    console.log('🐢  Finishing up loading...')
   }
 
-  console.log('🐢  Finishing up loading...')
   await delay(4000)
 
   await page.screenshot({ path: `${tempFolderName}/screenshot.png` })

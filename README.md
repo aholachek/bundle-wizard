@@ -46,15 +46,20 @@ To skip the initial prompt, provide a url as a first argument:
 
 `npx bundle-wizard reddit.com`
 
+### `interact` flag
+
+If you need to do some work in the browser getting the page ready for analysis (perhaps by signing in and then visiting a certain page), add this flag. You will see a browser window that will pop up that you can interact with. When you are ready to proceed, type `y` into the console to reload the page and start measuring performance.
+
+`npx bundle-wizard --interact`
+
+**Note**: While this tool does not record any data , it's still recommended from a common sense perspective  to enter login information only for test accounts.
+
 ### `desktop` flag
 
 By default, `bundle-wizard` will analyze a mobile version of the site. To analyze the desktop version instead, pass the `--desktop` flag:
 
 `npx bundle-wizard --desktop`
 
-### `debug` flag
-
-If you'd like to see more logging and detailed error messages, add this flag.
 
 `npx bundle-wizard --debug`
 
@@ -64,21 +69,18 @@ If you are running an HTTPS connection on localhost and want to test a local sit
 
 `npx bundle-wizard https://localhost:5000 --ignoreHTTPSErrors`
 
-## Credits
+## How it works
 
-The core functionality of this library is provided by the awesome [`source-map-explorer`](https://github.com/danvk/source-map-explorer).
+`bundle-wizard` uses [Puppeteer](https://github.com/puppeteer/puppeteer) to download a web page, measure performance, and examine the JavaScript it sends to the client. It then analyzes the code using the awesome [source-map-explorer](https://github.com/danvk/source-map-explorer) library and creates a custom visualization.
+
 
 ## Requirements
 
-1. Downloadable sourcemaps
+### Downloadable sourcemaps
 
    This utility downloads sourcemaps from the url you provide. This requires the sourcemaps to be publically available, or at least available on your network. You might need to point to a testing instead of production build, for instance, as some apps disable sourcemaps in production.
 
    Don't have access to sourcemaps in your prod app? Try [building your app locally.](#try-it-out-on-an-app-running-locally)
-
-2. A local Chrome installation
-
-   The wizard uses `puppeteer-core` to load coverage information from the provided url. This requires you to have a fairly up-to-date version of Chrome installed on your machine.
 
 ## Additional features
 
