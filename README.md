@@ -74,9 +74,7 @@ If you are running an HTTPS connection on localhost and want to test a local sit
 `bundle-wizard` uses [Puppeteer](https://github.com/puppeteer/puppeteer) to download a web page, measure performance, and examine the JavaScript it sends to the client. It then analyzes the code using the awesome [source-map-explorer](https://github.com/danvk/source-map-explorer) library and creates a custom visualization.
 
 
-## Requirements
-
-### Downloadable sourcemaps
+### Requirement: downloadable sourcemaps
 
    This utility downloads sourcemaps from the url you provide. This requires the sourcemaps to be publically available, or at least available on your network. You might need to point to a testing instead of production build, for instance, as some apps disable sourcemaps in production.
 
