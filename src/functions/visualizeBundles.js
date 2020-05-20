@@ -88,10 +88,6 @@ const visualizeBundles = async ({
       console.log(
         `If you wish to save or share them, the visualization files can be found in the following directory:\n\n📂 ${distFolder}`
       )
-
-      console.log(
-        `\nIf you want to further explore the collected performance data, you can drag and drop the trace file from\n\n📂 ${tempFolder}/trace.json\n\nto the online trace viewer at \n\n🌐 https://chromedevtools.github.io/timeline-viewer/.`
-      )
     })
   } catch (e) {
     console.error('⚠️  Failed to generate source map visualization')
