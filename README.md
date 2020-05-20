@@ -52,7 +52,7 @@ If you need to do some work in the browser getting the page ready for analysis (
 
 `npx bundle-wizard --interact`
 
-**Note**: While this tool does not record any data, it's still recommended from a common sense perspective  to enter login information only for test accounts.
+**Note**: While this tool does not record any data, it's still recommended from a common sense perspective to enter login information only for test accounts.
 
 ### `desktop` flag
 
