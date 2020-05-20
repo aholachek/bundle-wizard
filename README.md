@@ -48,11 +48,11 @@ To skip the initial prompt, provide a url as a first argument:
 
 ### `interact` flag
 
-If you need to do some work in the browser getting the page ready for analysis (perhaps by signing in and then visiting a certain page), add this flag. You will see a browser window that will pop up that you can interact with. When you are ready to proceed, type `y` into the console to reload the page and start measuring performance.
+If you need to do some work in the browser getting the page ready for analysis (perhaps by signing in and then visiting a certain page), use this flag. You will see a browser window that will pop up that you can interact with. When you are ready to proceed, type `y` into the console to reload the page and start measuring performance.
 
 `npx bundle-wizard --interact`
 
-**Note**: While this tool does not record any data , it's still recommended from a common sense perspective  to enter login information only for test accounts.
+**Note**: While this tool does not record any data, it's still recommended from a common sense perspective  to enter login information only for test accounts.
 
 ### `desktop` flag
 
@@ -60,8 +60,6 @@ By default, `bundle-wizard` will analyze a mobile version of the site. To analyz
 
 `npx bundle-wizard --desktop`
 
-
-`npx bundle-wizard --debug`
 
 ### `ignoreHTTPSErrors` flag
 
