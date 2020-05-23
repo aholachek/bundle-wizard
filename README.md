@@ -1,5 +1,7 @@
 # 🧙‍♂️ bundle-wizard
 
+[![npm version](https://badge.fury.io/js/bundle-wizard.svg)](https://badge.fury.io/js/bundle-wizard)
+
 This command line utility makes it simple to create visualizations of the JS bundles that were fetched for any specific page (or "entry point") of a web app.
 
 ## Example

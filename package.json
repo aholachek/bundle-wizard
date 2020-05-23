@@ -15,6 +15,10 @@
     "build": "rm -rf dist; parcel build src/client/index.html",
     "preversion": "npm run build"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aholachek/bundle-wizard"
+  },
   "author": "Alex Holachek",
   "license": "ISC",
   "keywords": [
