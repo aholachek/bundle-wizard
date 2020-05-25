@@ -1,7 +1,7 @@
 {
   "name": "bundle-wizard",
   "description": "Analyze the JavaScript loaded by a website",
-  "version": "1.1.0-4",
+  "version": "1.1.0-5",
   "main": "src/index.js",
   "engines": {
     "node": ">=10.0.0"
@@ -60,7 +60,5 @@
     "d3": "5",
     "prism-react-renderer": "^1.1.0",
     "styled-components": "^5.1.0"
-
-
   }
 }
