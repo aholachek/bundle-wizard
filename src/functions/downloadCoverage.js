@@ -4,7 +4,7 @@ const { devicesMap } = require('puppeteer-core/DeviceDescriptors')
 const fs = require('fs')
 const { Input, Confirm } = require('enquirer')
 const delay = require('./delay')
-const { splitString, pause } = require('./utils')
+const { splitString } = require('./utils')
 const util = require('util')
 const request = require('request')
 
