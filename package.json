@@ -6,9 +6,6 @@
   "engines": {
     "node": ">=10.0.0"
   },
-  "config": {
-    "puppeteer_skip_chromium_download": "true"
-  },
   "bin": {
     "bundle-wizard": "src/index.js"
   },
@@ -28,6 +25,7 @@
     "javascript"
   ],
   "dependencies": {
+    "chrome-launcher": "^0.13.2",
     "enquirer": "^2.3.5",
     "fs-extra": "^9.0.0",
     "get-port": "^5.1.1",
@@ -36,6 +34,8 @@
     "node-fetch": "^2.6.0",
     "open": "^7.0.3",
     "puppeteer": "^3.1.0",
+    "puppeteer-core": "^3.1.0",
+    "request": "^2.88.2",
     "serve": "^11.3.0",
     "serve-handler": "^6.1.2",
     "source-map": "^0.7.3",
@@ -46,19 +46,19 @@
     "yargs": "^15.3.1"
   },
   "devDependencies": {
+    "d3": "5",
     "eslint": "^7.0.0",
     "eslint-plugin-react": "^7.20.0",
     "eslint-plugin-react-hooks": "^4.0.2",
-    "sass": "^1.26.5",
-    "parcel": "^1.12.4",
     "js-levenshtein": "^1.1.6",
+    "parcel": "^1.12.4",
+    "prism-react-renderer": "^1.1.0",
     "react": ">= 16.8.0",
     "react-dom": ">= 16.8.0",
     "react-flip-toolkit": "^7.0.9",
     "react-is": ">= 16.8.0",
     "sanitize.css": "^11.0.1",
-    "d3": "5",
-    "prism-react-renderer": "^1.1.0",
+    "sass": "^1.26.5",
     "styled-components": "^5.1.0"
   }
 }

@@ -1,9 +1,12 @@
-const puppeteer = require('puppeteer')
-const { devicesMap } = require('puppeteer/DeviceDescriptors')
+const puppeteerCore = require('puppeteer-core')
+const chromeLauncher = require('chrome-launcher')
+const { devicesMap } = require('puppeteer-core/DeviceDescriptors')
 const fs = require('fs')
 const { Input, Confirm } = require('enquirer')
 const delay = require('./delay')
-const { splitString } = require('./utils')
+const { splitString, pause } = require('./utils')
+const util = require('util')
+const request = require('request')
 
 const validateURL = url => {
   if (!/^http/.test(url)) {
@@ -58,10 +61,73 @@ const downloadCoverage = async ({
 
   const isMobile = type === 'mobile'
 
-  const browser = await puppeteer.launch({
-    headless: !interact,
-    ignoreHTTPSErrors
-  })
+  let browser
+  let chrome
+
+  if (interact) {
+    let puppeteer
+    try {
+      puppeteer = require('puppeteer')
+    } catch (e) {
+      const { exec } = require('child_process')
+
+      await new Promise(resolve => {
+        let isDownloaded = false
+
+        console.log(
+          'The --interact option requires us to download a Puppeteer-compatible version of chromium.\n'
+        )
+
+        setTimeout(() => {
+          if (!isDownloaded) {
+            console.log(
+              '💻 Once Puppeteer is downloaded, a browser window will automatically open that you can interact with.\n'
+            )
+          }
+        }, 1500)
+
+        setTimeout(() => {
+          if (!isDownloaded) {
+            console.log('🐌 Please hold, this might take a moment...\n')
+          }
+        }, 3000)
+
+        exec('yarn add puppeteer', async (err, stdout) => {
+          if (err)
+            throw new Error(
+              "Unable to download Puppeteer, can't generate interactive session."
+            )
+          else {
+            console.log(stdout)
+
+            puppeteer = require('puppeteer')
+            isDownloaded = true
+            resolve()
+          }
+        })
+      })
+    }
+
+    browser = await puppeteer.launch({
+      headless: false,
+      ignoreHTTPSErrors
+    })
+  } else {
+    chrome = await chromeLauncher.launch({
+      chromeFlags: ['--headless'],
+      output: 'json'
+    })
+
+    const resp = await util.promisify(request)(
+      `http://localhost:${chrome.port}/json/version`
+    )
+    const { webSocketDebuggerUrl } = JSON.parse(resp.body)
+    browser = await puppeteerCore.connect({
+      browserWSEndpoint: webSocketDebuggerUrl,
+      ignoreHTTPSErrors
+    })
+  }
+
   const page = (await browser.pages())[0]
 
   if (isMobile) {
@@ -99,9 +165,7 @@ const downloadCoverage = async ({
   if (interact) {
     await page.goto(url)
 
-    console.log(
-      '\n💻  A browser window that you can interact with just opened.\n'
-    )
+    console.log('\n💻  A browser window just opened.\n')
     const startPrompt = new Confirm({
       name: 'question',
       message:
@@ -129,7 +193,9 @@ const downloadCoverage = async ({
 
   try {
     await browser.close()
+    if (chrome) await chrome.kill()
   } catch (error) {
+    console.error(error)
     // merged as a fix by https://github.com/aholachek/bundle-wizard/pull/6
   }
   return { urlToFileDict, url: interactionUrl || url, tracing }
