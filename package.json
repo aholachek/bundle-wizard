@@ -1,7 +1,7 @@
 {
   "name": "bundle-wizard",
   "description": "Analyze the JavaScript loaded by a website",
-  "version": "1.1.23",
+  "version": "1.1.0-6",
   "main": "src/index.js",
   "engines": {
     "node": ">=10.0.0"
@@ -29,9 +29,9 @@
     "enquirer": "^2.3.5",
     "fs-extra": "^9.0.0",
     "get-port": "^5.1.1",
+    "lodash.throttle": "^4.1.1",
     "node-fetch": "^2.6.0",
     "open": "^7.0.3",
-    "puppeteer": "^3.1.0",
     "puppeteer-core": "^3.1.0",
     "request": "^2.88.2",
     "serve": "^11.3.0",
@@ -43,14 +43,16 @@
     "uuid": "^8.0.0",
     "yargs": "^15.3.1"
   },
+  "peerDependencies": {
+    "puppeteer": "3"
+  },
   "devDependencies": {
-    "lodash.clonedeep": "^4.5.0",
-    "lodash.throttle": "^4.1.1",
     "d3": "5",
     "eslint": "^7.0.0",
     "eslint-plugin-react": "^7.20.0",
     "eslint-plugin-react-hooks": "^4.0.2",
     "js-levenshtein": "^1.1.6",
+    "lodash.clonedeep": "^4.5.0",
     "parcel": "^1.12.4",
     "prism-react-renderer": "^1.1.0",
     "react": ">= 16.8.0",
@@ -59,6 +61,7 @@
     "react-is": ">= 16.8.0",
     "sanitize.css": "^11.0.1",
     "sass": "^1.26.5",
-    "styled-components": "^5.1.0"
+    "styled-components": "^5.1.0",
+    "puppeteer": "^3.1.0"
   }
 }

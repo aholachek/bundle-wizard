@@ -65,48 +65,8 @@ const downloadCoverage = async ({
   let chrome
 
   if (interact) {
-    let puppeteer
-    try {
-      puppeteer = require('puppeteer')
-    } catch (e) {
-      const { exec } = require('child_process')
 
-      await new Promise(resolve => {
-        let isDownloaded = false
-
-        console.log(
-          'The --interact option requires us to download a Puppeteer-compatible version of chromium.\n'
-        )
-
-        setTimeout(() => {
-          if (!isDownloaded) {
-            console.log(
-              '💻 Once Puppeteer is downloaded, a browser window will automatically open that you can interact with.\n'
-            )
-          }
-        }, 1500)
-
-        setTimeout(() => {
-          if (!isDownloaded) {
-            console.log('🐌 Please hold, this might take a moment...\n')
-          }
-        }, 3000)
-
-        exec('yarn add puppeteer', async (err, stdout) => {
-          if (err)
-            throw new Error(
-              "Unable to download Puppeteer, can't generate interactive session."
-            )
-          else {
-            console.log(stdout)
-
-            puppeteer = require('puppeteer')
-            isDownloaded = true
-            resolve()
-          }
-        })
-      })
-    }
+    const puppeteer = require('puppeteer')
 
     browser = await puppeteer.launch({
       headless: false,
