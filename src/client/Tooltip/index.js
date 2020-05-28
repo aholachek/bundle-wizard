@@ -15,7 +15,7 @@ const Tooltip = ({ hovered }) => {
         <div>
           {hovered.data.longTask ? (
             <div style={{ marginBottom: '.15rem' }}>
-              🚨 This bundle originated a {Math.ceil(hovered.data.longTask)}ms "long task" in the browser
+              🚨 This bundle originated a {Math.ceil(hovered.data.longTask)}ms &quot;long task&quot; in the browser
             </div>
           ) : (
             ''

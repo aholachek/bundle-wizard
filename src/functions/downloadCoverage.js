@@ -1,35 +1,12 @@
+const puppeteerCore = require('puppeteer-core')
 const chromeLauncher = require('chrome-launcher')
-const puppeteer = require('puppeteer-core')
 const { devicesMap } = require('puppeteer-core/DeviceDescriptors')
-const fetch = require('node-fetch')
 const fs = require('fs')
-const { Input } = require('enquirer')
+const { Input, Confirm } = require('enquirer')
 const delay = require('./delay')
 const { splitString } = require('./utils')
-
-const launchBrowser = async ({ interact, ignoreHTTPSErrors }) => {
-  const opts = {
-    chromeFlags: interact ? [] : ['--headless'],
-    logLevel: global.debug ? 'info' : 'error',
-    output: 'json'
-  }
-  try {
-    const chrome = await chromeLauncher.launch(opts)
-    opts.port = chrome.port
-
-    const response = await fetch(`http://localhost:${opts.port}/json/version`)
-    const { webSocketDebuggerUrl } = await response.json()
-    const browser = await puppeteer.connect({
-      browserWSEndpoint: webSocketDebuggerUrl,
-      ignoreHTTPSErrors
-    })
-    return [chrome, browser]
-  } catch (e) {
-    console.error('⚠️  Unable to launch Chrome:\n')
-    console.error(e)
-    process.exit(1)
-  }
-}
+const util = require('util')
+const request = require('request')
 
 const validateURL = url => {
   if (!/^http/.test(url)) {
@@ -53,7 +30,7 @@ const validateURL = url => {
 const promptForURL = async () => {
   const url = await new Input({
     message: `Which site would you like to analyze?`,
-    initial: 'https://www.gatsbyjs.org/'
+    initial: 'https://reactjs.org/'
   }).run()
 
   const validUrl = validateURL(url)
@@ -84,13 +61,34 @@ const downloadCoverage = async ({
 
   const isMobile = type === 'mobile'
 
-  const [chrome, browser] = await launchBrowser({
-    interact,
-    isMobile,
-    ignoreHTTPSErrors
-  })
+  let browser
+  let chrome
 
-  const page = await (await browser.pages())[0]
+  if (interact) {
+
+    const puppeteer = require('puppeteer')
+
+    browser = await puppeteer.launch({
+      headless: false,
+      ignoreHTTPSErrors
+    })
+  } else {
+    chrome = await chromeLauncher.launch({
+      chromeFlags: ['--headless'],
+      output: 'json'
+    })
+
+    const resp = await util.promisify(request)(
+      `http://localhost:${chrome.port}/json/version`
+    )
+    const { webSocketDebuggerUrl } = JSON.parse(resp.body)
+    browser = await puppeteerCore.connect({
+      browserWSEndpoint: webSocketDebuggerUrl,
+      ignoreHTTPSErrors
+    })
+  }
+
+  const page = (await browser.pages())[0]
 
   if (isMobile) {
     await page.emulate(devicesMap['iPhone X'])
@@ -114,46 +112,53 @@ const downloadCoverage = async ({
     })
   })
 
-  await page.tracing.start({
-    path: `${tempFolderName}/trace.json`
-  })
-  // TODO: try block level
-  await page.coverage.startJSCoverage()
-  await page.goto(url)
-
-  const completeCoverage = async () => {
-    console.log('📋  Writing coverage file to disk...')
-    const tracing = await page.tracing.stop()
-    const jsCoverage = await page.coverage.stopJSCoverage()
-    fs.writeFileSync(coverageFilePath, JSON.stringify(jsCoverage))
-
-    try {
-      await browser.close()
-      await chrome.kill()
-    } catch (error) {
-      // merged as a fix by https://github.com/aholachek/bundle-wizard/pull/6
-    }
-    return { urlToFileDict, url, tracing }
+  const startTrace = async () => {
+    await page.tracing.start({
+      path: `${tempFolderName}/trace.json`
+    })
+    // TODO: try block level
+    await page.coverage.startJSCoverage()
   }
 
-  return new Promise(async resolve => {
-    if (interact) {
-      browser.on('disconnected', async () => {
-        resolve(await completeCoverage())
-      })
-      console.log(
-        '\n💻  A browser window should have opened that you can interact with.\n'
-      )
-      console.log('\n💻  Close the browser window to continue.\n')
-    } else {
-      // allow page to make any errant http requests.
-      await delay(1000)
-      console.log('🐢  Finishing up loading...\n')
-      await delay(4000)
-      await page.screenshot({ path: `${tempFolderName}/screenshot.png` })
-      resolve(await completeCoverage())
-    }
-  })
+  let interactionUrl
+
+  if (interact) {
+    await page.goto(url)
+
+    console.log('\n💻  A browser window just opened.\n')
+    const startPrompt = new Confirm({
+      name: 'question',
+      message:
+        'Type "y" to reload the current page and begin recording performance data'
+    })
+    await startPrompt.run()
+    await startTrace()
+    interactionUrl = page.url()
+    await page.reload()
+    console.log('\n🐢  Finishing up loading...')
+  } else {
+    await startTrace()
+    await page.goto(url)
+    console.log('🐢  Finishing up loading...')
+  }
+
+  await delay(4000)
+
+  await page.screenshot({ path: `${tempFolderName}/screenshot.png` })
+
+  console.log('\n📋  Writing coverage file to disk...')
+  const tracing = await page.tracing.stop()
+  const jsCoverage = await page.coverage.stopJSCoverage()
+  fs.writeFileSync(coverageFilePath, JSON.stringify(jsCoverage))
+
+  try {
+    await browser.close()
+    if (chrome) await chrome.kill()
+  } catch (error) {
+    console.error(error)
+    // merged as a fix by https://github.com/aholachek/bundle-wizard/pull/6
+  }
+  return { urlToFileDict, url: interactionUrl || url, tracing }
 }
 
 module.exports = downloadCoverage

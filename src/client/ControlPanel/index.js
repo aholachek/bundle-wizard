@@ -27,23 +27,13 @@ const ControlPanel = ({
   setShowAllChildren
 }) => {
   return (
-    <div
-      className={`control-panel `}
-      onClick={e => {
-        if (window.scrollY === 0) {
-          window.scrollBy({
-            top: 100,
-            left: 0,
-            behavior: 'smooth'
-          })
-        }
-      }}
-    >
+    <div className={`control-panel `}>
       {isTopLevel && (
         <div className="sourcemap-control">
           <label>
             <input
               type="checkbox"
+              title="uncheck to see only JS bundles"
               name=""
               onChange={toggleScriptsWithoutSourcemaps}
               checked={showScriptsWithoutSourcemaps}
@@ -58,6 +48,7 @@ const ControlPanel = ({
           <input
             type="checkbox"
             name=""
+            title="simplified graph is better for performance"
             onChange={() => {
               setShowAllChildren(!showAllChildren)
             }}
@@ -73,6 +64,7 @@ const ControlPanel = ({
             <input
               type="checkbox"
               name=""
+              title="coverage represents the percentage of the code that was run"
               onChange={() => {
                 setShowCoverage(!showCoverage)
               }}
