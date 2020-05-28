@@ -48,11 +48,15 @@ To skip the initial prompt, provide a url as a first argument:
 
 ### `interact` flag
 
-If you need to do some work in the browser getting the page ready for analysis (perhaps by signing in and then visiting a certain page), use this flag. 
+If you need to do some work in the browser getting the page ready for analysis (perhaps by signing in and then visiting a certain page), use the following command:
 
-`npx bundle-wizard --interact`
+`npx -p puppeteer -p bundle-wizard bundle-wizard --interact`
 
-A version of chromium that you can interact with through Puppeteer will first be downloaded. Next, you will see a browser window that will pop up that you can interact with. When you are ready to proceed, type `y` into the console in respond to the waiting prompt to reload the page and start measuring performance.
+(the persistent npm equivalent would be `npm install -g puppeteer bundle-wizard`)
+
+You might be wondering why you have to install puppeteer as a peer dependency to use the interact command. By default `bundle-wizard` uses `puppeteer-core`, which is faster to download than `puppeteer` because it doesn't come bundled with a version of chromium. Since the `--interact` command opens a browser in non-headless mode, unlike the default `bundle-wizard` command, it requires the full `puppeter` package to work reliably.
+
+After running this command and specifying a url, you will see a browser window that will pop up that you can interact with. When you are ready to proceed, type `y` into the console in respond to the waiting prompt to reload the page and start measuring performance.
 
 **Note**: While this tool does not record any data, it's still recommended from a common sense perspective to enter login information only for test accounts.
 
@@ -61,7 +65,6 @@ A version of chromium that you can interact with through Puppeteer will first be
 By default, `bundle-wizard` will analyze a mobile version of the site. To analyze the desktop version instead, pass the `--desktop` flag:
 
 `npx bundle-wizard --desktop`
-
 
 ### `ignoreHTTPSErrors` flag
 
@@ -73,15 +76,14 @@ If you are running an HTTPS connection on localhost and want to test a local sit
 
 `bundle-wizard` uses [Puppeteer](https://github.com/puppeteer/puppeteer) to download a web page, measure performance, and examine the JavaScript it sends to the client. It then analyzes the code using the awesome [source-map-explorer](https://github.com/danvk/source-map-explorer) library and creates a custom visualization.
 
-
 ### Requirement: downloadable sourcemaps
 
-   This utility downloads sourcemaps from the url you provide. This requires the sourcemaps to be publically available, or at least available on your network. You might need to point to a testing instead of production build, for instance, as some apps disable sourcemaps in production.
+This utility downloads sourcemaps from the url you provide. This requires the sourcemaps to be publically available, or at least available on your network. You might need to point to a testing instead of production build, for instance, as some apps disable sourcemaps in production.
 
-   Don't have access to sourcemaps in your prod app? Try [building your app locally.](#try-it-out-on-an-app-running-locally)
+Don't have access to sourcemaps in your prod app? Try [building your app locally.](#try-it-out-on-an-app-running-locally)
 
 ## Additional features
 
-If sourcemaps are properly configured (not true for reddit.com), you should be able to click on a square to see the code it represents: 
+If sourcemaps are properly configured (not true for reddit.com), you should be able to click on a square to see the code it represents:
 
 ![demonstration of code feature](./example.gif)
