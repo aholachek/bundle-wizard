@@ -57,6 +57,7 @@ If you need to do some work in the browser getting the page ready for analysis (
 The persistent npm equivalent would be running: 
 
 `npm install -g puppeteer bundle-wizard`
+
 `bundle-wizard --interact`
 
 You might be wondering why you have to install puppeteer as a peer dependency to use the interact command. By default `bundle-wizard` uses `puppeteer-core`, which is faster to download than `puppeteer` because it doesn't come bundled with a version of chromium. Since the `--interact` command opens a browser in non-headless mode, unlike the default `bundle-wizard` command, it requires the full `puppeteer` package to work reliably.
