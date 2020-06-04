@@ -54,9 +54,12 @@ If you need to do some work in the browser getting the page ready for analysis (
 
 `npx -p puppeteer -p bundle-wizard bundle-wizard --interact`
 
-(the persistent npm equivalent would be running `npm install -g puppeteer bundle-wizard` and then `bundle-wizard --interact`)
+The persistent npm equivalent would be running: 
 
-You might be wondering why you have to install puppeteer as a peer dependency to use the interact command. By default `bundle-wizard` uses `puppeteer-core`, which is faster to download than `puppeteer` because it doesn't come bundled with a version of chromium. Since the `--interact` command opens a browser in non-headless mode, unlike the default `bundle-wizard` command, it requires the full `puppeter` package to work reliably.
+`npm install -g puppeteer bundle-wizard`
+`bundle-wizard --interact`
+
+You might be wondering why you have to install puppeteer as a peer dependency to use the interact command. By default `bundle-wizard` uses `puppeteer-core`, which is faster to download than `puppeteer` because it doesn't come bundled with a version of chromium. Since the `--interact` command opens a browser in non-headless mode, unlike the default `bundle-wizard` command, it requires the full `puppeteer` package to work reliably.
 
 After running this command and specifying a url, you will see a browser window that will pop up that you can interact with. When you are ready to proceed, type `y` into the console in respond to the waiting prompt to reload the page and start measuring performance.
 
