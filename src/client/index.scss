@@ -103,7 +103,6 @@ $anim-duration: 400ms;
   display: inline-block;
   text-align: center;
   font-size: 0.8rem;
-  width: 14rem;
   > div:first-of-type {
     margin-bottom: 0.2rem;
     line-height: 1;
@@ -331,27 +330,27 @@ figure {
   background-color: hsla(0, 0%, 0%, 0.9);
   padding: 0.5rem;
 
-  @media (min-width: 990px) {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 1rem;
-  }
-
-  color: white;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
   z-index: 100;
-  transition: transform 2s;
-  cursor: pointer;
-  display: flex;
-  flex-wrap: wrap;
-  label {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-    cursor: pointer;
-  }
+
   > div {
-    margin-right: 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    color: white;
+    z-index: 100;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    color: white;
+    transition: transform 2s;
+    cursor: pointer;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
   }
 }
 
@@ -364,6 +363,6 @@ figure {
 
 .sourcemap-control {
   input {
-    margin-right: .5rem;
+    margin-right: 0.5rem;
   }
 }

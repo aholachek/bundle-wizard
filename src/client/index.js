@@ -8,8 +8,9 @@ import Breadcrumbs from './Breadcrumbs'
 import Summary from './Summary'
 import Tooltip from './Tooltip'
 import Code from './Code'
-import { findMostLikelyPath, usePrevious } from './utils'
+import { findMostLikelyPath, usePrevious, filterData } from './utils'
 import ControlPanel from './ControlPanel'
+import throttle from 'lodash.throttle'
 
 const jsonOptions = {
   headers: {
@@ -38,6 +39,7 @@ const Dashboard = () => {
   const [showAllChildren, setShowAllChildren] = React.useState(false)
   const [showCoverage, setShowCoverage] = React.useState(true)
   const [topLevelData, setTopLevelData] = React.useState({})
+  const [searchStr, setSearchStr] = React.useState('')
   const [
     showScriptsWithoutSourcemaps,
     setShowScriptsWithoutSourcemaps
@@ -202,7 +204,7 @@ const Dashboard = () => {
             />
 
             <Treemap
-              data={data}
+              data={filterData(data, searchStr)}
               setGraphRoot={setGraphRoot}
               setHovered={setHovered}
               showScriptsWithoutSourcemaps={showScriptsWithoutSourcemaps}
@@ -222,6 +224,8 @@ const Dashboard = () => {
                 isTopLevel={isTopLevel}
                 showAllChildren={showAllChildren}
                 setShowAllChildren={setShowAllChildren}
+                setSearchStr={setSearchStr}
+                searchStr={searchStr}
               />
             )}
           </>
