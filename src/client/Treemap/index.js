@@ -173,7 +173,7 @@ const renderGraph = ({
   }
 
   const createSizeLabel = d => {
-    return `${Math.ceil(d.value / 1000).toLocaleString()}kb`
+    return `${Math.ceil(d.data.realSize / 1000).toLocaleString()}kb`
   }
 
   const shouldShow = (width, height) => {

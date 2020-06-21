@@ -61764,11 +61764,35 @@ var collapse = function collapse(d) {
   if (d.children) d.children.forEach(function (child) {
     return collapse(child);
   });
-};
+}; // copy pasted from backend code
+
 
 exports.collapse = collapse;
 
+var calculateRealCumulativeSize = function calculateRealCumulativeSize(data) {
+  var processNode = function processNode(d) {
+    if (d.size) {
+      d.realSize = d.size;
+      return d.size;
+    }
+
+    if (d.children) {
+      var cumulativeSize = d.children.map(processNode).reduce(function (acc, curr) {
+        return acc + curr;
+      }, 0);
+      d.realSize = cumulativeSize;
+      return cumulativeSize;
+    }
+
+    return 0;
+  };
+
+  processNode(data);
+  return data;
+};
+
 var filterData = function filterData(data, searchStr) {
+  if (!searchStr) return data;
   var regex = new RegExp(searchStr, 'i');
   var filteredData = (0, _lodash.default)(data, searchStr); // simply remove leaf children that don't match
   // (the id has the entire path in it so it will catch outer folder names )
@@ -61791,7 +61815,7 @@ var filterData = function filterData(data, searchStr) {
   };
 
   traverse(filteredData);
-  return filteredData;
+  return calculateRealCumulativeSize(filteredData);
 };
 
 exports.filterData = filterData;
@@ -61973,7 +61997,7 @@ var renderGraph = function renderGraph(_ref) {
   };
 
   var createSizeLabel = function createSizeLabel(d) {
-    return "".concat(Math.ceil(d.value / 1000).toLocaleString(), "kb");
+    return "".concat(Math.ceil(d.data.realSize / 1000).toLocaleString(), "kb");
   };
 
   var shouldShow = function shouldShow(width, height) {
@@ -69199,7 +69223,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63861" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58938" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

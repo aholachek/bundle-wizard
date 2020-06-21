@@ -45,7 +45,28 @@ export const collapse = d => {
   if (d.children) d.children.forEach(child => collapse(child))
 }
 
+// copy pasted from backend code
+const calculateRealCumulativeSize = data => {
+  const processNode = d => {
+    if (d.size) {
+      d.realSize = d.size
+      return d.size
+    }
+    if (d.children) {
+      const cumulativeSize = d.children.map(processNode).reduce((acc, curr) => {
+        return acc + curr
+      }, 0)
+      d.realSize = cumulativeSize
+      return cumulativeSize
+    }
+    return 0
+  }
+  processNode(data)
+  return data
+}
+
 export const filterData = (data, searchStr) => {
+  if (!searchStr) return data
   const regex = new RegExp(searchStr, 'i')
   const filteredData = cloneDeep(data, searchStr)
   // simply remove leaf children that don't match
@@ -68,5 +89,5 @@ export const filterData = (data, searchStr) => {
   }
 
   traverse(filteredData)
-  return filteredData
+  return calculateRealCumulativeSize(filteredData)
 }
