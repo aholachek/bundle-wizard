@@ -62000,6 +62000,11 @@ var renderGraph = function renderGraph(_ref) {
     return "".concat(Math.ceil(d.data.realSize / 1000).toLocaleString(), "kb");
   };
 
+  var createNameLabel = function createNameLabel(d) {
+    if (isTopLevel(d)) return '‎';
+    return "".concat(d.data.longTask ? '🚨 ' : '').concat(d.data.name);
+  };
+
   var shouldShow = function shouldShow(width, height) {
     return showAllChildren ? width > 0 && height > 0 : width > 3 && height > 3 && width * height > 50;
   };
@@ -62055,11 +62060,8 @@ var renderGraph = function renderGraph(_ref) {
     }).classed('no-interact', function (d) {
       return !d.parent || d.data.noSourcemap;
     });
-    var label = entered.append('div').attr('class', 'label').text(function (d) {
-      // need to return an  empty character not to mess up formatting
-      if (isTopLevel(d)) return '‎';
-      return "".concat(d.data.longTask ? '🚨 ' : '').concat(d.data.name);
-    });
+    var label = entered.append('div').attr('class', 'label');
+    label.append('span').attr('data-name', true).text(createNameLabel);
     label.append('div').attr('data-size', true).text(createSizeLabel);
     return entered;
   };
@@ -62088,6 +62090,7 @@ var renderGraph = function renderGraph(_ref) {
         return "".concat(d.x0, "px");
       }).style('box-shadow', renderBoxShadowBorder).each(function (d) {
         this.querySelector('[data-size]').innerText = createSizeLabel(d);
+        this.querySelector('[data-name]').innerText = createNameLabel(d);
       });
     };
 

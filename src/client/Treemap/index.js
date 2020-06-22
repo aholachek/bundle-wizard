@@ -156,7 +156,6 @@ const renderGraph = ({
             ? filteredData.children.filter(c => !c.noSourcemap)
             : []
         )
-
   const root = treemap(editedFilteredData)
   const isBundle = d => d.parent && isTopLevel(d.parent)
 
@@ -174,6 +173,11 @@ const renderGraph = ({
 
   const createSizeLabel = d => {
     return `${Math.ceil(d.data.realSize / 1000).toLocaleString()}kb`
+  }
+
+  const createNameLabel = d => {
+    if (isTopLevel(d)) return '‎'
+    return `${d.data.longTask ? '🚨 ' : ''}${d.data.name}`
   }
 
   const shouldShow = (width, height) => {
@@ -261,15 +265,9 @@ const renderGraph = ({
         return !d.parent || d.data.noSourcemap
       })
 
-    const label = entered
-      .append('div')
-      .attr('class', 'label')
+    const label = entered.append('div').attr('class', 'label')
 
-      .text(d => {
-        // need to return an  empty character not to mess up formatting
-        if (isTopLevel(d)) return '‎'
-        return `${d.data.longTask ? '🚨 ' : ''}${d.data.name}`
-      })
+    label.append('span').attr('data-name', true).text(createNameLabel)
 
     label.append('div').attr('data-size', true).text(createSizeLabel)
     return entered
@@ -304,6 +302,7 @@ const renderGraph = ({
         .style('box-shadow', renderBoxShadowBorder)
         .each(function (d) {
           this.querySelector('[data-size]').innerText = createSizeLabel(d)
+          this.querySelector('[data-name]').innerText = createNameLabel(d)
         })
     }
     startAnimation()
