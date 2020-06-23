@@ -68831,7 +68831,7 @@ var ControlPanel = function ControlPanel(_ref) {
       setShowCoverage(!showCoverage);
     },
     checked: showCoverage
-  }), "show coverage ", showCoverage && _react.default.createElement(Legend, null)))));
+  }), "show coverage ", _react.default.createElement(Legend, null)))));
 };
 
 var _default = ControlPanel;

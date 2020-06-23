@@ -70,7 +70,7 @@ const ControlPanel = ({
               }}
               checked={showCoverage}
             />
-            show coverage {showCoverage && <Legend />}
+            show coverage <Legend />
           </label>
         </div>
       </div>
