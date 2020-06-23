@@ -8,7 +8,7 @@ This command line utility makes it simple to create visualizations of the JS bun
 
 `npx bundle-wizard reddit.com`
 
-<a href="https://bundle-wizard-spectrum.netlify.app/">
+<a href="https://bundle-wizard.netlify.app/">
 <img src="./reddit-mobile-analysis.png" alt="bundle-wizard interaction showing code for reddit">
 </a>
 
