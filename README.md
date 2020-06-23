@@ -54,7 +54,7 @@ If you need to do some work in the browser getting the page ready for analysis (
 
 `npx -p puppeteer -p bundle-wizard bundle-wizard --interact`
 
-The persistent npm equivalent would be running: 
+The persistent npm equivalent would be running:
 
 `npm install -g puppeteer bundle-wizard`
 
@@ -90,6 +90,14 @@ Don't have access to sourcemaps in your prod app? Try [building your app locally
 
 ## Additional features
 
+### View source code
+
 If sourcemaps are properly configured (not true for reddit.com), you should be able to click on a square to see the code it represents:
 
 ![demonstration of code feature](./example.gif)
+
+### Simple search
+
+Want to know all the bundles that contain code from certain library (say, `momentjs` or `lodash`)? Bundle-wizard offers a search functionality in the bottom bar that allows you to filter the view based on the name of the containing folder or bundle name:
+
+![demo of simple search](./codecademy-example.png)
