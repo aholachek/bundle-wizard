@@ -156,7 +156,6 @@ const renderGraph = ({
             ? filteredData.children.filter(c => !c.noSourcemap)
             : []
         )
-
   const root = treemap(editedFilteredData)
   const isBundle = d => d.parent && isTopLevel(d.parent)
 
@@ -173,12 +172,12 @@ const renderGraph = ({
   }
 
   const createSizeLabel = d => {
-    if (d.data.isRuntime && d.data.size) {
-      return `${Math.ceil(d.data.size)}ms`
-    } else if (d.data.isRuntime) {
-      return ''
-    }
     return `${Math.ceil(d.data.realSize / 1000).toLocaleString()}kb`
+  }
+
+  const createNameLabel = d => {
+    if (isTopLevel(d)) return '‎'
+    return `${d.data.longTask ? '🚨 ' : ''}${d.data.name}`
   }
 
   const shouldShow = (width, height) => {
@@ -266,14 +265,9 @@ const renderGraph = ({
         return !d.parent || d.data.noSourcemap
       })
 
-    const label = entered
-      .append('div')
-      .attr('class', 'label')
+    const label = entered.append('div').attr('class', 'label')
 
-      .text(d => {
-        if (isTopLevel(d)) return 'all bundles'
-        return `${d.data.longTask ? '🚨 ' : ''}${d.data.name}`
-      })
+    label.append('span').attr('data-name', true).text(createNameLabel)
 
     label.append('div').attr('data-size', true).text(createSizeLabel)
     return entered
@@ -308,6 +302,7 @@ const renderGraph = ({
         .style('box-shadow', renderBoxShadowBorder)
         .each(function (d) {
           this.querySelector('[data-size]').innerText = createSizeLabel(d)
+          this.querySelector('[data-name]').innerText = createNameLabel(d)
         })
     }
     startAnimation()
@@ -328,6 +323,8 @@ const renderGraph = ({
     })
 }
 
+const updateInterval = 350
+
 const Treemap = ({
   data,
   setGraphRoot,
@@ -342,7 +339,11 @@ const Treemap = ({
     dimensionsRef.current.width = window.innerWidth
     dimensionsRef.current.height = graphContainerRef.current.clientHeight
   }
-  useEffect(() => {
+
+  const lastCalled = React.useRef(null)
+  const timerId = React.useRef(null)
+
+  React.useEffect(() => {
     if (showingCode) return
     const throttledResize = throttle(() => {
       cacheWindowSize()
@@ -356,7 +357,7 @@ const Treemap = ({
         ...dimensionsRef.current,
         showAllChildren
       })
-    }, 300)
+    }, updateInterval)
     window.addEventListener('resize', throttledResize)
     return () => {
       window.removeEventListener('resize', throttledResize)
@@ -371,16 +372,30 @@ const Treemap = ({
   ])
 
   useEffect(() => {
-    cacheWindowSize()
-    renderGraph({
-      el: graphContainerRef.current,
-      data,
-      setGraphRoot,
-      setHovered,
-      ...dimensionsRef.current,
-      showScriptsWithoutSourcemaps,
-      showAllChildren
-    })
+    const now = Date.now()
+    const then = lastCalled.current
+    lastCalled.current = now
+    function throttledRenderGraph() {
+      cacheWindowSize()
+      renderGraph({
+        el: graphContainerRef.current,
+        data,
+        setGraphRoot,
+        setHovered,
+        ...dimensionsRef.current,
+        showScriptsWithoutSourcemaps,
+        showAllChildren
+      })
+    }
+    if (then && now - then < updateInterval) {
+      if (timerId.current) clearTimeout(timerId.current)
+      timerId.current = setTimeout(
+        throttledRenderGraph,
+        updateInterval - (now - then)
+      )
+    } else {
+      throttledRenderGraph()
+    }
   }, [
     data.id,
     showScriptsWithoutSourcemaps,

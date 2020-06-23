@@ -1,7 +1,7 @@
 {
   "name": "bundle-wizard",
   "description": "Analyze the JavaScript loaded by a website",
-  "version": "1.2.0",
+  "version": "1.2.1-1",
   "main": "src/index.js",
   "engines": {
     "node": ">=10.0.0"
@@ -33,6 +33,7 @@
     "enquirer": "^2.3.5",
     "fs-extra": "^9.0.0",
     "get-port": "^5.1.1",
+    "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
     "node-fetch": "^2.6.0",
     "open": "^7.0.3",
@@ -59,13 +60,13 @@
     "lodash.clonedeep": "^4.5.0",
     "parcel": "^1.12.4",
     "prism-react-renderer": "^1.1.0",
+    "puppeteer": "^3.1.0",
     "react": ">= 16.8.0",
     "react-dom": ">= 16.8.0",
     "react-flip-toolkit": "^7.0.9",
     "react-is": ">= 16.8.0",
     "sanitize.css": "^11.0.1",
     "sass": "^1.26.5",
-    "styled-components": "^5.1.0",
-    "puppeteer": "^3.1.0"
+    "styled-components": "^5.1.0"
   }
 }

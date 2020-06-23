@@ -1,5 +1,6 @@
 import React from 'react'
 import levenshtein from 'js-levenshtein'
+import cloneDeep from 'lodash.clonedeep'
 
 export function usePrevious(value) {
   const ref = React.useRef()
@@ -42,4 +43,51 @@ export const collapse = d => {
     collapse(d)
   }
   if (d.children) d.children.forEach(child => collapse(child))
+}
+
+// copy pasted from backend code
+const calculateRealCumulativeSize = data => {
+  const processNode = d => {
+    if (d.size) {
+      d.realSize = d.size
+      return d.size
+    }
+    if (d.children) {
+      const cumulativeSize = d.children.map(processNode).reduce((acc, curr) => {
+        return acc + curr
+      }, 0)
+      d.realSize = cumulativeSize
+      return cumulativeSize
+    }
+    return 0
+  }
+  processNode(data)
+  return data
+}
+
+export const filterData = (data, searchStr) => {
+  if (!searchStr) return data
+  const regex = new RegExp(searchStr, 'i')
+  const filteredData = cloneDeep(data, searchStr)
+  // simply remove leaf children that don't match
+  // (the id has the entire path in it so it will catch outer folder names )
+  const traverse = node => {
+    if (!node.children) return node
+    node.children = node.children
+      .filter(child => {
+        if (child.children) return true
+        if (regex.test(child.id)) {
+          return true
+        }
+        return false
+      })
+      .map(child => {
+        if (child.children) return traverse(child)
+        return child
+      })
+    return node
+  }
+
+  traverse(filteredData)
+  return calculateRealCumulativeSize(filteredData)
 }
