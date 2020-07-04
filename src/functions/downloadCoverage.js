@@ -65,7 +65,6 @@ const downloadCoverage = async ({
   let chrome
 
   if (interact) {
-
     const puppeteer = require('puppeteer')
 
     browser = await puppeteer.launch({
@@ -141,7 +140,7 @@ const downloadCoverage = async ({
     await page.goto(url)
     console.log('🐢  Finishing up loading...')
   }
-
+  // allow for any extra requests to complete 
   await delay(4000)
 
   await page.screenshot({ path: `${tempFolderName}/screenshot.png` })
@@ -149,7 +148,16 @@ const downloadCoverage = async ({
   console.log('\n📋  Writing coverage file to disk...')
   const tracing = await page.tracing.stop()
   const jsCoverage = await page.coverage.stopJSCoverage()
-  fs.writeFileSync(coverageFilePath, JSON.stringify(jsCoverage))
+  // prevent bug that was crashing source-map-explorer for certain sites
+  const validJSCoverageLines = jsCoverage.filter(({ url }) => {
+    try {
+      new URL(url)
+      return true
+    } catch (e) {
+      return false
+    }
+  })
+  fs.writeFileSync(coverageFilePath, JSON.stringify(validJSCoverageLines))
 
   try {
     await browser.close()
