@@ -1,6 +1,5 @@
 const puppeteerCore = require('puppeteer-core')
 const chromeLauncher = require('chrome-launcher')
-const { devicesMap } = require('puppeteer-core/DeviceDescriptors')
 const fs = require('fs')
 const { Input, Confirm } = require('enquirer')
 const delay = require('./delay')
@@ -90,7 +89,7 @@ const downloadCoverage = async ({
   const page = (await browser.pages())[0]
 
   if (isMobile) {
-    await page.emulate(devicesMap['iPhone X'])
+    await page.emulate(puppeteerCore.devices['iPhone X'])
   }
 
   const urlToFileDict = {}
@@ -140,7 +139,7 @@ const downloadCoverage = async ({
     await page.goto(url)
     console.log('🐢  Finishing up loading...')
   }
-  // allow for any extra requests to complete 
+  // allow for any extra requests to complete
   await delay(4000)
 
   await page.screenshot({ path: `${tempFolderName}/screenshot.png` })

@@ -1,12 +1,9 @@
 const fs = require('fs-extra')
 const https = require('https')
 const fetch = require('node-fetch')
+const { getSourcemapUrl } = require('./utils')
 
-const downloadSourcemaps = async ({
-  urlToFileDict,
-  url: baseUrl,
-  ignoreHTTPSErrors
-}) => {
+const downloadSourcemaps = async ({ urlToFileDict, ignoreHTTPSErrors }) => {
   const urls = Object.keys(urlToFileDict)
 
   console.log('\n⬇️   Downloading sourcemaps...')
@@ -19,9 +16,9 @@ const downloadSourcemaps = async ({
     rejectUnauthorized: false
   })
 
-
   const promises = urls.map(url => {
-    return fetch(`${url}.map`, {
+    const sourcemapUrl = getSourcemapUrl(urlToFileDict[url], url)
+    return fetch(sourcemapUrl, {
       agent: ignoreHTTPSErrors ? ignoreHTTPSErrorsAgent : undefined,
       timeout: 5000
     })
@@ -35,7 +32,7 @@ const downloadSourcemaps = async ({
       .catch(error => {
         scriptsWithoutSourcemaps[url] = urlToFileDict[url]
         if (global.debug) {
-          console.error(`\nUnable to download sourcemap: ${url}.map\n`)
+          console.error(`\nUnable to download sourcemap: ${sourcemapUrl}\n`)
           console.error(error)
 
           if (error.statusCode)

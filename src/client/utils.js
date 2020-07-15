@@ -67,7 +67,12 @@ const calculateRealCumulativeSize = data => {
 
 export const filterData = (data, searchStr) => {
   if (!searchStr) return data
-  const regex = new RegExp(searchStr, 'i')
+  let regex
+  try {
+    regex = new RegExp(searchStr, 'i')
+  } catch (e) {
+    return data
+  }
   const filteredData = cloneDeep(data, searchStr)
   // simply remove leaf children that don't match
   // (the id has the entire path in it so it will catch outer folder names )

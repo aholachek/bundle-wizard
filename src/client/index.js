@@ -164,7 +164,7 @@ const Dashboard = () => {
                   setShowSummary(false)
                 }}
               >
-                🌲&nbsp;Treemap
+                Treemap
               </a>
             </li>
             <li className={showSummary && 'active'}>
@@ -176,7 +176,7 @@ const Dashboard = () => {
                   setShowSummary(true)
                 }}
               >
-                ℹ️&nbsp;Summary
+                Summary
               </a>
             </li>
           </ul>

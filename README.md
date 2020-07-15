@@ -40,6 +40,20 @@ e.g. `npx serve -s build`
 
 e.g. `npx bundle-wizard localhost:5000/sign-up`
 
+## Additional features
+
+### View source code
+
+If sourcemaps are properly configured (not true for reddit.com), you should be able to click on a square to see the code it represents:
+
+![demonstration of code feature](./example.gif)
+
+### Filter bundles with regex
+
+Want to know all the bundles that contain code from certain library (say, `momentjs` or `lodash`)? Wondering how much weight in your bundles is from `node_modules` vs custom code? You can answer questions like these by putting a search string or regex into the bottom search bar that allows you to filter the view based on the name of the containing folder bundle name, or script:
+
+![demo of simple search](./codecademy-example.png)
+
 ## Optional command line arguments
 
 ### `url` (initial argument)
@@ -87,17 +101,3 @@ If you are running an HTTPS connection on localhost and want to test a local sit
 This utility downloads sourcemaps from the url you provide. This requires the sourcemaps to be publically available, or at least available on your network. You might need to point to a testing instead of production build, for instance, as some apps disable sourcemaps in production.
 
 Don't have access to sourcemaps in your prod app? Try [building your app locally.](#try-it-out-on-an-app-running-locally)
-
-## Additional features
-
-### View source code
-
-If sourcemaps are properly configured (not true for reddit.com), you should be able to click on a square to see the code it represents:
-
-![demonstration of code feature](./example.gif)
-
-### Simple search
-
-Want to know all the bundles that contain code from certain library (say, `momentjs` or `lodash`)? Bundle-wizard offers a search functionality in the bottom bar that allows you to filter the view based on the name of the containing folder or bundle name:
-
-![demo of simple search](./codecademy-example.png)
