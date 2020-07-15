@@ -62461,22 +62461,16 @@ var Summary = function Summary(_ref2) {
 
   return _react.default.createElement("div", {
     className: "summary"
-  }, _react.default.createElement("div", null, _react.default.createElement(Table, {
+  }, _react.default.createElement("div", null, _react.default.createElement("h2", null, "Summary"), _react.default.createElement("p", null, "To put this information into context, try comparing the total amount of minified JS you're sending to", ' ', _react.default.createElement("a", {
+    href: "https://timkadlec.com/remembers/2020-04-21-the-cost-of-javascript-frameworks/"
+  }, "the findings in this article about \"The Cost of JavaScript Frameworks\"."), ' '), _react.default.createElement(Table, {
     noWarn: true,
     bundles: [{
       name: 'All bundles',
       averageCoverage: averageCoverage,
       realSize: totalSize
     }]
-  }), hasLargeBundles && _react.default.createElement("div", null, _react.default.createElement("p", {
-    style: {
-      marginTop: '2rem'
-    }
-  }, _react.default.createElement("a", {
-    href: "https://v8.dev/blog/cost-of-javascript-2019"
-  }, "JS bundles should generally be smaller than 100kb for best performance."), ' ', "Bundles larger than 100kb are marked with a \u26A0\uFE0F icon.")), hasLongTasks && _react.default.createElement("div", null, _react.default.createElement("p", null, "When JavaScript code is executed on app startup, it can generate long tasks that delay page interactivity. Bundles that kicked off long tasks > 150ms are marked here with a \uD83D\uDEA8 icon. However, just because a bundle initiated a long task, doesn't mean the majority of the task's time was spent executing code from that particular bundle.", ' ', _react.default.createElement("a", {
-    href: "https://web.dev/long-tasks-devtools/"
-  }, "For instructions on how to hunt down the causes of long tasks, check out this article."))), Boolean(highPriorityBundles.length) && _react.default.createElement(Table, {
+  }), Boolean(highPriorityBundles.length) && _react.default.createElement(Table, {
     onBundleNameClick: onBundleNameClick,
     bundles: highPriorityBundles,
     title: "High Priority Bundles",
@@ -62490,7 +62484,11 @@ var Summary = function Summary(_ref2) {
     description: _react.default.createElement(_react.default.Fragment, null, "These bundles were considered less important for building the page, which might mean they had less of an effect on the user's perceived initial load time. Consider", ' ', _react.default.createElement("a", {
       href: "https://medium.com/webpack/link-rel-prefetch-preload-in-webpack-51a52358f84c"
     }, "using the \"preload\" or \"prefetch\" directives"), ' ', "if any of these scripts should have been loaded immediately.")
-  })), _react.default.createElement("h2", null, "Analyzed page:"), _react.default.createElement("img", {
+  })), _react.default.createElement("h2", null, "Warnings"), hasLongTasks && _react.default.createElement("p", null, "When JavaScript code is executed on app startup, it can generate long tasks that delay page interactivity. Bundles that kicked off long tasks > 150ms are marked above with a \uD83D\uDEA8 icon. However, just because a bundle initiated a long task, doesn't mean the majority of the task's time was spent executing code from that particular bundle.", ' ', _react.default.createElement("a", {
+    href: "https://web.dev/long-tasks-devtools/"
+  }, "For instructions on how to hunt down the causes of long tasks, check out this article.")), hasLargeBundles && _react.default.createElement("p", null, _react.default.createElement("a", {
+    href: "https://v8.dev/blog/cost-of-javascript-2019"
+  }, "JS bundles should generally be smaller than 100kb for best performance."), ' ', "Bundles larger than 100kb are marked in the tables above with a \u26A0\uFE0F icon."), _react.default.createElement("h2", null, "Analyzed page"), _react.default.createElement("img", {
     className: "screenshot",
     src: "./screenshot.png",
     alt: "screenshot of website"
@@ -70033,7 +70031,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64263" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53246" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

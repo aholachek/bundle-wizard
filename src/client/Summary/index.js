@@ -103,6 +103,16 @@ const Summary = ({ data, setGraphRoot }) => {
   return (
     <div className="summary">
       <div>
+        <h2>Summary</h2>
+        <p>
+          To put this information into context, try comparing the total amount
+          of minified JS you&apos;re sending to{' '}
+          <a href="https://timkadlec.com/remembers/2020-04-21-the-cost-of-javascript-frameworks/">
+            the findings in this article about &quot;The Cost of JavaScript
+            Frameworks&quot;.
+          </a>{' '}
+        </p>
+
         <Table
           noWarn
           bundles={[
@@ -113,33 +123,7 @@ const Summary = ({ data, setGraphRoot }) => {
             }
           ]}
         />
-        {hasLargeBundles && (
-          <div>
-            <p style={{ marginTop: '2rem' }}>
-              <a href="https://v8.dev/blog/cost-of-javascript-2019">
-                JS bundles should generally be smaller than 100kb for best
-                performance.
-              </a>{' '}
-              Bundles larger than 100kb are marked with a ⚠️ icon.
-            </p>
-          </div>
-        )}
-        {hasLongTasks && (
-          <div>
-            <p>
-              When JavaScript code is executed on app startup, it can generate
-              long tasks that delay page interactivity. Bundles that kicked off
-              long tasks &gt; 150ms are marked here with a 🚨 icon. However,
-              just because a bundle initiated a long task, doesn't mean the
-              majority of the task's time was spent executing code from that
-              particular bundle.{' '}
-              <a href="https://web.dev/long-tasks-devtools/">
-                For instructions on how to hunt down the causes of long tasks,
-                check out this article.
-              </a>
-            </p>
-          </div>
-        )}
+
         {Boolean(highPriorityBundles.length) && (
           <Table
             onBundleNameClick={onBundleNameClick}
@@ -151,10 +135,10 @@ const Summary = ({ data, setGraphRoot }) => {
                 <a href="https://developers.google.com/web/fundamentals/performance/resource-prioritization">
                   prioritized by the browser
                 </a>{' '}
-                for immediate load. (They were marked "highest" or "high"
-                priority by the browser). They may have more of an effect on a
-                user's perception of page load speed than lower-priority
-                bundles.
+                for immediate load. (They were marked &quot;highest&quot; or
+                &quot;high&quot;&#10; priority by the browser). They may have
+                more of an effect on a&#10; user&apos;s perception of page load
+                speed than lower-priority&#10; bundles.
               </>
             }
           />
@@ -167,10 +151,11 @@ const Summary = ({ data, setGraphRoot }) => {
             description={
               <>
                 These bundles were considered less important for building the
-                page, which might mean they had less of an effect on the user's
-                perceived initial load time. Consider{' '}
+                page, which might mean they had less of an effect on the
+                user&apos;s perceived initial load time. Consider{' '}
                 <a href="https://medium.com/webpack/link-rel-prefetch-preload-in-webpack-51a52358f84c">
-                  using the "preload" or "prefetch" directives
+                  using the &quot;preload&quot; or &quot;prefetch&quot;
+                  directives
                 </a>{' '}
                 if any of these scripts should have been loaded immediately.
               </>
@@ -178,7 +163,33 @@ const Summary = ({ data, setGraphRoot }) => {
           />
         )}
       </div>
-      <h2>Analyzed page:</h2>
+
+      <h2>Warnings</h2>
+      {hasLongTasks && (
+        <p>
+          When JavaScript code is executed on app startup, it can generate long
+          tasks that delay page interactivity. Bundles that kicked off long
+          tasks &gt; 150ms are marked above with a 🚨 icon. However, just
+          because a bundle initiated a long task, doesn&apos;t mean the majority
+          of&#10; the task&apos;s time was spent executing code from that
+          particular bundle.{' '}
+          <a href="https://web.dev/long-tasks-devtools/">
+            For instructions on how to hunt down the causes of long tasks, check
+            out this article.
+          </a>
+        </p>
+      )}
+      {hasLargeBundles && (
+        <p>
+          <a href="https://v8.dev/blog/cost-of-javascript-2019">
+            JS bundles should generally be smaller than 100kb for best
+            performance.
+          </a>{' '}
+          Bundles larger than 100kb are marked in the tables above with a ⚠️
+          icon.
+        </p>
+      )}
+      <h2>Analyzed page</h2>
       <img
         className="screenshot"
         src="./screenshot.png"
