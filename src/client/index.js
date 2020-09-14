@@ -39,7 +39,15 @@ const Dashboard = () => {
   const [showAllChildren, setShowAllChildren] = React.useState(false)
   const [showCoverage, setShowCoverage] = React.useState(true)
   const [topLevelData, setTopLevelData] = React.useState({})
-  const [searchStr, setSearchStr] = React.useState('')
+  const [searchStr, _setSearchStr] = React.useState(
+    new URLSearchParams(window.location.search).get('search') || ''
+  )
+  const setSearchStr = str => {
+    const queryParams = new URLSearchParams(window.location.search)
+    queryParams.set('search', window.encodeURIComponent(str))
+    history.replaceState(null, null, '?' + queryParams.toString())
+    _setSearchStr(str)
+  }
   const [
     showScriptsWithoutSourcemaps,
     setShowScriptsWithoutSourcemaps
