@@ -6,6 +6,7 @@ const http = require('http')
 const open = require('open')
 const getPort = require('get-port')
 const processSourceMapExplorerData = require('./processSourceMapExplorerDataIntoTreemap')
+const { Confirm } = require('enquirer')
 
 const visualizeBundles = async ({
   bundles,
@@ -27,6 +28,7 @@ const visualizeBundles = async ({
 
     const tempFolder = path.join(__dirname, '..', '..', 'temp')
     const distFolder = path.join(__dirname, '..', '..', 'dist')
+    const shareFolder = path.join(__dirname, '..', '..', 'shareable', 'dist')
     const processedData = processSourceMapExplorerData(
       data.bundles,
       scriptsWithoutSourcemapsDict
@@ -85,9 +87,33 @@ const visualizeBundles = async ({
       )
       open(`http://localhost:${port}`)
 
-      console.log(
-        `If you wish to save or share them, the visualization files can be found in the following directory:\n\n📂 ${distFolder}`
-      )
+      const sharePrompt = new Confirm({
+        name: 'question',
+        message:
+          'Type "y" to generate a deployable folder in order to share or save this visualization, otherwise type "n" when you\'re ready to quit bundle-wizard'
+      })
+
+      const response = await sharePrompt.run()
+
+      if (response) {
+        fs.mkdirs(shareFolder)
+
+        fs.readdir(distFolder, (err, files) => {
+          if (err) return console.error(err)
+          files.forEach(file => {
+            if (file.match('originalFile')) return
+            fs.copySync(`${distFolder}/${file}`, `${shareFolder}/${file}`)
+          })
+
+          open(path.join(__dirname, '..', '..', 'shareable'))
+
+          console.log(
+            `\nThe shareable visualization site files are located in: \n\n📂  ${shareFolder} \n\n type ctrl+c when you're ready to quit bundle-wizard\n`
+          )
+        })
+      } else {
+        server.close()
+      }
     })
   } catch (e) {
     console.error('⚠️  Failed to generate source map visualization')
