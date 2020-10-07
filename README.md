@@ -48,6 +48,8 @@ If sourcemaps are properly configured (not true for reddit.com), you should be a
 
 ![demonstration of code feature](./example.gif)
 
+(Note: for performance reasons, this functionality will be automatically stripped if you decide to package your bundle-wizard files in order to host or share them).
+
 ### Filter bundles with regex
 
 Want to know all the bundles that contain code from certain library (say, `momentjs` or `lodash`)? Wondering how much weight in your bundles is from `node_modules` vs custom code? You can answer questions like these by putting a search string or regex into the bottom search bar that allows you to filter the view based on the name of the containing folder bundle name, or script:
