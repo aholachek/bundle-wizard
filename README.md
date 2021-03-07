@@ -94,6 +94,12 @@ If you are running an HTTPS connection on localhost and want to test a local sit
 
 `npx bundle-wizard https://localhost:5000 --ignoreHTTPSErrors`
 
+### `port` argument
+
+By default, `bundle-wizard` will try to find an open port in the 3000 range. However, if you'd like it to run on a certain port, you can do so by passing in a value for `--port`:
+
+`npx bundle-wizard https://localhost:3000 --port=4000`
+
 ## How it works
 
 `bundle-wizard` uses [Puppeteer](https://github.com/puppeteer/puppeteer) to download a web page, measure performance, and examine the JavaScript it sends to the client. It then analyzes the code using the awesome [source-map-explorer](https://github.com/danvk/source-map-explorer) library and creates a custom visualization.

@@ -96,7 +96,15 @@ const visualizeBundles = async ({
           'Type "y" to generate a deployable folder in order to share or save this visualization, otherwise type "n" when you\'re ready to quit bundle-wizard'
       })
 
-      const response = await sharePrompt.run()
+      let response
+
+     try {
+        response = await sharePrompt.run()
+        // have to add this catch to get ctrl + c to work for some reason
+     } catch (e) {
+       console.log(e)
+       return process.exit()
+     }
 
       if (response) {
         fs.mkdirs(shareFolder)
