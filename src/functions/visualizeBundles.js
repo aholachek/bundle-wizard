@@ -1,6 +1,7 @@
 const fs = require('fs-extra')
-const { explore } = require('source-map-explorer')
+const argv = require('yargs').argv
 const path = require('path')
+const { explore } = require('source-map-explorer')
 const handler = require('serve-handler')
 const http = require('http')
 const open = require('open')
@@ -79,7 +80,9 @@ const visualizeBundles = async ({
       })
     })
 
-    const port = await getPort({ port: [3000, 3001, 3002, 3003] })
+    const port =
+      parseInt(argv.port, 10) ||
+      (await getPort({ port: [3000, 3001, 3002, 3003] }))
 
     server.listen(port, async () => {
       console.log(
