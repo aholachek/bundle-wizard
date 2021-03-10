@@ -44,7 +44,7 @@ e.g. `npx bundle-wizard localhost:5000/sign-up`
 
 ### View source code
 
-If sourcemaps are properly configured (not true for reddit.com), you should be able to click on a square to see the code it represents:
+If sourcemaps are properly configured you should be able to click on a square to see the code it represents:
 
 ![demonstration of code feature](./example.gif)
 
