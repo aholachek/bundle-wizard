@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import * as d3 from 'd3'
+import * as d3 from 'd3/dist/d3'
 import throttle from 'lodash.throttle'
 import cloneDeep from 'lodash.clonedeep'
 import { collapse } from '../utils'

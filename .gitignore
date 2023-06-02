@@ -4,8 +4,11 @@ bundle-wizard-downloads
 TODO
 temp
 .cache
+.parcel-cache
 yarn-error.log
 dist/originalFiles
 dist/originalFileMapping.json
+dist/screenshot.png
+dist/treeData.json
 src/client/originalFiles
 shareable

@@ -4,8 +4,6 @@ const fs = require('fs')
 const { Input, Confirm } = require('enquirer')
 const delay = require('./delay')
 const { splitString } = require('./utils')
-const util = require('util')
-const request = require('request')
 
 const validateURL = url => {
   if (!/^http/.test(url)) {
@@ -76,10 +74,12 @@ const downloadCoverage = async ({
       output: 'json'
     })
 
-    const resp = await util.promisify(request)(
-      `http://localhost:${chrome.port}/json/version`
-    )
-    const { webSocketDebuggerUrl } = JSON.parse(resp.body)
+    // require() of ES Module not supported.
+    const { default: fetch } = await import('node-fetch')
+
+    const resp = await fetch(`http://127.0.0.1:${chrome.port}/json/version`)
+    const { webSocketDebuggerUrl } = await resp.json()
+
     browser = await puppeteerCore.connect({
       browserWSEndpoint: webSocketDebuggerUrl,
       ignoreHTTPSErrors
@@ -89,12 +89,12 @@ const downloadCoverage = async ({
   const page = (await browser.pages())[0]
 
   if (isMobile) {
-    await page.emulate(puppeteerCore.devices['iPhone X'])
+    await page.emulate(puppeteerCore.KnownDevices['iPhone X'])
   }
-
   const urlToFileDict = {}
 
   page.on('response', response => {
+
     const status = response.status()
     if (status >= 300 && status <= 399) {
       return
@@ -107,6 +107,8 @@ const downloadCoverage = async ({
       const localFileName = `${downloadsDir}/${Math.random()}${splitString}${fileName}`
       urlToFileDict[url.toString()] = localFileName
       fs.writeFileSync(localFileName, body)
+    }).catch(() => {
+      // ignore: ProtocolError: Could not load body for this request. This might happen if the request is a preflight request.
     })
   })
 

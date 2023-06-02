@@ -1,9 +1,11 @@
 const fs = require('fs-extra')
 const https = require('https')
-const fetch = require('node-fetch')
 const { getSourcemapUrl } = require('./utils')
 
 const downloadSourcemaps = async ({ urlToFileDict, ignoreHTTPSErrors }) => {
+  // require() of ES Module not supported.
+  const { default: fetch } = await import('node-fetch')
+
   const urls = Object.keys(urlToFileDict)
 
   console.log('\n⬇️   Downloading sourcemaps...')
