@@ -8,5 +8,7 @@ temp
 yarn-error.log
 dist/originalFiles
 dist/originalFileMapping.json
+dist/screenshot.png
+dist/treeData.json
 src/client/originalFiles
 shareable
