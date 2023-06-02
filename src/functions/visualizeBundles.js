@@ -4,8 +4,6 @@ const path = require('path')
 const { explore } = require('source-map-explorer')
 const handler = require('serve-handler')
 const http = require('http')
-const open = require('open')
-const getPort = require('get-port')
 const processSourceMapExplorerData = require('./processSourceMapExplorerDataIntoTreemap')
 const { Confirm } = require('enquirer')
 
@@ -20,6 +18,10 @@ const visualizeBundles = async ({
   console.log(`\n🖼️   Generating visualization...\n`)
 
   try {
+    // require() of ES Module not supported.
+    const { default: open } = await import('open')
+    const { default: getPort } = await import('get-port')
+
     const data = await explore(bundles, {
       output: {
         format: 'json'

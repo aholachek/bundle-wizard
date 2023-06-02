@@ -4,6 +4,7 @@ bundle-wizard-downloads
 TODO
 temp
 .cache
+.parcel-cache
 yarn-error.log
 dist/originalFiles
 dist/originalFileMapping.json

@@ -1,8 +1,9 @@
 import React from 'react'
-import styled, { keyframes, css } from 'styled-components'
-import Highlight, { defaultProps } from 'prism-react-renderer'
-import theme from 'prism-react-renderer/themes/palenight'
+import styled, { keyframes } from 'styled-components'
+import { Highlight, themes } from 'prism-react-renderer'
 import { Flipped } from 'react-flip-toolkit'
+
+const theme = themes.palenight
 
 const fadeIn = keyframes`
   from {
@@ -57,7 +58,7 @@ export default function Code({ text, setHovered, id }) {
   return (
     <Flipped flipId={id}>
       <Container>
-        <Highlight {...defaultProps} code={text} language="jsx" theme={theme}>
+        <Highlight code={text} language="jsx" theme={theme}>
           {({ className, style, tokens, getLineProps, getTokenProps }) => (
             <pre className={className} style={style}>
               {tokens.map((line, i) => (
